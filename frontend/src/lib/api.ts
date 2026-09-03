@@ -1,8 +1,17 @@
 import axios from 'axios';
 import { supabase } from './supabase';
 
+// In production, if VITE_API_URL is not explicitly configured, use relative path ''
+// so requests hit the same origin (e.g. Vercel serverless /api/ routes).
+// In development, default to local backend on port 8000.
+const defaultBaseURL = import.meta.env.PROD ? '' : 'http://localhost:8000';
+const apiBaseURL =
+  import.meta.env.VITE_API_URL !== undefined && import.meta.env.VITE_API_URL !== ''
+    ? import.meta.env.VITE_API_URL
+    : defaultBaseURL;
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
+  baseURL: apiBaseURL,
 });
 
 api.interceptors.request.use(async (config) => {
