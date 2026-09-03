@@ -58,3 +58,5 @@ pnpm-debug.log*
 .coverage
 htmlcov/
 *.tsbuildinfo
+.vercel
+.env*

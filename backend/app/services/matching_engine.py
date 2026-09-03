@@ -302,6 +302,32 @@ def calculate_match_scores(problem: Dict[str, Any], startup: Dict[str, Any]) -> 
     st_gov_pilots = startup.get("government_pilots") or 0
     st_success_rate = startup.get("pilot_success_rate") or 80.0
     st_verified = startup.get("verification_status") == "verified"
+    st_raw_status = (startup.get("verification_status") or "").lower()
+
+    if st_raw_status in ["blacklisted", "suspended", "rejected"]:
+        return {
+            "startup_id": startup["id"],
+            "startup_name": st_name,
+            "match_percent": 0.0,
+            "score": 0.0,
+            "match_rating": "FAIR",
+            "category": "Ineligible",
+            "badge": f"INELIGIBLE ({st_raw_status.upper()})",
+            "confidence": "Low",
+            "matched_technologies": [],
+            "matched_capabilities": [],
+            "relevant_previous_projects": [],
+            "missing_requirements": ["Compliance violation / Account flagged"],
+            "explanation": f"{st_name} is currently flagged as {st_raw_status} and is ineligible for government matching or procurement consideration.",
+            "breakdown": {"sector_fit": 0, "technology_fit": 0, "capability_fit": 0, "project_relevance": 0, "government_experience": 0, "trust": 0},
+            "reasons": [f"Status: {st_raw_status.upper()}", "Ineligible for government pilot consideration"],
+            "explainability": {
+                "is_relevant": False,
+                "reason": f"{st_name} is currently {st_raw_status} and ineligible.",
+                "strengths": [f"Status: {st_raw_status.upper()}"]
+            },
+            "startup": startup
+        }
 
     # Detect problem domain
     prob_domain = _detect_problem_domain(prob_text, prob_sector)
@@ -563,6 +589,27 @@ def calculate_match_scores(problem: Dict[str, Any], startup: Dict[str, Any]) -> 
             f"it lacks required domain infrastructure experience and field capabilities for this specific government challenge."
         )
 
+    matched_tech_list = list(set(matched_techs))
+    matched_cap_list = list(set(matched_caps))
+    relevant_proj_list = [best_matching_project] if best_matching_project else []
+    
+    # Calculate missing requirements
+    missing_tech = [t for t in (problem.get("required_technologies") or []) if not any(t.lower() in (st_t or "").lower() for st_t in (startup.get("technologies") or []))]
+    missing_caps = [c for c in (problem.get("required_capabilities") or []) if not any(c.lower() in (st_c or "").lower() for st_c in (startup.get("capabilities") or []))]
+    missing_requirements = (missing_tech + missing_caps)[:3]
+    
+    confidence = "High" if match_percent >= 85 else ("Medium" if match_percent >= 60 else "Low")
+    category = "Best" if match_percent >= 85 else ("Better" if match_percent >= 70 else ("Good" if match_percent >= 50 else "Fair"))
+
+    breakdown = {
+        "sector_fit": sector_score,
+        "technology_fit": tech_score,
+        "capability_fit": cap_score,
+        "project_relevance": exp_score,
+        "government_experience": gov_score,
+        "trust": round(trust_comp_score, 1)
+    }
+
     explainability = {
         "sector_score": sector_score,
         "sector_max": 20,
@@ -577,10 +624,18 @@ def calculate_match_scores(problem: Dict[str, Any], startup: Dict[str, Any]) -> 
         "trust_score_comp": round(trust_comp_score, 1),
         "trust_max": 5,
         "best_matching_project": best_matching_project,
+        "matched_technologies": matched_tech_list,
+        "matched_capabilities": matched_cap_list,
+        "relevant_previous_projects": relevant_proj_list,
+        "missing_requirements": missing_requirements,
+        "confidence": confidence,
+        "category": category,
+        "explanation": reason,
         "strengths": strengths[:5],
         "reason": reason,
         "ui_rating": ui_rating,
         "badge": badge,
+        "breakdown": breakdown,
         "is_relevant": is_relevant,
         "sector_match": sector_match,
         "technology_match": technology_match,
@@ -590,21 +645,20 @@ def calculate_match_scores(problem: Dict[str, Any], startup: Dict[str, Any]) -> 
         "location_match": True if prob_location and st_location and (prob_location in st_location or st_location in prob_location) else "partial",
     }
 
-    breakdown = {
-        "sector_fit": sector_score,
-        "technology_fit": tech_score,
-        "capability_fit": cap_score,
-        "project_relevance": exp_score,
-        "government_experience": gov_score,
-        "trust": round(trust_comp_score, 1)
-    }
-
     return {
         "startup_id": startup["id"],
+        "startup_name": st_name,
         "match_percent": match_percent,
         "score": match_percent,
         "match_rating": db_rating,
+        "category": category,
         "badge": badge,
+        "confidence": confidence,
+        "matched_technologies": matched_tech_list,
+        "matched_capabilities": matched_cap_list,
+        "relevant_previous_projects": relevant_proj_list,
+        "missing_requirements": missing_requirements,
+        "explanation": reason,
         "breakdown": breakdown,
         "reasons": strengths[:5],
         "explainability": explainability,

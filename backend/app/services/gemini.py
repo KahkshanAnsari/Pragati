@@ -1,22 +1,30 @@
 import json
 import logging
-from google import genai
-from google.genai import types
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-# Initialize the new google-genai client
-client = genai.Client(api_key=settings.GEMINI_API_KEY)
+client = None
+genai_types = None
+try:
+    from google import genai
+    from google.genai import types as genai_types
+    if settings.GEMINI_API_KEY:
+        client = genai.Client(api_key=settings.GEMINI_API_KEY)
+except Exception as e:
+    logger.warning(f"Could not initialize Google GenAI client: {e}. Fallbacks will be used.")
+
 MODEL = "gemini-2.0-flash"
 
 
 def _generate(prompt: str) -> str:
     """Call Gemini and return the text response."""
+    if not client or not genai_types:
+        raise RuntimeError("Google GenAI client not initialized")
     response = client.models.generate_content(
         model=MODEL,
         contents=prompt,
-        config=types.GenerateContentConfig(
+        config=genai_types.GenerateContentConfig(
             response_mime_type="application/json",
             temperature=0.3,
         ),
@@ -185,11 +193,13 @@ location_match can be: true, false, or "partial"
         result = json.loads(_generate(prompt))
         if result and isinstance(result, list) and len(result) > 0:
             return result
-        logger.warning("Gemini returned empty match list, using fallback matching")
-        return _fallback_match_startups(problem, startups)
+        logger.warning("Gemini returned empty match list, using matching engine")
+        from app.services.matching_engine import rank_startups_for_problem
+        return rank_startups_for_problem(problem, startups)
     except Exception as e:
-        logger.error(f"Error in match_startups (using fallback): {e}")
-        return _fallback_match_startups(problem, startups)
+        logger.error(f"Error in match_startups (using matching engine): {e}")
+        from app.services.matching_engine import rank_startups_for_problem
+        return rank_startups_for_problem(problem, startups)
 
 
 async def analyze_pilot(pilot_data: dict) -> dict:
