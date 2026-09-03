@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../lib/api';
 import { PageHeader } from '../../components/ui/PageHeader';
@@ -6,139 +6,303 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
+import { Select } from '../../components/ui/Select';
 import { Spinner } from '../../components/ui/Spinner';
 import { toast } from 'react-hot-toast';
-import { ProblemAIStructured } from '../../types';
 import { useAuthStore } from '../../stores/authStore';
+import { ArrowLeft, Send } from 'lucide-react';
+
+const DEPARTMENTS = [
+  { value: 'd0000001-1111-4111-8111-000000000001', label: 'Water Resources Department, Nagpur' },
+  { value: 'd0000002-1111-4111-8111-000000000002', label: 'Pune Smart City Development Corp (PSCDCL)' },
+  { value: 'd0000003-1111-4111-8111-000000000003', label: 'National Highways Authority of India (NHAI)' },
+  { value: 'd0000004-1111-4111-8111-000000000004', label: 'Department of Agriculture, Maharashtra' },
+  { value: 'd0000005-1111-4111-8111-000000000005', label: 'Health & Family Welfare Dept, Karnataka' },
+  { value: 'd0000006-1111-4111-8111-000000000006', label: 'Ministry of New & Renewable Energy (MNRE)' },
+  { value: 'd0000007-1111-4111-8111-000000000007', label: 'Department of School Education, Telangana' },
+  { value: 'd0000008-1111-4111-8111-000000000008', label: 'Brihanmumbai Municipal Corporation (BMC)' },
+];
+
+const SECTORS = [
+  { value: 'Water & Wastewater', label: 'Water & Wastewater' },
+  { value: 'Smart Infrastructure & Mobility', label: 'Smart Infrastructure & Mobility' },
+  { value: 'Healthcare', label: 'Healthcare' },
+  { value: 'Agriculture', label: 'Agriculture' },
+  { value: 'Clean Energy', label: 'Clean Energy' },
+  { value: 'Education & Skilling', label: 'Education & Skilling' },
+  { value: 'Governance & Smart Cities', label: 'Governance & Smart Cities' },
+  { value: 'Waste Management', label: 'Waste Management' },
+];
 
 export const PostProblem: React.FC = () => {
   const navigate = useNavigate();
   const { profile } = useAuthStore();
-  const [description, setDescription] = useState('');
-  const [isStructuring, setIsStructuring] = useState(false);
-  const [aiResult, setAiResult] = useState<ProblemAIStructured | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
     title: '',
+    description: '',
+    department_id: DEPARTMENTS[0].value,
+    sector: 'Water & Wastewater',
     location: '',
-    required_capabilities: '',
     required_technologies: '',
+    required_capabilities: '',
     budget_min: '',
     budget_max: '',
-    timeline_days: '',
-    eligibility_requirements: ''
+    timeline_days: '90',
+    expected_outcome: '',
+    eligibility_requirements: '',
   });
 
-  const handleStructure = async () => {
-    if (!description.trim()) {
-      toast.error('Please enter a problem description first.');
+  // Pre-fill department from officer profile if available
+  useEffect(() => {
+    const officerDeptId = (profile as any)?.department_id || (profile as any)?.department?.id;
+    if (officerDeptId) {
+      setFormData((prev) => ({ ...prev, department_id: officerDeptId }));
+    }
+  }, [profile]);
+
+  const handleSubmit = async (status: 'published' | 'draft' = 'published') => {
+    if (!formData.title.trim()) {
+      toast.error('Problem Title is required');
       return;
     }
-    setIsStructuring(true);
-    try {
-      const res = await api.post('/api/problems/structure', { description });
-      setAiResult(res.data.data);
-      toast.success('AI structurally refined the problem!');
-    } catch (err) {
-      toast.error('Failed to structure problem. Try again.');
-    } finally {
-      setIsStructuring(false);
+    if (!formData.description.trim()) {
+      toast.error('Problem Description is required');
+      return;
     }
-  };
+    if (!formData.sector) {
+      toast.error('Sector is required');
+      return;
+    }
 
-  const handlePublish = async (status: 'draft' | 'published') => {
-    if (!aiResult) return;
+    setSubmitting(true);
     try {
+      const budgetMin = formData.budget_min ? Number(formData.budget_min) : 500000;
+      const budgetMax = formData.budget_max ? Number(formData.budget_max) : (budgetMin ? budgetMin * 2 : 1500000);
+      const timelineDays = formData.timeline_days ? Number(formData.timeline_days) : 90;
+
       const payload = {
-        ...formData,
-        ...aiResult,
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        department_id: formData.department_id || undefined,
+        sector: formData.sector,
+        location: formData.location.trim() || undefined,
+        required_technologies: formData.required_technologies
+          ? formData.required_technologies.split(',').map((s) => s.trim()).filter(Boolean)
+          : [],
+        required_capabilities: formData.required_capabilities
+          ? formData.required_capabilities.split(',').map((s) => s.trim()).filter(Boolean)
+          : [],
+        budget_min: budgetMin,
+        budget_max: budgetMax,
+        timeline_days: timelineDays,
+        pilot_duration_days: timelineDays,
+        expected_outcome: formData.expected_outcome.trim() || undefined,
+        eligibility_requirements: formData.eligibility_requirements.trim() || undefined,
         status,
-        required_capabilities: formData.required_capabilities.split(',').map(s => s.trim()).filter(Boolean),
-        required_technologies: formData.required_technologies.split(',').map(s => s.trim()).filter(Boolean),
-        budget_min: Number(formData.budget_min),
-        budget_max: Number(formData.budget_max),
-        timeline_days: Number(formData.timeline_days)
       };
-      
+
       await api.post('/api/problems', payload);
-      toast.success(`Problem ${status === 'published' ? 'published' : 'saved as draft'}!`);
+      toast.success(status === 'published' ? 'Problem posted successfully!' : 'Problem saved as draft!');
       navigate('/government/problems');
-    } catch (err) {
-      toast.error('Failed to save problem.');
+    } catch (err: any) {
+      console.error('Failed to post problem:', err);
+      const msg = err.response?.data?.detail || 'Failed to post problem';
+      toast.error(msg);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <PageHeader 
-        title="Post a Problem" 
-        subtitle="Describe your department's challenge and let AI help structure it for startups."
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex items-center justify-between">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => navigate('/government/problems')}
+          className="gap-2 text-gray-600 hover:text-navy-900"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Registry
+        </Button>
+      </div>
+
+      <PageHeader
+        title="Post a Problem"
+        subtitle="Submit a government challenge statement to invite innovative pilot proposals from verified startups."
       />
 
-      <Card>
-        <CardContent className="pt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Problem Description</label>
-          <Textarea 
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Describe the problem in your own words..."
-            className="min-h-[150px] mb-4"
-          />
-          <Button onClick={handleStructure} disabled={isStructuring || !description.trim()} className="w-full sm:w-auto">
-            {isStructuring ? <><Spinner className="mr-2" /> AI is structuring...</> : '✨ Structure with AI'}
-          </Button>
+      <Card className="border border-gray-200 shadow-sm">
+        <CardContent className="p-8 space-y-6">
+          {/* Section 1: Problem Overview */}
+          <div className="space-y-4">
+            <h3 className="text-base font-semibold text-navy-900 border-b border-gray-100 pb-2">
+              Problem Overview
+            </h3>
+
+            <Input
+              label="Problem Title"
+              required
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="e.g., Automated Water Leakage Detection & Monitoring"
+            />
+
+            <Textarea
+              label="Problem Description"
+              required
+              rows={4}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Describe the operational challenge, current infrastructure bottlenecks, and target problem to solve..."
+            />
+          </div>
+
+          {/* Section 2: Department & Categorization */}
+          <div className="space-y-4">
+            <h3 className="text-base font-semibold text-navy-900 border-b border-gray-100 pb-2">
+              Department & Sector Details
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Select
+                label="Government Department"
+                value={formData.department_id}
+                options={DEPARTMENTS}
+                onChange={(val) => setFormData({ ...formData, department_id: val })}
+              />
+
+              <Select
+                label="Sector"
+                value={formData.sector}
+                options={SECTORS}
+                onChange={(val) => setFormData({ ...formData, sector: val })}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                label="Location / Jurisdiction"
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                placeholder="e.g., Nagpur, Maharashtra"
+              />
+
+              <Input
+                label="Timeline / Pilot Duration (Days)"
+                type="number"
+                value={formData.timeline_days}
+                onChange={(e) => setFormData({ ...formData, timeline_days: e.target.value })}
+                placeholder="e.g., 90"
+              />
+            </div>
+          </div>
+
+          {/* Section 3: Technical Requirements */}
+          <div className="space-y-4">
+            <h3 className="text-base font-semibold text-navy-900 border-b border-gray-100 pb-2">
+              Technical & Operational Requirements
+            </h3>
+
+            <Input
+              label="Required Technologies (comma-separated)"
+              value={formData.required_technologies}
+              onChange={(e) => setFormData({ ...formData, required_technologies: e.target.value })}
+              placeholder="e.g., IoT, AI/ML, Acoustic Sensors, SCADA"
+            />
+
+            <Input
+              label="Required Capabilities (comma-separated)"
+              value={formData.required_capabilities}
+              onChange={(e) => setFormData({ ...formData, required_capabilities: e.target.value })}
+              placeholder="e.g., Leak Detection, Water Infrastructure Monitoring, Real-Time Telemetry"
+            />
+          </div>
+
+          {/* Section 4: Budget & Outcomes */}
+          <div className="space-y-4">
+            <h3 className="text-base font-semibold text-navy-900 border-b border-gray-100 pb-2">
+              Budget & Expected Outcomes
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                label="Budget Min (₹)"
+                type="number"
+                value={formData.budget_min}
+                onChange={(e) => setFormData({ ...formData, budget_min: e.target.value })}
+                placeholder="e.g., 1000000"
+              />
+
+              <Input
+                label="Budget Max (₹)"
+                type="number"
+                value={formData.budget_max}
+                onChange={(e) => setFormData({ ...formData, budget_max: e.target.value })}
+                placeholder="e.g., 2000000"
+              />
+            </div>
+
+            <Input
+              label="Expected Outcome"
+              value={formData.expected_outcome}
+              onChange={(e) => setFormData({ ...formData, expected_outcome: e.target.value })}
+              placeholder="e.g., 20% reduction in water distribution losses within 90 days"
+            />
+
+            <Textarea
+              label="Eligibility Requirements (Optional)"
+              rows={2}
+              value={formData.eligibility_requirements}
+              onChange={(e) => setFormData({ ...formData, eligibility_requirements: e.target.value })}
+              placeholder="e.g., DPIIT-recognized startups with proven field deployment experience..."
+            />
+          </div>
+
+          {/* Form Actions */}
+          <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-gray-100">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate('/government/problems')}
+              disabled={submitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => handleSubmit('draft')}
+              disabled={submitting}
+            >
+              Save as Draft
+            </Button>
+            <Button
+              type="button"
+              onClick={() => handleSubmit('published')}
+              disabled={submitting}
+              className="bg-navy-900 hover:bg-navy-800 text-white min-w-[140px] gap-2"
+            >
+              {submitting ? (
+                <>
+                  <Spinner className="w-4 h-4" />
+                  Posting...
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  Post Problem
+                </>
+              )}
+            </Button>
+          </div>
         </CardContent>
       </Card>
-
-      {aiResult && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <Card className="border-amber-200 shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-bl-lg">
-              ✨ AI Suggested
-            </div>
-            <CardContent className="pt-8 space-y-4">
-              <h3 className="font-semibold text-lg text-navy-900 border-b pb-2 mb-4">Structured Requirements</h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input label="Sector" value={aiResult.sector} onChange={(e) => setAiResult({...aiResult, sector: e.target.value})} />
-                <Input label="Suggested Pilot Duration (Days)" type="number" value={aiResult.suggested_pilot_duration_days} onChange={(e) => setAiResult({...aiResult, suggested_pilot_duration_days: Number(e.target.value)})} />
-                <Input label="Required Technology" value={aiResult.technology} onChange={(e) => setAiResult({...aiResult, technology: e.target.value})} />
-                <Input label="Required Capability" value={aiResult.required_capability} onChange={(e) => setAiResult({...aiResult, required_capability: e.target.value})} />
-              </div>
-              <Textarea label="Suggested KPI" value={aiResult.suggested_kpi} onChange={(e) => setAiResult({...aiResult, suggested_kpi: e.target.value})} />
-              <Textarea label="Expected Outcome" value={aiResult.expected_outcome} onChange={(e) => setAiResult({...aiResult, expected_outcome: e.target.value})} />
-              <Textarea label="Refined Description" value={aiResult.refined_description} onChange={(e) => setAiResult({...aiResult, refined_description: e.target.value})} className="min-h-[100px]" />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-6 space-y-4">
-              <h3 className="font-semibold text-lg text-navy-900 border-b pb-2 mb-4">Final Details</h3>
-              <Input label="Problem Title" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="E.g., Smart Water Leakage Detection System" />
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input label="Department" value={(profile as any)?.department?.name || 'Department'} disabled />
-                <Input label="Location" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} placeholder="E.g., Mumbai, Maharashtra" />
-                <Input label="Budget Min (₹)" type="number" value={formData.budget_min} onChange={e => setFormData({...formData, budget_min: e.target.value})} />
-                <Input label="Budget Max (₹)" type="number" value={formData.budget_max} onChange={e => setFormData({...formData, budget_max: e.target.value})} />
-                <Input label="Timeline (Days to apply)" type="number" value={formData.timeline_days} onChange={e => setFormData({...formData, timeline_days: e.target.value})} />
-              </div>
-
-              <div className="space-y-4">
-                <Input label="Required Capabilities (comma separated)" value={formData.required_capabilities} onChange={e => setFormData({...formData, required_capabilities: e.target.value})} placeholder="IoT, Data Analysis, Hardware" />
-                <Input label="Required Technologies (comma separated)" value={formData.required_technologies} onChange={e => setFormData({...formData, required_technologies: e.target.value})} placeholder="Sensors, Cloud, React" />
-                <Textarea label="Eligibility Requirements" value={formData.eligibility_requirements} onChange={e => setFormData({...formData, eligibility_requirements: e.target.value})} />
-              </div>
-
-              <div className="flex gap-4 pt-6">
-                <Button onClick={() => handlePublish('published')} className="flex-1">Publish Problem</Button>
-                <Button variant="secondary" onClick={() => handlePublish('draft')}>Save as Draft</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   );
 };
+
+export default PostProblem;
