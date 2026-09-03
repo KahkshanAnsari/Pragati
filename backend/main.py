@@ -21,10 +21,12 @@ app.add_middleware(
 )
 
 @app.get("/", tags=["health"])
+@app.get("/api", tags=["health"])
 async def health_check():
     return {"status": "ok", "message": "Pragati API is running"}
 
 @app.get("/health", tags=["health"])
+@app.get("/api/health", tags=["health"])
 async def health():
     return {"status": "healthy"}
 
