@@ -6,404 +6,587 @@ import {
   Building2,
   Rocket,
   Search,
-  ShieldCheck,
   Sparkles,
   ArrowRight,
   CheckCircle2,
-  ShoppingBag,
   FileCheck,
-  Scale,
-  Layers,
   BarChart3,
+  ShieldCheck,
   Cpu,
-  Lock,
-  Globe2,
+  Layers,
+  Activity,
+  Workflow,
+  Target,
 } from 'lucide-react';
+import pragatiLogo from '../assets/pragati-logo.png';
 
 export function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
-      {/* Navigation Bar */}
-      <header className="sticky top-0 z-50 px-6 lg:px-12 py-4 flex items-center justify-between border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-navy-900 flex items-center justify-center text-white font-bold text-xl shadow-xs">
-            P
-          </div>
-          <div>
-            <div className="text-xl font-extrabold text-navy-900 tracking-tight leading-none">PRAGATI</div>
-            <div className="text-[10px] uppercase font-semibold text-blue-700 tracking-wider">
-              Gov-Tech Innovation & Procurement Platform
+    <div className="min-h-screen bg-white flex flex-col font-sans text-[#0F172A] selection:bg-blue-100 selection:text-blue-900">
+      {/* ── 1. NAVBAR ────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#E2E8F0] shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+          {/* Logo & Platform Name */}
+          <div className="flex items-center gap-3.5">
+            <img
+              src={pragatiLogo}
+              alt="PRAGATI Logo"
+              className="h-12 w-12 object-contain shrink-0"
+            />
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-black text-[#0F172A] tracking-tight leading-none">
+                  PRAGATI
+                </span>
+                <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider bg-[#EFF6FF] text-[#2563EB] px-2 py-0.5 rounded border border-blue-200">
+                  GovTech
+                </span>
+              </div>
+              <span className="text-[11px] text-[#64748B] font-medium hidden sm:block mt-0.5">
+                National Government Innovation & Procurement Platform
+              </span>
             </div>
           </div>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <a
-            href="#how-it-works"
-            className="hidden md:inline-block text-xs font-semibold text-gray-600 hover:text-navy-900 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            How It Works
-          </a>
-          <a
-            href="#why-pragati"
-            className="hidden md:inline-block text-xs font-semibold text-gray-600 hover:text-navy-900 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            Why Pragati
-          </a>
-          <Button
-            size="sm"
-            onClick={() => navigate('/auth/government/login')}
-            className="bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold py-2 px-3.5 shadow-xs"
-          >
-            Login as Government
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => navigate('/auth/startup/login')}
-            className="border-gray-300 hover:bg-gray-50 text-navy-900 text-xs font-bold py-2 px-3.5"
-          >
-            Login as Startup
-          </Button>
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#64748B]">
+            <a
+              href="#value-strip"
+              className="hover:text-[#0F172A] transition-colors"
+            >
+              Overview
+            </a>
+            <a
+              href="#how-it-works"
+              className="hover:text-[#0F172A] transition-colors"
+            >
+              How It Works
+            </a>
+            <a
+              href="#core-features"
+              className="hover:text-[#0F172A] transition-colors"
+            >
+              Core Features
+            </a>
+          </nav>
+
+          {/* Action CTAs */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <button
+              onClick={() => navigate('/auth/startup/login')}
+              className="px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-[#0F172A] hover:bg-slate-50 border border-[#E2E8F0] rounded-lg transition-colors"
+            >
+              Startup Login
+            </button>
+            <Button
+              size="sm"
+              onClick={() => navigate('/auth/government/login')}
+              className="bg-[#0F172A] hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold px-3.5 sm:px-4 py-2 rounded-lg shadow-xs"
+            >
+              Government Portal
+            </Button>
+          </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <main className="relative overflow-hidden pt-16 pb-20 px-6 lg:px-12 bg-gradient-to-b from-blue-50/40 via-white to-gray-50">
-        <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-35 pointer-events-none" />
+      {/* ── 2. HERO SECTION ────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-white pt-12 pb-16 lg:pt-20 lg:pb-24 border-b border-[#E2E8F0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-7 space-y-6 text-left"
+            >
+              {/* Sovereign Tag */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EFF6FF] border border-blue-200 text-[#2563EB] text-xs font-semibold">
+                <ShieldCheck className="w-4 h-4 text-[#2563EB]" />
+                <span>Smart India Hackathon 2026 • GFR 2017 Innovation Framework</span>
+              </div>
 
-        <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/80 border border-blue-200 text-blue-900 text-xs font-bold"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-blue-700" />
-            Empowering Public Sector Modernization under GFR 2017
-          </motion.div>
+              {/* Main Headline */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0F172A] tracking-tight leading-[1.12]">
+                From Government Problems to{' '}
+                <span className="text-[#2563EB]">Scalable Solutions.</span>
+              </h1>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-navy-900 leading-[1.15] tracking-tight"
-          >
-            From Government Problems to{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-700 to-navy-900">
-              Scalable Solutions.
+              {/* Subheadline */}
+              <p className="text-base sm:text-lg text-[#64748B] leading-relaxed max-w-2xl">
+                Pragati connects government challenges with verified startups through AI-powered matching, structured pilots and a path to scalable adoption.
+              </p>
+
+              {/* Primary & Secondary Action Buttons */}
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+                <Button
+                  size="lg"
+                  onClick={() => navigate('/auth/government/login')}
+                  className="bg-[#0F172A] hover:bg-slate-800 text-white font-bold px-7 py-3.5 text-sm rounded-xl shadow-sm flex items-center justify-center gap-2.5 transition-all"
+                >
+                  <Building2 className="w-4 h-4 text-blue-400" />
+                  Explore Government Portal
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => navigate('/auth/startup/login')}
+                  className="bg-white hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold px-7 py-3.5 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2.5 transition-all"
+                >
+                  <Rocket className="w-4 h-4 text-[#2563EB]" />
+                  Explore Startup Portal
+                </Button>
+              </div>
+
+              {/* Micro Trust Points */}
+              <div className="pt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-[#64748B]">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
+                  <span>DPIIT Startup Sandbox</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
+                  <span>Transparent AI Matching</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
+                  <span>Milestone Escrow Governance</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right Visual: Elegant AI / Network Visual */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="lg:col-span-5 relative"
+            >
+              <div className="relative mx-auto max-w-md lg:max-w-none bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-6 shadow-sm overflow-hidden">
+                {/* Visual Header */}
+                <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3 mb-5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
+                    <span className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                      Pragati Neural Mesh
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono text-[#64748B] bg-white px-2 py-0.5 rounded border border-[#E2E8F0]">
+                    GFR 2017 Live
+                  </span>
+                </div>
+
+                {/* SVG Network Graph */}
+                <div className="relative h-64 w-full flex items-center justify-center">
+                  <svg
+                    className="absolute inset-0 w-full h-full"
+                    viewBox="0 0 360 256"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    {/* Grid Background Lines */}
+                    <path
+                      d="M20 64 H340 M20 128 H340 M20 192 H340 M90 20 V236 M180 20 V236 M270 20 V236"
+                      stroke="#E2E8F0"
+                      strokeWidth="1"
+                      strokeDasharray="3 3"
+                    />
+
+                    {/* Dynamic Network Connecting Lines */}
+                    <path
+                      d="M60 70 L180 128 M60 186 L180 128 M180 128 L300 70 M180 128 L300 186"
+                      stroke="#93C5FD"
+                      strokeWidth="2"
+                    />
+
+                    {/* Data Flow Pulses */}
+                    <circle cx="120" cy="99" r="3" fill="#2563EB" />
+                    <circle cx="120" cy="157" r="3" fill="#2563EB" />
+                    <circle cx="240" cy="99" r="3" fill="#2563EB" />
+                    <circle cx="240" cy="157" r="3" fill="#2563EB" />
+
+                    {/* Central AI Match Hub Outer Pulse */}
+                    <circle
+                      cx="180"
+                      cy="128"
+                      r="28"
+                      fill="#EFF6FF"
+                      stroke="#BFDBFE"
+                      strokeWidth="1.5"
+                    />
+                    <circle
+                      cx="180"
+                      cy="128"
+                      r="18"
+                      fill="#2563EB"
+                      className="opacity-95"
+                    />
+
+                    {/* Node 1: Govt Department */}
+                    <circle cx="60" cy="70" r="14" fill="#0F172A" />
+                    {/* Node 2: Problem Statement */}
+                    <circle cx="60" cy="186" r="14" fill="#0F172A" />
+                    {/* Node 3: Verified Startup */}
+                    <circle cx="300" cy="70" r="14" fill="#2563EB" />
+                    {/* Node 4: Milestone Sandbox */}
+                    <circle cx="300" cy="186" r="14" fill="#0F172A" />
+                  </svg>
+
+                  {/* HTML Overlay Badges on Top of SVG Nodes */}
+                  <div className="absolute top-2 left-2 bg-white px-2.5 py-1 rounded-md border border-[#E2E8F0] shadow-xs text-[10px] font-bold text-[#0F172A]">
+                    Govt Department
+                  </div>
+                  <div className="absolute bottom-2 left-2 bg-white px-2.5 py-1 rounded-md border border-[#E2E8F0] shadow-xs text-[10px] font-bold text-[#0F172A]">
+                    Problem Registry
+                  </div>
+                  <div className="absolute top-2 right-2 bg-white px-2.5 py-1 rounded-md border border-[#E2E8F0] shadow-xs text-[10px] font-bold text-[#2563EB]">
+                    Verified Startups
+                  </div>
+                  <div className="absolute bottom-2 right-2 bg-white px-2.5 py-1 rounded-md border border-[#E2E8F0] shadow-xs text-[10px] font-bold text-[#0F172A]">
+                    Scale Dossier
+                  </div>
+
+                  {/* Center Hub Indicator */}
+                  <div className="absolute flex flex-col items-center pointer-events-none">
+                    <Cpu className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+
+                {/* Micro Metric Banner inside Visual */}
+                <div className="mt-4 pt-3 border-t border-[#E2E8F0] grid grid-cols-3 gap-2 text-center">
+                  <div className="bg-white p-2 rounded-lg border border-[#E2E8F0]">
+                    <div className="text-xs font-black text-[#0F172A]">100%</div>
+                    <div className="text-[9px] text-[#64748B] font-medium">Explainable AI</div>
+                  </div>
+                  <div className="bg-white p-2 rounded-lg border border-[#E2E8F0]">
+                    <div className="text-xs font-black text-[#2563EB]">GFR 2017</div>
+                    <div className="text-[9px] text-[#64748B] font-medium">Compliance</div>
+                  </div>
+                  <div className="bg-white p-2 rounded-lg border border-[#E2E8F0]">
+                    <div className="text-xs font-black text-[#0F172A]">90-Day</div>
+                    <div className="text-[9px] text-[#64748B] font-medium">Sandbox Pilot</div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3. TRUST / VALUE STRIP ────────────────────────────────────────────── */}
+      <section id="value-strip" className="py-12 bg-[#F8FAFC] border-b border-[#E2E8F0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-xl mx-auto mb-8">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">
+              End-to-End Governance Engine
             </span>
-          </motion.h1>
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0F172A] mt-1">
+              Structured Public Innovation Pipeline
+            </h2>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed"
-          >
-            PRAGATI connects government departments with verified DPIIT startups to discover, pilot, evaluate, and procure high-impact innovations with statutory compliance, explainable AI matching, and procurement readiness dossiers.
-          </motion.p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {[
+              {
+                step: 'Phase 01',
+                title: 'Government Challenges',
+                desc: 'Departments publish municipal and state challenges with clear baseline KPIs.',
+                icon: Building2,
+              },
+              {
+                step: 'Phase 02',
+                title: 'AI Matching',
+                desc: 'Deterministic algorithm evaluates startup tech stack, DPIIT status, and capacity.',
+                icon: Sparkles,
+              },
+              {
+                step: 'Phase 03',
+                title: 'Pilot Validation',
+                desc: 'Controlled 90-day sandbox pilots with third-party field inspection & telemetry.',
+                icon: Target,
+              },
+              {
+                step: 'Phase 04',
+                title: 'National Scale',
+                desc: 'Validated solutions transition into GFR 2017 procurement dossiers for pan-India scale.',
+                icon: Layers,
+              },
+            ].map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={idx}
+                  className="bg-white p-5 rounded-xl border border-[#E2E8F0] shadow-xs flex flex-col justify-between hover:border-blue-300 transition-colors"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[11px] font-bold text-[#2563EB] tracking-wide">
+                        {item.step}
+                      </span>
+                      <div className="w-8 h-8 rounded-lg bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center">
+                        <Icon className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <h3 className="font-bold text-sm text-[#0F172A] mb-1">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-[#64748B] leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
-          >
+      {/* ── 4. HOW PRAGATI WORKS (5 STEPS) ────────────────────────────────────────────── */}
+      <section id="how-it-works" className="py-20 bg-white border-b border-[#E2E8F0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">
+              Operational Workflow
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] tracking-tight">
+              How Pragati Works
+            </h2>
+            <p className="text-sm text-[#64748B]">
+              A step-by-step protocol for discovering, de-risking, and scaling high-impact technologies.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 relative">
+            {[
+              {
+                num: '01',
+                title: 'Identify',
+                desc: 'Government departments post real problems.',
+                icon: Search,
+              },
+              {
+                num: '02',
+                title: 'Match',
+                desc: 'AI evaluates startups based on technology, capabilities and relevant experience.',
+                icon: Sparkles,
+              },
+              {
+                num: '03',
+                title: 'Pilot',
+                desc: 'Selected solutions are tested in controlled government pilots.',
+                icon: Rocket,
+              },
+              {
+                num: '04',
+                title: 'Validate',
+                desc: 'KPIs and outcomes are monitored.',
+                icon: BarChart3,
+              },
+              {
+                num: '05',
+                title: 'Scale',
+                desc: 'Validated solutions move toward wider adoption/procurement.',
+                icon: Layers,
+              },
+            ].map((step, i) => {
+              const Icon = step.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, duration: 0.4 }}
+                  className="bg-[#F8FAFC] p-6 rounded-xl border border-[#E2E8F0] shadow-xs flex flex-col justify-between hover:border-blue-300 hover:shadow-sm transition-all"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-black text-[#2563EB]">
+                        {step.num}
+                      </span>
+                      <div className="w-9 h-9 rounded-lg bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center">
+                        <Icon className="w-4 h-4" />
+                      </div>
+                    </div>
+                    <h3 className="text-base font-bold text-[#0F172A]">
+                      {step.title}
+                    </h3>
+                    <p className="text-xs text-[#64748B] leading-relaxed">
+                      {step.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. CORE FEATURES (4 CARDS) ────────────────────────────────────────────── */}
+      <section id="core-features" className="py-20 bg-[#F8FAFC] border-b border-[#E2E8F0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">
+              Core Capabilities
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] tracking-tight">
+              Enterprise GovTech Features
+            </h2>
+            <p className="text-sm text-[#64748B]">
+              Purpose-built tools for public officials, project inspectors, and innovative enterprises.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: 'AI-Powered Matching',
+                desc: 'Find startups aligned with the actual problem requirements.',
+                icon: Sparkles,
+                tag: 'Objective Scoring',
+              },
+              {
+                title: 'Pilot Management',
+                desc: 'Track milestones, KPIs and pilot progress.',
+                icon: Workflow,
+                tag: 'Escrow Tranches',
+              },
+              {
+                title: 'Validation & Monitoring',
+                desc: 'Measure whether the solution actually works.',
+                icon: Activity,
+                tag: 'Field Telemetry',
+              },
+              {
+                title: 'Procurement Readiness',
+                desc: 'Move validated solutions toward government adoption.',
+                icon: FileCheck,
+                tag: 'GFR 2017 Dossier',
+              },
+            ].map((feature, idx) => {
+              const Icon = feature.icon;
+              return (
+                <div
+                  key={idx}
+                  className="bg-white p-6 rounded-xl border border-[#E2E8F0] shadow-xs hover:border-blue-300 hover:shadow-md transition-all flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="w-10 h-10 rounded-lg bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-50 text-[#64748B] px-2 py-0.5 rounded border border-[#E2E8F0]">
+                        {feature.tag}
+                      </span>
+                    </div>
+                    <h3 className="font-bold text-base text-[#0F172A]">
+                      {feature.title}
+                    </h3>
+                    <p className="text-xs text-[#64748B] leading-relaxed">
+                      {feature.desc}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. FINAL CTA ────────────────────────────────────────────── */}
+      <section className="py-20 bg-[#EFF6FF] border-b border-[#E2E8F0]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white shadow-xs border border-blue-200 text-[#2563EB] mx-auto p-1">
+            <img
+              src={pragatiLogo}
+              alt="PRAGATI Logo"
+              className="h-full w-full object-contain"
+            />
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] tracking-tight">
+            Turn Government Challenges into Measurable Solutions.
+          </h2>
+
+          <p className="text-sm sm:text-base text-[#64748B] max-w-2xl mx-auto">
+            Join state departments, municipal corporations, and DPIIT-recognized startups accelerating India’s public sector innovation.
+          </p>
+
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <Button
               size="lg"
               onClick={() => navigate('/auth/government/login')}
-              className="w-full sm:w-auto bg-navy-900 hover:bg-navy-800 text-white font-bold px-8 py-3.5 text-sm shadow-md flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-[#0F172A] hover:bg-slate-800 text-white font-bold px-8 py-3.5 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2"
             >
-              <Building2 className="w-4 h-4 text-blue-300" /> Enter as Government Department
+              <Building2 className="w-4 h-4 text-blue-400" />
+              Government Portal
             </Button>
             <Button
               variant="secondary"
               size="lg"
               onClick={() => navigate('/auth/startup/login')}
-              className="w-full sm:w-auto border-2 border-navy-900 text-navy-900 hover:bg-navy-50 font-bold px-8 py-3.5 text-sm flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold px-8 py-3.5 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2"
             >
-              <Rocket className="w-4 h-4 text-blue-600" /> Enter as DPIIT Startup
+              <Rocket className="w-4 h-4 text-[#2563EB]" />
+              Startup Portal
             </Button>
-          </motion.div>
-        </div>
-      </main>
-
-      {/* Visual Lifecycle Progression */}
-      <section className="py-12 bg-white border-y border-gray-200">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-8">
-            <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">End-to-End Governance Loop</span>
-            <h2 className="text-xl font-bold text-navy-900 mt-1">The Pragati Innovation Lifecycle</h2>
           </div>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-2 md:grid-cols-7 gap-2 text-center text-xs">
-            {[
-              { step: '01', title: 'Problem', desc: 'Department registers challenge' },
-              { step: '02', title: 'Match', desc: 'AI ranks verified startups' },
-              { step: '03', title: 'Evaluate', desc: 'Transparent scoring matrix' },
-              { step: '04', title: 'Pilot', desc: 'Milestone-tranche sandbox' },
-              { step: '05', title: 'Measure', desc: 'Telemetry & field inspection' },
-              { step: '06', title: 'Procure', desc: 'GFR 2017 procurement dossier' },
-              { step: '07', title: 'Scale', desc: 'Cross-department adoption' },
-            ].map((item, idx) => (
-              <div key={idx} className="p-3 rounded-lg bg-gray-50 border border-gray-100 flex flex-col justify-between">
-                <div>
-                  <span className="text-[10px] font-mono font-bold text-blue-600 block">{item.step}</span>
-                  <span className="font-bold text-navy-900 block mt-0.5">{item.title}</span>
-                </div>
-                <span className="text-[11px] text-gray-500 mt-1 leading-tight">{item.desc}</span>
+      {/* ── 7. FOOTER ────────────────────────────────────────────── */}
+      <footer className="bg-white py-12 text-xs text-[#64748B]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-[#E2E8F0] pb-8">
+            {/* Logo & Info */}
+            <div className="flex items-center gap-3">
+              <img
+                src={pragatiLogo}
+                alt="PRAGATI Logo"
+                className="h-10 w-10 object-contain shrink-0"
+              />
+              <div>
+                <span className="font-bold text-sm text-[#0F172A] tracking-tight">
+                  PRAGATI
+                </span>
+                <p className="text-[11px] text-[#64748B]">
+                  National Government Innovation & Procurement Platform
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
 
-      {/* How Pragati Works (01 - 06) */}
-      <section id="how-it-works" className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
-            <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">Operational Architecture</span>
-            <h2 className="text-3xl font-extrabold text-navy-900">How Pragati Works</h2>
-            <p className="text-sm text-gray-600">
-              A structured six-stage procurement protocol that de-risks public sector innovation adoption.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                num: '01',
-                title: 'Identify & Structure',
-                desc: 'Government officers publish unstructured municipal or departmental challenges. Pragati AI converts them into structured technical specifications with KPIs and pilot budgets.',
-                icon: Search,
-              },
-              {
-                num: '02',
-                title: 'Explainable AI Matching',
-                desc: 'Multidimensional matching engine evaluates sector fit, patent capabilities, past government pilot track records, and statutory DPIIT credentials without black-box bias.',
-                icon: Sparkles,
-              },
-              {
-                num: '03',
-                title: 'Milestone Sandbox Pilot',
-                desc: 'Selected startups receive phased budget allocations. Fund releases are tied strictly to verified milestone deliverables under sandbox operating guidelines.',
-                icon: Rocket,
-              },
-              {
-                num: '04',
-                title: 'Live Telemetry & Inspection',
-                desc: 'Continuous measurement of target vs actual KPIs coupled with geo-tagged third-party field inspection evidence uploaded directly to the platform.',
-                icon: BarChart3,
-              },
-              {
-                num: '05',
-                title: 'Automated Procurement Dossier',
-                desc: 'Upon successful pilot completion, Pragati compiles an 8-point GFR 2017 compliance package and generates verified procurement readiness packages.',
-                icon: FileCheck,
-              },
-              {
-                num: '06',
-                title: 'Cross-Department Scale',
-                desc: 'Proven solutions enter the National Validated Solutions Repository, allowing other states, municipalities, and ministries to adopt pre-validated innovations without repeating pilots.',
-                icon: Globe2,
-              },
-            ].map((card, i) => {
-              const Icon = card.icon;
-              return (
-                <div
-                  key={i}
-                  className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:border-blue-300 hover:shadow-md transition-all flex flex-col justify-between"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <span className="font-mono text-xs font-bold text-gray-400">{card.num}</span>
-                    </div>
-                    <h3 className="font-bold text-base text-navy-900">{card.title}</h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">{card.desc}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Why Pragati (6 Differentiators) */}
-      <section id="why-pragati" className="py-20 bg-white border-t border-gray-200">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
-            <span className="text-xs uppercase font-bold text-blue-600 tracking-wider">Public Value Proposition</span>
-            <h2 className="text-3xl font-extrabold text-navy-900">Why Governments Choose Pragati</h2>
-            <p className="text-sm text-gray-600">
-              Engineered specifically for Indian public procurement rules, transparency mandates, and startup innovation frameworks.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                title: 'Statutory GFR 2017 Compliance',
-                desc: 'Fully aligned with General Financial Rules (Rule 149 & Rule 194) for pilot sandbox procurement and accelerated procurement review.',
-                icon: Scale,
-              },
-              {
-                title: 'Audit-Proof Verification',
-                desc: 'Immutable audit logs track every status change, milestone verification, and inspector sign-off to satisfy CAG scrutiny.',
-                icon: Lock,
-              },
-              {
-                title: 'Phased Tranche De-Risking',
-                desc: 'Budget is never disbursed upfront. Tranches release only upon verified milestone evidence and field inspector approval.',
-                icon: ShieldCheck,
-              },
-              {
-                title: 'Explainable AI Decision Support',
-                desc: 'Every recommendation displays an audit trail breaking down sector fit, technology compatibility, and track record score.',
-                icon: Cpu,
-              },
-              {
-                title: 'Zero Repeat Pilots',
-                desc: 'Once a startup solution is validated by one department, other government entities can fast-track adoption via repository data.',
-                icon: Layers,
-              },
-              {
-                title: 'Direct Procurement Review',
-                desc: 'Validated procurement cases transition pilot-tested solutions directly into departmental procurement review pipelines.',
-                icon: ShoppingBag,
-              },
-            ].map((diff, i) => {
-              const Icon = diff.icon;
-              return (
-                <div key={i} className="p-5 rounded-xl border border-gray-200 bg-gray-50/50 space-y-2">
-                  <div className="w-8 h-8 rounded-lg bg-navy-900 text-white flex items-center justify-center mb-3">
-                    <Icon className="w-4 h-4 text-blue-400" />
-                  </div>
-                  <h4 className="font-bold text-sm text-navy-900">{diff.title}</h4>
-                  <p className="text-xs text-gray-600 leading-relaxed">{diff.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Dual Persona Comparison Cards: For Government & For Startups */}
-      <section className="py-20 bg-gray-50 border-t border-gray-200">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* For Government */}
-            <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-navy-900 text-white flex items-center justify-center">
-                  <Building2 className="w-6 h-6 text-blue-400" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-navy-900">For Government Departments</h3>
-                  <p className="text-xs text-gray-500">Solve complex public service delivery challenges</p>
-                </div>
-              </div>
-
-              <ul className="space-y-3 text-xs text-gray-700">
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Convert vague departmental problems into structured technical challenge tenders.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Automate shortlisting with explainable AI matching across verified DPIIT startups.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Execute monitored 90-day sandbox pilots with milestone escrow budget controls.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Receive audit-ready GFR 2017 dossiers for seamless scale-up and procurement review.</span>
-                </li>
-              </ul>
-
-              <Button
+            {/* Links */}
+            <div className="flex items-center gap-6 text-xs font-semibold text-[#0F172A]">
+              <button
                 onClick={() => navigate('/auth/government/login')}
-                className="w-full bg-navy-900 hover:bg-navy-800 text-white font-bold py-2.5 text-xs"
+                className="hover:text-[#2563EB] transition-colors"
               >
-                Access Government Portal
-              </Button>
-            </div>
-
-            {/* For Startups */}
-            <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center">
-                  <Rocket className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-navy-900">For DPIIT Recognized Startups</h3>
-                  <p className="text-xs text-gray-500">Access high-value public procurement opportunities</p>
-                </div>
-              </div>
-
-              <ul className="space-y-3 text-xs text-gray-700">
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                  <span>Direct visibility into high-priority state and central government challenges.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                  <span>Zero-tender pilot entry through sandbox provisions bypassing legacy turnover rules.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                  <span>Guaranteed milestone-based milestone payment disbursements on verified progress.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                  <span>Direct transition to validated procurement cases and cross-state scalability.</span>
-                </li>
-              </ul>
-
-              <Button
-                variant="secondary"
+                Government Portal
+              </button>
+              <button
                 onClick={() => navigate('/auth/startup/login')}
-                className="w-full border-2 border-navy-900 text-navy-900 hover:bg-gray-50 font-bold py-2.5 text-xs"
+                className="hover:text-[#2563EB] transition-colors"
               >
-                Access Startup Portal
-              </Button>
+                Startup Portal
+              </button>
+              <a href="#how-it-works" className="hover:text-[#2563EB] transition-colors">
+                How It Works
+              </a>
+              <a href="#core-features" className="hover:text-[#2563EB] transition-colors">
+                Core Features
+              </a>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="bg-navy-900 text-white py-12 border-t border-navy-800">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-1 text-center md:text-left">
-            <div className="text-lg font-bold tracking-wider text-white">PRAGATI</div>
-            <p className="text-xs text-navy-200">
-              National Government Innovation & Public Procurement Acceleration Platform
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#64748B]">
+            <p>© 2026 PRAGATI. Built for Smart India Hackathon (SIH) National Mission.</p>
+            <p className="flex items-center gap-1.5 font-medium text-[#0F172A]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#2563EB]" />
+              100% GFR 2017 & DPIIT Compliant Innovation Sandbox
             </p>
-            <p className="text-[11px] text-gray-400">
-              Built for Smart India Hackathon (SIH) 2026 • Compliant with GFR 2017
-            </p>
-          </div>
-
-          <div className="flex items-center gap-4 text-xs text-navy-200">
-            <button onClick={() => navigate('/auth/government/login')} className="hover:text-white transition-colors">
-              Government Login
-            </button>
-            <span>•</span>
-            <button onClick={() => navigate('/auth/startup/login')} className="hover:text-white transition-colors">
-              Startup Login
-            </button>
-            <span>•</span>
-            <a href="mailto:support@pragati.gov.in" className="hover:text-white transition-colors">
-              Help & Support
-            </a>
           </div>
         </div>
       </footer>
