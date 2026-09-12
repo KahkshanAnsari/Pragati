@@ -22,6 +22,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { useNotificationStore } from '../../stores/notificationStore';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { toast } from 'react-hot-toast';
+import pragatiLogo from '../../assets/pragati-logo.png';
 
 const navItems = [
   { name: 'Dashboard', path: '/government/dashboard', icon: LayoutDashboard },
@@ -59,15 +60,11 @@ export function GovernmentLayout() {
       <aside className="w-64 bg-white border-r border-slate-200/90 flex flex-col flex-shrink-0 z-20 shadow-xs">
         {/* Brand Header */}
         <div className="h-16 flex items-center px-5 border-b border-slate-100 gap-3">
-          <div className="w-9 h-9 rounded-lg bg-navy-900 text-white flex items-center justify-center font-black text-lg shadow-xs tracking-tight">
-            P
-          </div>
+          <img src={pragatiLogo} alt="PRAGATI" className="h-9 w-9 object-contain shrink-0" />
           <div>
             <div className="flex items-center gap-1.5">
               <span className="font-extrabold text-lg text-navy-900 tracking-tight leading-none">PRAGATI</span>
-              <span className="text-[10px] font-bold bg-blue-100 text-blue-800 px-1.5 py-0.2 rounded border border-blue-200">
-                GOV
-              </span>
+              <span className="text-[10px] font-bold bg-blue-100 text-blue-800 px-1.5 py-0.2 rounded border border-blue-200">GOV</span>
             </div>
             <p className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider mt-0.5">
               GovTech Procurement

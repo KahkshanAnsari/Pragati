@@ -12,7 +12,6 @@ import {
   FileCheck,
   BarChart3,
   ShieldCheck,
-  Cpu,
   Layers,
   Activity,
   Workflow,
@@ -92,189 +91,61 @@ export function Landing() {
       </header>
 
       {/* ── 2. HERO SECTION ────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-white pt-12 pb-16 lg:pt-20 lg:pb-24 border-b border-[#E2E8F0]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="lg:col-span-7 space-y-6 text-left"
-            >
-              {/* Sovereign Tag */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EFF6FF] border border-blue-200 text-[#2563EB] text-xs font-semibold">
-                <ShieldCheck className="w-4 h-4 text-[#2563EB]" />
-                <span>Smart India Hackathon 2026 • GFR 2017 Innovation Framework</span>
-              </div>
+      <section className="relative overflow-hidden bg-white pt-16 pb-20 lg:pt-24 lg:pb-28 border-b border-[#E2E8F0]">
+  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
+      {/* Sovereign Tag */}
+      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EFF6FF] border border-blue-200 text-[#2563EB] text-xs font-semibold">
+        <ShieldCheck className="w-4 h-4 text-[#2563EB]" />
+        <span>Smart India Hackathon 2026 • GFR 2017 Innovation Framework</span>
+      </div>
 
-              {/* Main Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0F172A] tracking-tight leading-[1.12]">
-                From Government Problems to{' '}
-                <span className="text-[#2563EB]">Scalable Solutions.</span>
-              </h1>
+      {/* Main Headline */}
+      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0F172A] tracking-tight leading-[1.12]">
+        From Government Problems to <span className="text-[#2563EB]">Scalable Solutions.</span>
+      </h1>
 
-              {/* Subheadline */}
-              <p className="text-base sm:text-lg text-[#64748B] leading-relaxed max-w-2xl">
-                Pragati connects government challenges with verified startups through AI-powered matching, structured pilots and a path to scalable adoption.
-              </p>
+      {/* Subheadline */}
+      <p className="text-base sm:text-lg text-[#64748B] leading-relaxed max-w-2xl mx-auto">
+        Pragati connects government challenges with capable startups through AI-powered matching, structured pilots, validation and a clear path to adoption.
+      </p>
 
-              {/* Primary & Secondary Action Buttons */}
-              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-                <Button
-                  size="lg"
-                  onClick={() => navigate('/auth/government/login')}
-                  className="bg-[#0F172A] hover:bg-slate-800 text-white font-bold px-7 py-3.5 text-sm rounded-xl shadow-sm flex items-center justify-center gap-2.5 transition-all"
-                >
-                  <Building2 className="w-4 h-4 text-blue-400" />
-                  Explore Government Portal
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  onClick={() => navigate('/auth/startup/login')}
-                  className="bg-white hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold px-7 py-3.5 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2.5 transition-all"
-                >
-                  <Rocket className="w-4 h-4 text-[#2563EB]" />
-                  Explore Startup Portal
-                </Button>
-              </div>
+      {/* CTA Buttons */}
+      <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+        <Button
+          size="lg"
+          onClick={() => navigate('/auth/government/login')}
+          className="w-full sm:w-auto bg-[#0F172A] hover:bg-slate-800 text-white font-bold px-7 py-3.5 text-sm rounded-xl shadow-sm flex items-center justify-center gap-2.5 transition-all"
+        >
+          <Building2 className="w-4 h-4 text-blue-400" />
+          Explore Government Portal
+          <ArrowRight className="w-4 h-4" />
+        </Button>
+        <Button
+          variant="secondary"
+          size="lg"
+          onClick={() => navigate('/auth/startup/login')}
+          className="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold px-7 py-3.5 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2.5 transition-all"
+        >
+          <Rocket className="w-4 h-4 text-[#2563EB]" />
+          Explore Startup Portal
+        </Button>
+      </div>
 
-              {/* Micro Trust Points */}
-              <div className="pt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-[#64748B]">
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
-                  <span>DPIIT Startup Sandbox</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
-                  <span>Transparent AI Matching</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
-                  <span>Milestone Escrow Governance</span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Right Visual: Elegant AI / Network Visual */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="lg:col-span-5 relative"
-            >
-              <div className="relative mx-auto max-w-md lg:max-w-none bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-6 shadow-sm overflow-hidden">
-                {/* Visual Header */}
-                <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3 mb-5">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
-                    <span className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">
-                      Pragati Neural Mesh
-                    </span>
-                  </div>
-                  <span className="text-[11px] font-mono text-[#64748B] bg-white px-2 py-0.5 rounded border border-[#E2E8F0]">
-                    GFR 2017 Live
-                  </span>
-                </div>
-
-                {/* SVG Network Graph */}
-                <div className="relative h-64 w-full flex items-center justify-center">
-                  <svg
-                    className="absolute inset-0 w-full h-full"
-                    viewBox="0 0 360 256"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    {/* Grid Background Lines */}
-                    <path
-                      d="M20 64 H340 M20 128 H340 M20 192 H340 M90 20 V236 M180 20 V236 M270 20 V236"
-                      stroke="#E2E8F0"
-                      strokeWidth="1"
-                      strokeDasharray="3 3"
-                    />
-
-                    {/* Dynamic Network Connecting Lines */}
-                    <path
-                      d="M60 70 L180 128 M60 186 L180 128 M180 128 L300 70 M180 128 L300 186"
-                      stroke="#93C5FD"
-                      strokeWidth="2"
-                    />
-
-                    {/* Data Flow Pulses */}
-                    <circle cx="120" cy="99" r="3" fill="#2563EB" />
-                    <circle cx="120" cy="157" r="3" fill="#2563EB" />
-                    <circle cx="240" cy="99" r="3" fill="#2563EB" />
-                    <circle cx="240" cy="157" r="3" fill="#2563EB" />
-
-                    {/* Central AI Match Hub Outer Pulse */}
-                    <circle
-                      cx="180"
-                      cy="128"
-                      r="28"
-                      fill="#EFF6FF"
-                      stroke="#BFDBFE"
-                      strokeWidth="1.5"
-                    />
-                    <circle
-                      cx="180"
-                      cy="128"
-                      r="18"
-                      fill="#2563EB"
-                      className="opacity-95"
-                    />
-
-                    {/* Node 1: Govt Department */}
-                    <circle cx="60" cy="70" r="14" fill="#0F172A" />
-                    {/* Node 2: Problem Statement */}
-                    <circle cx="60" cy="186" r="14" fill="#0F172A" />
-                    {/* Node 3: Verified Startup */}
-                    <circle cx="300" cy="70" r="14" fill="#2563EB" />
-                    {/* Node 4: Milestone Sandbox */}
-                    <circle cx="300" cy="186" r="14" fill="#0F172A" />
-                  </svg>
-
-                  {/* HTML Overlay Badges on Top of SVG Nodes */}
-                  <div className="absolute top-2 left-2 bg-white px-2.5 py-1 rounded-md border border-[#E2E8F0] shadow-xs text-[10px] font-bold text-[#0F172A]">
-                    Govt Department
-                  </div>
-                  <div className="absolute bottom-2 left-2 bg-white px-2.5 py-1 rounded-md border border-[#E2E8F0] shadow-xs text-[10px] font-bold text-[#0F172A]">
-                    Problem Registry
-                  </div>
-                  <div className="absolute top-2 right-2 bg-white px-2.5 py-1 rounded-md border border-[#E2E8F0] shadow-xs text-[10px] font-bold text-[#2563EB]">
-                    Verified Startups
-                  </div>
-                  <div className="absolute bottom-2 right-2 bg-white px-2.5 py-1 rounded-md border border-[#E2E8F0] shadow-xs text-[10px] font-bold text-[#0F172A]">
-                    Scale Dossier
-                  </div>
-
-                  {/* Center Hub Indicator */}
-                  <div className="absolute flex flex-col items-center pointer-events-none">
-                    <Cpu className="w-5 h-5 text-white" />
-                  </div>
-                </div>
-
-                {/* Micro Metric Banner inside Visual */}
-                <div className="mt-4 pt-3 border-t border-[#E2E8F0] grid grid-cols-3 gap-2 text-center">
-                  <div className="bg-white p-2 rounded-lg border border-[#E2E8F0]">
-                    <div className="text-xs font-black text-[#0F172A]">100%</div>
-                    <div className="text-[9px] text-[#64748B] font-medium">Explainable AI</div>
-                  </div>
-                  <div className="bg-white p-2 rounded-lg border border-[#E2E8F0]">
-                    <div className="text-xs font-black text-[#2563EB]">GFR 2017</div>
-                    <div className="text-[9px] text-[#64748B] font-medium">Compliance</div>
-                  </div>
-                  <div className="bg-white p-2 rounded-lg border border-[#E2E8F0]">
-                    <div className="text-xs font-black text-[#0F172A]">90-Day</div>
-                    <div className="text-[9px] text-[#64748B] font-medium">Sandbox Pilot</div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      {/* Trust points */}
+      <div className="pt-4 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs text-[#64748B]">
+        <div className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-[#2563EB]" /> DPIIT Startup Sandbox</div>
+        <div className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-[#2563EB]" /> Transparent AI Matching</div>
+        <div className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-[#2563EB]" /> Milestone Escrow Governance</div>
+      </div>
+    </motion.div>
+  </div>
+</section>
 
       {/* ── 3. TRUST / VALUE STRIP ────────────────────────────────────────────── */}
       <section id="value-strip" className="py-12 bg-[#F8FAFC] border-b border-[#E2E8F0]">

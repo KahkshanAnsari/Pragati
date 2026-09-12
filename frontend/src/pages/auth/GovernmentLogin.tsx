@@ -6,6 +6,7 @@ import { supabase } from '../../lib/supabase';
 import { api } from '../../lib/api';
 import { useAuthStore } from '../../stores/authStore';
 import toast from 'react-hot-toast';
+import pragatiLogo from '../../assets/pragati-logo.png';
 
 export function GovernmentLogin() {
   const [email, setEmail] = useState('');
