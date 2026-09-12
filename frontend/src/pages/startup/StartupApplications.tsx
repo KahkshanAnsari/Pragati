@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { Spinner } from '../../components/ui/Spinner';
+import { ProblemCardSkeleton } from '../../components/ui/Skeleton';
 import { Button } from '../../components/ui/Button';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Modal } from '../../components/ui/Modal';
@@ -92,7 +92,7 @@ export const StartupApplications: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><Spinner size="lg" /></div>
+        <ProblemCardSkeleton count={3} />
       ) : filteredApps.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl border border-dashed border-gray-300">
           <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />

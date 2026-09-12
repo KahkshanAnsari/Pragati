@@ -10,7 +10,7 @@ import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
 import { Select } from '../../components/ui/Select';
-import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonItem } from '../../components/ui/Skeleton';
 import { formatDate } from '../../lib/utils';
 import { toast } from 'react-hot-toast';
 
@@ -67,7 +67,7 @@ export const IssueReporting: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'resolved': return 'bg-green-100 text-green-800';
+      case 'resolved': return 'bg-blue-50 text-blue-700 border border-blue-200';
       case 'under_investigation': return 'bg-amber-100 text-amber-800';
       default: return 'bg-red-100 text-red-800';
     }
@@ -84,7 +84,17 @@ export const IssueReporting: React.FC = () => {
     { label: 'Other', value: 'other' }
   ];
 
-  if (loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
+  if (loading) {
+    return (
+      <div className="space-y-6 max-w-4xl mx-auto">
+        <SkeletonItem className="h-8 w-48" />
+        <div className="space-y-3">
+          <SkeletonItem className="h-24 w-full rounded-xl" />
+          <SkeletonItem className="h-24 w-full rounded-xl" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">

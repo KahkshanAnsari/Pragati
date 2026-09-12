@@ -6,7 +6,7 @@ import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
 import { Select } from '../../components/ui/Select';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { Spinner } from '../../components/ui/Spinner';
+import { Skeleton, SkeletonItem } from '../../components/ui/Skeleton';
 import { useAuthStore } from '../../stores/authStore';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
@@ -85,7 +85,22 @@ export const StartupProfile: React.FC = () => {
   };
 
   if (fetching) {
-    return <div className="flex h-96 items-center justify-center"><Spinner size="lg" /></div>;
+    return (
+      <div className="max-w-5xl mx-auto space-y-6">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-4">
+          <SkeletonItem className="h-7 w-48" />
+          <SkeletonItem className="h-4 w-72" />
+        </div>
+        <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <SkeletonItem className="h-12 w-full rounded-lg" />
+            <SkeletonItem className="h-12 w-full rounded-lg" />
+            <SkeletonItem className="h-12 w-full rounded-lg" />
+            <SkeletonItem className="h-12 w-full rounded-lg" />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -193,11 +208,11 @@ export const StartupProfile: React.FC = () => {
             <div className="space-y-4 text-sm">
               <div className="flex justify-between items-center border-b border-navy-700 pb-2">
                 <span className="text-gray-300">DPIIT Recognition</span>
-                {status === 'verified' ? <span className="text-green-400 flex items-center gap-1"><CheckCircle2 className="w-4 h-4"/> Verified</span> : <span className="text-amber-400">Pending</span>}
+                {status === 'verified' ? <span className="text-cyan-400 flex items-center gap-1"><CheckCircle2 className="w-4 h-4"/> Verified</span> : <span className="text-amber-400">Pending</span>}
               </div>
               <div className="flex justify-between items-center border-b border-navy-700 pb-2">
                 <span className="text-gray-300">GST Details</span>
-                {status === 'verified' ? <span className="text-green-400 flex items-center gap-1"><CheckCircle2 className="w-4 h-4"/> Verified</span> : <span className="text-amber-400">Pending</span>}
+                {status === 'verified' ? <span className="text-cyan-400 flex items-center gap-1"><CheckCircle2 className="w-4 h-4"/> Verified</span> : <span className="text-amber-400">Pending</span>}
               </div>
               <div className="flex justify-between items-center border-b border-navy-700 pb-2">
                 <span className="text-gray-300">Government Pilots</span>
@@ -205,7 +220,7 @@ export const StartupProfile: React.FC = () => {
               </div>
               <div className="flex justify-between items-center border-b border-navy-700 pb-2">
                 <span className="text-gray-300">Pilot Success Rate</span>
-                <span className="font-bold text-green-400">100%</span>
+                <span className="font-bold text-cyan-400">100%</span>
               </div>
             </div>
           </Card>

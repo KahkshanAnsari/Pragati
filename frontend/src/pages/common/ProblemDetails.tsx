@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
-import { Spinner } from '../../components/ui/Spinner';
+import { ProblemCardSkeleton } from '../../components/ui/Skeleton';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Problem, Application } from '../../types';
 import { api } from '../../lib/api';
@@ -68,8 +68,8 @@ export const ProblemDetails: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex h-96 items-center justify-center">
-        <Spinner size="lg" />
+      <div className="space-y-6 max-w-5xl mx-auto">
+        <ProblemCardSkeleton count={2} />
       </div>
     );
   }
@@ -130,9 +130,9 @@ export const ProblemDetails: React.FC = () => {
             existingApp ? (
               <Button
                 onClick={() => navigate('/startup/applications')}
-                className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+                className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 shadow-glow-blue"
               >
-                <CheckCircle2 className="w-4 h-4" />
+                <CheckCircle2 className="w-4 h-4 text-cyan-300" />
                 Applied ({existingApp.status})
               </Button>
             ) : (

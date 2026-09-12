@@ -6,7 +6,7 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
 import { Card, CardHeader, CardContent } from '../../components/ui/Card';
 import { Textarea } from '../../components/ui/Textarea';
-import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonItem } from '../../components/ui/Skeleton';
 import { formatCurrency } from '../../lib/utils';
 import { toast } from 'react-hot-toast';
 
@@ -81,7 +81,25 @@ export const EvaluationForm: React.FC = () => {
     </div>
   );
 
-  if (loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
+  if (loading) {
+    return (
+      <div className="space-y-6 max-w-4xl">
+        <SkeletonItem className="h-8 w-48" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white p-6 rounded-xl border border-slate-200 space-y-4">
+            <SkeletonItem className="h-6 w-32" />
+            <SkeletonItem className="h-20 w-full rounded-lg" />
+            <SkeletonItem className="h-10 w-full rounded-lg" />
+          </div>
+          <div className="bg-white p-6 rounded-xl border border-slate-200 space-y-4">
+            <SkeletonItem className="h-6 w-32" />
+            <SkeletonItem className="h-20 w-full rounded-lg" />
+            <SkeletonItem className="h-10 w-full rounded-lg" />
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (!app) return <div>Application not found</div>;
 
   return (
@@ -118,7 +136,7 @@ export const EvaluationForm: React.FC = () => {
               <h3 className="font-semibold text-lg text-navy-900">Scoring Form</h3>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">Total Score:</span>
-                <span className={`text-2xl font-bold ${totalScore >= 45 ? 'text-green-600' : totalScore >= 30 ? 'text-amber-500' : 'text-red-500'}`}>
+                <span className={`text-2xl font-bold ${totalScore >= 45 ? 'text-blue-600' : totalScore >= 30 ? 'text-cyan-600' : 'text-red-500'}`}>
                   {totalScore}/60
                 </span>
               </div>
@@ -146,7 +164,7 @@ export const EvaluationForm: React.FC = () => {
               <Button 
                 onClick={() => handleSubmit('select')} 
                 disabled={submitting}
-                className="bg-green-600 hover:bg-green-700 text-white flex-1"
+                className="bg-blue-600 hover:bg-blue-700 text-white flex-1 shadow-glow-blue"
               >
                 Select for Pilot
               </Button>

@@ -7,7 +7,7 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
-import { Spinner } from '../../components/ui/Spinner';
+import { CardSkeletonGrid } from '../../components/ui/Skeleton';
 import { Badge } from '../../components/ui/Badge';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { toast } from 'react-hot-toast';
@@ -42,7 +42,14 @@ export const StartupDirectory: React.FC = () => {
     return true;
   });
 
-  if (loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Startup Directory" subtitle="Browse and discover verified startups." />
+        <CardSkeletonGrid count={6} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -94,7 +101,7 @@ export const StartupDirectory: React.FC = () => {
                 </div>
                 <div className="text-right">
                   <div className="text-sm text-gray-500 mb-1">Trust Score</div>
-                  <div className={`text-xl font-bold ${startup.trust_score >= 80 ? 'text-green-600' : 'text-amber-500'}`}>
+                  <div className={`text-xl font-bold ${startup.trust_score >= 80 ? 'text-blue-600' : 'text-amber-500'}`}>
                     {startup.trust_score}/100
                   </div>
                 </div>
@@ -122,7 +129,7 @@ export const StartupDirectory: React.FC = () => {
                   <div className="text-xs text-gray-500">Gov Pilots</div>
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-green-600">{startup.pilot_success_rate}%</div>
+                  <div className="text-lg font-bold text-blue-600">{startup.pilot_success_rate}%</div>
                   <div className="text-xs text-gray-500">Success Rate</div>
                 </div>
               </div>

@@ -5,7 +5,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { Spinner } from '../../components/ui/Spinner';
+import { PilotWorkspaceSkeleton } from '../../components/ui/Skeleton';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
@@ -99,7 +99,7 @@ export const PilotWorkspace: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="flex h-full items-center justify-center"><Spinner size="lg" /></div>;
+  if (loading) return <PilotWorkspaceSkeleton />;
   if (!pilot) return null;
 
   return (
@@ -150,7 +150,7 @@ export const PilotWorkspace: React.FC = () => {
           
           <div className="space-y-4 flex-1">
             {milestones.map((milestone, idx) => (
-              <div key={milestone.id} className={`p-4 rounded-lg border ${milestone.status === 'inspector_verified' ? 'border-green-200 bg-green-50' : milestone.status === 'startup_claimed' ? 'border-blue-200 bg-blue-50' : 'border-gray-200 bg-white'}`}>
+              <div key={milestone.id} className={`p-4 rounded-lg border ${milestone.status === 'inspector_verified' ? 'border-blue-200 bg-blue-50/50' : milestone.status === 'startup_claimed' ? 'border-cyan-200 bg-cyan-50/50' : 'border-gray-200 bg-white'}`}>
                 <div className="flex justify-between items-start mb-2">
                   <h4 className="font-semibold text-gray-900">{idx + 1}. {milestone.title}</h4>
                   {milestone.status === 'inspector_verified' ? (

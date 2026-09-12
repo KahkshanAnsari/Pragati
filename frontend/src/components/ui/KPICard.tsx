@@ -10,8 +10,8 @@ export interface KPICardProps {
   change?: string;
   trend?: 'up' | 'down' | 'neutral';
   icon?: React.ReactNode;
-  iconBg?: string; // e.g. 'bg-blue-50 text-blue-600'
-  accentColor?: 'navy' | 'teal' | 'blue' | 'success' | 'warning' | 'error' | 'amber';
+  iconBg?: string;
+  accentColor?: 'navy' | 'blue' | 'cyan' | 'amber' | 'error' | 'success' | 'teal';
   description?: string;
   className?: string;
   animate?: boolean;
@@ -20,22 +20,24 @@ export interface KPICardProps {
 
 const ACCENT_BORDER: Record<string, string> = {
   navy:    'border-l-navy-900',
-  teal:    'border-l-teal-500',
-  blue:    'border-l-blue-500',
-  success: 'border-l-success-500',
-  warning: 'border-l-warning-500',
-  error:   'border-l-error-500',
+  blue:    'border-l-blue-600',
+  cyan:    'border-l-cyan-500',
+  teal:    'border-l-cyan-500',
+  success: 'border-l-blue-600',
   amber:   'border-l-amber-500',
+  warning: 'border-l-amber-500',
+  error:   'border-l-red-500',
 };
 
 const ICON_BG_DEFAULTS: Record<string, string> = {
-  navy:    'bg-navy-900/10 text-navy-900',
-  teal:    'bg-teal-50 text-teal-600',
+  navy:    'bg-slate-100 text-navy-900',
   blue:    'bg-blue-50 text-blue-600',
-  success: 'bg-success-50 text-success-700',
-  warning: 'bg-warning-50 text-warning-700',
-  error:   'bg-error-50 text-error-700',
-  amber:   'bg-amber-50 text-amber-700',
+  cyan:    'bg-cyan-50 text-cyan-600',
+  teal:    'bg-cyan-50 text-cyan-600',
+  success: 'bg-blue-50 text-blue-600',
+  amber:   'bg-amber-50 text-amber-600',
+  warning: 'bg-amber-50 text-amber-600',
+  error:   'bg-red-50 text-red-600',
 };
 
 export function KPICard({
@@ -73,9 +75,9 @@ export function KPICard({
       onClick={onClick}
     >
       <div className="flex items-start justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{displayLabel}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{displayLabel}</p>
         {icon && (
-          <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center shrink-0', resolvedIconBg)}>
+          <div className={cn('w-9 h-9 rounded-lg flex items-center justify-center shrink-0 border border-slate-100', resolvedIconBg)}>
             {icon}
           </div>
         )}
@@ -98,9 +100,9 @@ export function KPICard({
         {change && (
           <span
             className={cn('flex items-center text-xs font-semibold', {
-              'text-success-600': trend === 'up',
-              'text-error-500':   trend === 'down',
-              'text-slate-400':   trend === 'neutral',
+              'text-blue-600':  trend === 'up',
+              'text-red-500':   trend === 'down',
+              'text-slate-400': trend === 'neutral',
             })}
           >
             {trend === 'up'      && <TrendingUp   className="w-3.5 h-3.5 mr-0.5" />}

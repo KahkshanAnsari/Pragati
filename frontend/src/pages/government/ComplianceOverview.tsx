@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { Spinner } from '../../components/ui/Spinner';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { api } from '../../lib/api';
 import { formatDate } from '../../lib/utils';
 import {
@@ -96,8 +96,10 @@ export const ComplianceOverview: React.FC = () => {
         </div>
 
         {loading ? (
-          <div className="flex py-8 justify-center">
-            <Spinner />
+          <div className="py-4 space-y-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} variant="row" />
+            ))}
           </div>
         ) : logs.length === 0 ? (
           <div className="text-center py-8 text-sm text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-200">

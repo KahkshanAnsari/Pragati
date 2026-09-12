@@ -8,6 +8,7 @@ import { Card, CardHeader, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { Spinner } from '../../components/ui/Spinner';
+import { Skeleton, SkeletonItem } from '../../components/ui/Skeleton';
 import { Modal } from '../../components/ui/Modal';
 import { Select } from '../../components/ui/Select';
 import { toast } from 'react-hot-toast';
@@ -99,8 +100,25 @@ export const StartupProfile: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-16 flex justify-center">
-        <Spinner size="lg" />
+      <div className="space-y-6 max-w-7xl mx-auto">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-4">
+          <SkeletonItem className="h-8 w-64" />
+          <SkeletonItem className="h-4 w-48" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-3">
+              <SkeletonItem className="h-5 w-40" />
+              <SkeletonItem className="h-20 w-full rounded-lg" />
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-3">
+              <SkeletonItem className="h-5 w-32" />
+              <SkeletonItem className="h-16 w-full rounded-lg" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

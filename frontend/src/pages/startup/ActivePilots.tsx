@@ -5,7 +5,7 @@ import { ProgressBar } from '../../components/ui/ProgressBar';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { Spinner } from '../../components/ui/Spinner';
+import { ProblemCardSkeleton } from '../../components/ui/Skeleton';
 import { Pilot } from '../../types';
 import { api } from '../../lib/api';
 import { formatCurrency, formatDate } from '../../lib/utils';
@@ -37,8 +37,12 @@ export const ActivePilots: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex h-96 items-center justify-center">
-        <Spinner size="lg" />
+      <div className="space-y-6">
+        <PageHeader
+          title="Active Pilots"
+          subtitle="Manage, monitor, and submit milestones & KPI evidence for your funded government pilots."
+        />
+        <ProblemCardSkeleton count={3} />
       </div>
     );
   }
@@ -113,7 +117,7 @@ export const ActivePilots: React.FC = () => {
                         <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider font-semibold">Progress</p>
                         <p className="font-bold text-navy-900 text-sm flex items-center gap-1">
                           {progress >= 75 ? (
-                            <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                            <CheckCircle className="w-3.5 h-3.5 text-blue-600" />
                           ) : (
                             <Activity className="w-3.5 h-3.5 text-blue-500" />
                           )}
@@ -122,7 +126,7 @@ export const ActivePilots: React.FC = () => {
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider font-semibold">KPI Status</p>
-                        <p className={`font-bold text-sm flex items-center gap-1 ${progress >= 70 ? 'text-green-600' : 'text-amber-600'}`}>
+                        <p className={`font-bold text-sm flex items-center gap-1 ${progress >= 70 ? 'text-blue-600' : 'text-amber-600'}`}>
                           <Target className="w-3.5 h-3.5" />
                           {progress >= 70 ? 'On Track' : 'In Progress'}
                         </p>

@@ -5,7 +5,7 @@ import { Pilot, KPI, PilotOutcomeScore, AIPilotAnalysis } from '../../types';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
 import { Card, CardHeader, CardContent } from '../../components/ui/Card';
-import { Spinner } from '../../components/ui/Spinner';
+import { PilotWorkspaceSkeleton, SkeletonItem } from '../../components/ui/Skeleton';
 import { toast } from 'react-hot-toast';
 
 export const PilotOutcome: React.FC = () => {
@@ -58,7 +58,7 @@ export const PilotOutcome: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
+  if (loading) return <PilotWorkspaceSkeleton />;
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -87,7 +87,7 @@ export const PilotOutcome: React.FC = () => {
                     </div>
                     <div className="border-l pl-4 border-gray-200">
                       <div className="text-xs text-gray-500 uppercase">Actual</div>
-                      <div className={`font-bold text-lg ${kpi.status === 'achieved' ? 'text-green-600' : 'text-red-500'}`}>
+                      <div className={`font-bold text-lg ${kpi.status === 'achieved' ? 'text-blue-600' : 'text-red-500'}`}>
                         {kpi.current_value || 0} {kpi.unit}
                       </div>
                       <div className="text-xs mt-1">
@@ -111,9 +111,14 @@ export const PilotOutcome: React.FC = () => {
             </CardHeader>
             <CardContent>
               {analyzing ? (
-                <div className="py-12 flex flex-col items-center">
-                  <Spinner className="mb-4" />
-                  <p className="text-gray-500">Synthesizing milestones, budget, and KPIs...</p>
+                <div className="py-8 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 rounded-full bg-blue-600 animate-ping" />
+                    <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider">AI Engine Analyzing Pilot Data...</p>
+                  </div>
+                  <SkeletonItem className="h-4 w-full" />
+                  <SkeletonItem className="h-4 w-5/6" />
+                  <SkeletonItem className="h-4 w-3/4" />
                 </div>
               ) : analysis ? (
                 <div className="space-y-6 animate-in fade-in">
@@ -124,7 +129,7 @@ export const PilotOutcome: React.FC = () => {
                   
                   <div className="grid grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-medium text-green-700 mb-2 flex items-center gap-2"><span className="text-lg">✓</span> Major Achievements</h4>
+                      <h4 className="font-medium text-blue-700 mb-2 flex items-center gap-2"><span className="text-lg text-blue-600">✓</span> Major Achievements</h4>
                       <ul className="text-sm text-gray-700 space-y-1 list-disc pl-5">
                         {analysis.major_achievements.map((a, i) => <li key={i}>{a}</li>)}
                       </ul>
@@ -153,11 +158,11 @@ export const PilotOutcome: React.FC = () => {
         </div>
 
         <div className="space-y-6">
-          <Card className="text-center border-t-4 border-t-green-500">
+          <Card className="text-center border-t-4 border-t-blue-600 shadow-card">
             <CardContent className="pt-8 pb-6">
               <div className="text-sm text-gray-500 uppercase tracking-wider mb-2">Overall Score</div>
               <div className="text-6xl font-bold text-navy-900 mb-4">{score.overall_score}<span className="text-2xl text-gray-400">/100</span></div>
-              <div className="inline-block px-4 py-2 bg-green-100 text-green-800 font-bold rounded-full text-sm mb-6">
+              <div className="inline-block px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 font-bold rounded-full text-sm mb-6">
                 {score.outcome}
               </div>
 

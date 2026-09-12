@@ -9,6 +9,7 @@ import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Modal } from '../../components/ui/Modal';
 import { Textarea } from '../../components/ui/Textarea';
+import { CardSkeletonGrid } from '../../components/ui/Skeleton';
 import { Spinner } from '../../components/ui/Spinner';
 import { formatDate } from '../../lib/utils';
 import { toast } from 'react-hot-toast';
@@ -107,8 +108,12 @@ export const ValidatedSolutions: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-16 flex justify-center">
-        <Spinner size="lg" />
+      <div className="space-y-6 max-w-7xl mx-auto">
+        <PageHeader
+          title="Validated Solutions Registry"
+          subtitle="Explore solutions proven through government sandbox pilots across India."
+        />
+        <CardSkeletonGrid count={6} />
       </div>
     );
   }
