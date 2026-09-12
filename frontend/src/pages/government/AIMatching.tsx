@@ -27,7 +27,8 @@ import {
   RefreshCw,
   SearchX
 } from 'lucide-react';
-import { formatCurrency } from '../../lib/utils';
+import { formatCurrency, cn } from '../../lib/utils';
+import { Skeleton, SkeletonCard, SkeletonList } from '../../components/ui/Skeleton';
 
 export const AIMatching: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -130,9 +131,19 @@ export const AIMatching: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-16 flex flex-col items-center justify-center space-y-3">
-        <Spinner size="lg" />
-        <p className="text-xs text-slate-500 font-medium">Analyzing challenge and finding relevant startups...</p>
+      <div className="space-y-6 max-w-7xl mx-auto p-4 sm:p-6">
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-64" />
+          <Skeleton className="h-4 w-96" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-4">
+            <SkeletonCard className="h-96" />
+          </div>
+          <div className="lg:col-span-8 space-y-4">
+            <SkeletonList count={3} />
+          </div>
+        </div>
       </div>
     );
   }
@@ -302,9 +313,9 @@ export const AIMatching: React.FC = () => {
                 className="w-full bg-navy-900 hover:bg-navy-800 text-white font-bold py-2.5 flex items-center justify-center gap-2 shadow-xs cursor-pointer"
               >
                 {isMatching ? (
-                  <>
-                    <Spinner size="sm" /> Analyzing Startups...
-                  </>
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" /> Analyzing Fit...
+                  </span>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 text-amber-300" /> Run AI Matching
@@ -317,27 +328,64 @@ export const AIMatching: React.FC = () => {
 
         {/* Right 8 Cols: Match Results & Explainability */}
         <div className="lg:col-span-8 space-y-4">
-          {/* Loading Animation Card */}
+          {/* Multi-Step Staged Loading Card (No Generic Spinner) */}
           {isMatching && (
-            <Card className="p-8 bg-white border border-slate-200 shadow-xs flex flex-col items-center justify-center text-center space-y-4 min-h-[320px]">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-xs animate-bounce">
-                <Sparkles className="w-7 h-7" />
+            <Card className="p-8 bg-white border border-slate-200 shadow-xs flex flex-col items-center justify-center text-center space-y-5 min-h-[380px]">
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-xs">
+                <Sparkles className="w-7 h-7 text-blue-600 animate-pulse" />
               </div>
               <div className="space-y-1">
                 <h3 className="text-base font-bold text-navy-900">
-                  Executing Multidimensional Fit Engine
+                  Executing Explainable Match Engine
                 </h3>
-                <p className="text-xs text-indigo-700 font-medium animate-pulse">
-                  {steps[matchingStep]}
+                <p className="text-xs text-slate-500">
+                  Applying weighted GovTech compatibility scoring across 6 dimensions
                 </p>
               </div>
+
+              {/* Staged Step Progress Bar */}
               <div className="w-full max-w-md bg-slate-100 rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-indigo-600 h-full transition-all duration-300 rounded-full"
+                  className="bg-blue-600 h-full transition-all duration-300 rounded-full"
                   style={{ width: `${((matchingStep + 1) / steps.length) * 100}%` }}
                 />
               </div>
-              <p className="text-[11px] text-slate-400">
+
+              {/* Staged Step Items */}
+              <div className="w-full max-w-md text-left space-y-2.5 pt-1">
+                {steps.map((stepText, idx) => {
+                  const isDone = idx < matchingStep;
+                  const isCurrent = idx === matchingStep;
+                  return (
+                    <div
+                      key={idx}
+                      className={cn(
+                        'flex items-center gap-3 p-2.5 rounded-lg border text-xs transition-all duration-200',
+                        isDone
+                          ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900 font-medium'
+                          : isCurrent
+                          ? 'bg-blue-50/90 border-blue-200 text-blue-900 font-semibold shadow-2xs'
+                          : 'bg-slate-50/50 border-slate-100 text-slate-400 opacity-60'
+                      )}
+                    >
+                      <div className="shrink-0">
+                        {isDone ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        ) : isCurrent ? (
+                          <div className="w-4 h-4 rounded-full border-2 border-blue-600 border-t-transparent animate-spin" />
+                        ) : (
+                          <div className="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center text-[10px] text-slate-400">
+                            {idx + 1}
+                          </div>
+                        )}
+                      </div>
+                      <span className="truncate">{stepText}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <p className="text-[11px] text-slate-400 pt-1">
                 Evaluating Sector (20%), Tech Stack (25%), Capabilities (25%), Previous Projects (20%), Gov Pilots (5%), Statutory Trust (5%)
               </p>
             </Card>

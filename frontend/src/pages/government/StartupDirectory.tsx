@@ -8,6 +8,7 @@ import { Card, CardContent } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonList } from '../../components/ui/Skeleton';
 import { Badge } from '../../components/ui/Badge';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { toast } from 'react-hot-toast';
@@ -42,7 +43,7 @@ export const StartupDirectory: React.FC = () => {
     return true;
   });
 
-  if (loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
+  if (loading) return <div className="p-6 space-y-4"><SkeletonList count={4} /></div>;
 
   return (
     <div className="space-y-6">

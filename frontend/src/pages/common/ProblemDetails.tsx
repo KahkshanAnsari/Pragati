@@ -4,6 +4,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonCard, Skeleton } from '../../components/ui/Skeleton';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Problem, Application } from '../../types';
 import { api } from '../../lib/api';
@@ -68,8 +69,10 @@ export const ProblemDetails: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex h-96 items-center justify-center">
-        <Spinner size="lg" />
+      <div className="space-y-6 max-w-5xl mx-auto p-6">
+        <Skeleton className="h-8 w-64" />
+        <SkeletonCard />
+        <SkeletonCard />
       </div>
     );
   }

@@ -4,6 +4,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonList } from '../../components/ui/Skeleton';
 import { api } from '../../lib/api';
 import { formatDate } from '../../lib/utils';
 import { useNotificationStore } from '../../stores/notificationStore';
@@ -92,9 +93,7 @@ export const NotificationsPage: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="flex py-12 justify-center">
-          <Spinner size="lg" />
-        </div>
+        <SkeletonList count={4} />
       ) : (
         <div className="space-y-3">
           {notifications.map((n) => (

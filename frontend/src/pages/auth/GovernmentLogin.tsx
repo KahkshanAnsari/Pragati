@@ -67,6 +67,7 @@ export function GovernmentLogin() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-sm border border-gray-200 p-8">
         <div className="text-center mb-8">
+          <img src={pragatiLogo} alt="PRAGATI" className="h-12 w-12 object-contain mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-navy-900 mb-2">Government Portal Login</h1>
           <p className="text-gray-500">Sign in to manage problems and pilots</p>
         </div>

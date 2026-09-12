@@ -6,6 +6,7 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
 import { Card, CardHeader, CardContent } from '../../components/ui/Card';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonCard } from '../../components/ui/Skeleton';
 import { toast } from 'react-hot-toast';
 
 export const PilotOutcome: React.FC = () => {
@@ -58,7 +59,7 @@ export const PilotOutcome: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
+  if (loading) return <div className="p-8 max-w-6xl mx-auto space-y-4"><SkeletonCard /><SkeletonCard /></div>;
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">

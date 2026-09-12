@@ -12,6 +12,7 @@ import { StatusBadge } from '../../components/ui/StatusBadge';
 import { Select } from '../../components/ui/Select';
 import { Input } from '../../components/ui/Input';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonList } from '../../components/ui/Skeleton';
 import { toast } from 'react-hot-toast';
 import { Sparkles, Plus, Search, Filter } from 'lucide-react';
 
@@ -63,8 +64,8 @@ export const ProblemRegistry: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-12 flex justify-center">
-        <Spinner size="lg" />
+      <div className="space-y-6">
+        <SkeletonList count={4} />
       </div>
     );
   }

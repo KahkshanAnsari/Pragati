@@ -7,6 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { api } from '../../lib/api';
 import { useAuthStore } from '../../stores/authStore';
 import toast from 'react-hot-toast';
+import pragatiLogo from '../../assets/pragati-logo.png';
 
 export function StartupRegister() {
   const [step, setStep] = useState(1);
@@ -102,6 +103,7 @@ export function StartupRegister() {
     <div className="min-h-screen bg-blue-50 flex items-center justify-center p-4 py-12">
       <div className="w-full max-w-lg bg-white rounded-xl shadow-lg border border-gray-100 p-8">
         <div className="text-center mb-6">
+          <img src={pragatiLogo} alt="PRAGATI" className="h-12 w-12 object-contain mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-blue-600 mb-2">Startup Registration</h1>
           <p className="text-gray-500">Step {step} of 3</p>
         </div>

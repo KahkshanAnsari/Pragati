@@ -7,6 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { api } from '../../lib/api';
 import { useAuthStore } from '../../stores/authStore';
 import toast from 'react-hot-toast';
+import pragatiLogo from '../../assets/pragati-logo.png';
 
 export function GovernmentRegister() {
   const [formData, setFormData] = useState({
@@ -103,6 +104,7 @@ export function GovernmentRegister() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 py-12">
       <div className="w-full max-w-lg bg-white rounded-xl shadow-sm border border-gray-200 p-8">
         <div className="text-center mb-8">
+          <img src={pragatiLogo} alt="PRAGATI" className="h-12 w-12 object-contain mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-navy-900 mb-2">Government Officer Registration</h1>
           <p className="text-gray-500">Create your account to start procuring innovation</p>
         </div>

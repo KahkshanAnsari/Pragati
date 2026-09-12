@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardHeader, CardContent } from '../../components/ui/Card';
 import { Textarea } from '../../components/ui/Textarea';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonCard } from '../../components/ui/Skeleton';
 import { formatCurrency } from '../../lib/utils';
 import { toast } from 'react-hot-toast';
 
@@ -81,7 +82,7 @@ export const EvaluationForm: React.FC = () => {
     </div>
   );
 
-  if (loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
+  if (loading) return <div className="p-8 max-w-4xl mx-auto space-y-4"><SkeletonCard /><SkeletonCard /></div>;
   if (!app) return <div>Application not found</div>;
 
   return (

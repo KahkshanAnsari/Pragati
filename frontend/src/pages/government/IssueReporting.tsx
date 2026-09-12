@@ -11,6 +11,7 @@ import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
 import { Select } from '../../components/ui/Select';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonList } from '../../components/ui/Skeleton';
 import { formatDate } from '../../lib/utils';
 import { toast } from 'react-hot-toast';
 
@@ -84,7 +85,7 @@ export const IssueReporting: React.FC = () => {
     { label: 'Other', value: 'other' }
   ];
 
-  if (loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
+  if (loading) return <div className="p-8 max-w-4xl mx-auto space-y-4"><SkeletonList count={3} /></div>;
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">

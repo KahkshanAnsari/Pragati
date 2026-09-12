@@ -7,6 +7,7 @@ import { ProgressBar } from '../../components/ui/ProgressBar';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonPage } from '../../components/ui/Skeleton';
 import {
   Compass,
   FileText,
@@ -115,11 +116,7 @@ export function StartupDashboard() {
   const startupName = startupProfile?.name || 'Startup Founder';
 
   if (loading) {
-    return (
-      <div className="p-16 flex justify-center">
-        <Spinner size="lg" />
-      </div>
-    );
+    return <SkeletonPage />;
   }
 
   return (

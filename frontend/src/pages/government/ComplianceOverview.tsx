@@ -3,6 +3,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonTable } from '../../components/ui/Skeleton';
 import { api } from '../../lib/api';
 import { formatDate } from '../../lib/utils';
 import {
@@ -96,9 +97,7 @@ export const ComplianceOverview: React.FC = () => {
         </div>
 
         {loading ? (
-          <div className="flex py-8 justify-center">
-            <Spinner />
-          </div>
+          <SkeletonTable columns={4} rows={4} />
         ) : logs.length === 0 ? (
           <div className="text-center py-8 text-sm text-gray-500 bg-gray-50 rounded-lg border border-dashed border-gray-200">
             No audit events recorded yet. Actions performed in the system are logged automatically.

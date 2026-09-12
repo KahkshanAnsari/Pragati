@@ -1,5 +1,6 @@
 import React from 'react';
 import { Spinner } from './Spinner';
+import { SkeletonTable } from './Skeleton';
 
 /**
  * Column definition — key is optional (will use accessor string as key if omitted).
@@ -28,11 +29,7 @@ export function DataTable<T extends Record<string, any>>({
   onRowClick,
 }: DataTableProps<T>) {
   if (loading) {
-    return (
-      <div className="p-12 flex justify-center">
-        <Spinner size="lg" />
-      </div>
-    );
+    return <SkeletonTable columns={columns.length} rows={5} />;
   }
   if (!data.length) {
     return (

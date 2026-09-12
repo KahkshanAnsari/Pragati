@@ -6,6 +6,7 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { Button } from '../../components/ui/Button';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonList } from '../../components/ui/Skeleton';
 import { Card } from '../../components/ui/Card';
 import { formatDate, formatCurrency } from '../../lib/utils';
 import { toast } from 'react-hot-toast';
@@ -58,8 +59,8 @@ export const Applications: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-16 flex justify-center">
-        <Spinner size="lg" />
+      <div className="space-y-6">
+        <SkeletonList count={3} />
       </div>
     );
   }
