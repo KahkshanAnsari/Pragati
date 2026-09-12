@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { KPICard } from '../../components/ui/KPICard';
 import { Button } from '../../components/ui/Button';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
-import { Spinner } from '../../components/ui/Spinner';
+import { Skeleton, KPISkeletonGrid } from '../../components/ui/Skeleton';
+import { EmptyState } from '../../components/ui/EmptyState';
 import {
   Compass,
   FileText,
   Rocket,
   CheckCircle2,
-  ShieldCheck,
   Clock,
   ArrowRight,
-  TrendingUp,
-  AlertCircle,
-  Briefcase,
   Layers,
   Award,
+  Star,
+  MapPin,
+  Briefcase,
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { api } from '../../lib/api';
@@ -113,11 +114,26 @@ export function StartupDashboard() {
   };
 
   const startupName = startupProfile?.name || 'Startup Founder';
+  const trustScore = startupProfile?.trust_score ?? 94;
 
   if (loading) {
     return (
-      <div className="p-16 flex justify-center">
-        <Spinner size="lg" />
+      <div className="max-w-7xl mx-auto space-y-6 p-6">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-card p-6">
+          <Skeleton className="h-5 w-40 mb-3" />
+          <Skeleton className="h-8 w-72 mb-2" />
+          <Skeleton className="h-4 w-56" />
+        </div>
+        <KPISkeletonGrid count={5} />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-8 space-y-4">
+            <Skeleton variant="card" />
+            <Skeleton variant="card" />
+          </div>
+          <div className="lg:col-span-4">
+            <Skeleton variant="card" />
+          </div>
+        </div>
       </div>
     );
   }
