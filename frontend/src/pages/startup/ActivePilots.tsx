@@ -5,7 +5,7 @@ import { ProgressBar } from '../../components/ui/ProgressBar';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonList } from '../../components/ui/Skeleton';
 import { Pilot } from '../../types';
 import { api } from '../../lib/api';
 import { formatCurrency, formatDate } from '../../lib/utils';
@@ -36,11 +36,7 @@ export const ActivePilots: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex h-96 items-center justify-center">
-        <Spinner size="lg" />
-      </div>
-    );
+    return <SkeletonList count={3} />;
   }
 
   return (

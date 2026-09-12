@@ -367,48 +367,7 @@ export function Landing() {
         </div>
       </section>
 
-      {/* ── 6. FINAL CTA ────────────────────────────────────────────── */}
-      <section className="py-20 bg-[#EFF6FF] border-b border-[#E2E8F0]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white shadow-xs border border-blue-200 text-[#2563EB] mx-auto p-1">
-            <img
-              src={pragatiLogo}
-              alt="PRAGATI Logo"
-              className="h-full w-full object-contain"
-            />
-          </div>
-
-          <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] tracking-tight">
-            Turn Government Challenges into Measurable Solutions.
-          </h2>
-
-          <p className="text-sm sm:text-base text-[#64748B] max-w-2xl mx-auto">
-            Join state departments, municipal corporations, and DPIIT-recognized startups accelerating India’s public sector innovation.
-          </p>
-
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-            <Button
-              size="lg"
-              onClick={() => navigate('/auth/government/login')}
-              className="w-full sm:w-auto bg-[#0F172A] hover:bg-slate-800 text-white font-bold px-8 py-3.5 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2"
-            >
-              <Building2 className="w-4 h-4 text-blue-400" />
-              Government Portal
-            </Button>
-            <Button
-              variant="secondary"
-              size="lg"
-              onClick={() => navigate('/auth/startup/login')}
-              className="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold px-8 py-3.5 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2"
-            >
-              <Rocket className="w-4 h-4 text-[#2563EB]" />
-              Startup Portal
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 7. FOOTER ────────────────────────────────────────────── */}
+      {/* ── 6. FOOTER ────────────────────────────────────────────── */}
       <footer className="bg-white py-12 text-xs text-[#64748B]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-[#E2E8F0] pb-8">
@@ -454,10 +413,6 @@ export function Landing() {
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#64748B]">
             <p>© 2026 PRAGATI. Built for Smart India Hackathon (SIH) National Mission.</p>
-            <p className="flex items-center gap-1.5 font-medium text-[#0F172A]">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#2563EB]" />
-              100% GFR 2017 & DPIIT Compliant Innovation Sandbox
-            </p>
           </div>
         </div>
       </footer>

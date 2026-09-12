@@ -6,7 +6,7 @@ import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
 import { Select } from '../../components/ui/Select';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonCard } from '../../components/ui/Skeleton';
 import { useAuthStore } from '../../stores/authStore';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
@@ -85,7 +85,7 @@ export const StartupProfile: React.FC = () => {
   };
 
   if (fetching) {
-    return <div className="flex h-96 items-center justify-center"><Spinner size="lg" /></div>;
+    return <div className="max-w-3xl mx-auto p-8 space-y-4"><SkeletonCard /><SkeletonCard /></div>;
   }
 
   return (

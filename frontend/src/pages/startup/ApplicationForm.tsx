@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonPage } from '../../components/ui/Skeleton';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Badge } from '../../components/ui/Badge';
 import { Problem, Application } from '../../types';
@@ -101,11 +102,7 @@ export const ApplicationForm: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Spinner size="lg" />
-      </div>
-    );
+    return <SkeletonPage />;
   }
 
   if (!problem) return null;

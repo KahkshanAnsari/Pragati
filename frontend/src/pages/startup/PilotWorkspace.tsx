@@ -5,7 +5,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonPage } from '../../components/ui/Skeleton';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
@@ -99,7 +99,7 @@ export const PilotWorkspace: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="flex h-full items-center justify-center"><Spinner size="lg" /></div>;
+  if (loading) return <SkeletonPage />;
   if (!pilot) return null;
 
   return (

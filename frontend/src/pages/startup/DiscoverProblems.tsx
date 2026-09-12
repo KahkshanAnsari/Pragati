@@ -5,7 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Input } from '../../components/ui/Input';
-import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonList } from '../../components/ui/Skeleton';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Problem, Application } from '../../types';
 import { api } from '../../lib/api';
@@ -119,11 +119,7 @@ export const DiscoverProblems: React.FC = () => {
   const otherProblems = filteredProblems.filter((p) => p.status !== 'published');
 
   if (loading) {
-    return (
-      <div className="flex h-96 items-center justify-center">
-        <Spinner size="lg" />
-      </div>
-    );
+    return <SkeletonList count={4} />;
   }
 
   return (

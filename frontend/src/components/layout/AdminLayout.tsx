@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, Building, Rocket, AlertCircle, FileText, BarChart, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import pragatiLogo from '../../assets/pragati-logo.png';
 
 const navItems = [
   { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
@@ -28,8 +29,11 @@ export function AdminLayout() {
   return (
     <div className="flex h-screen bg-gray-100">
       <aside className="w-64 bg-gray-900 text-white flex flex-col">
-        <div className="h-16 flex items-center px-6 font-bold text-xl border-b border-gray-800">
-          Pragati <span className="text-red-400 ml-2 text-sm font-normal">Admin</span>
+        <div className="h-16 flex items-center px-5 gap-3 border-b border-gray-800">
+          <img src={pragatiLogo} alt="PRAGATI" className="h-8 w-8 object-contain shrink-0" />
+          <div className="font-extrabold text-base text-white tracking-tight flex items-center gap-1.5">
+            PRAGATI <span className="text-blue-400 text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-950/60 border border-blue-800">ADMIN</span>
+          </div>
         </div>
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
