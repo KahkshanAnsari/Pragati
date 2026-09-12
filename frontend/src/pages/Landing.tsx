@@ -102,7 +102,7 @@ export function Landing() {
       {/* Sovereign Tag */}
       <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EFF6FF] border border-blue-200 text-[#2563EB] text-xs font-semibold">
         <ShieldCheck className="w-4 h-4 text-[#2563EB]" />
-        <span>Smart India Hackathon 2026 • GFR 2017 Innovation Framework</span>
+        <span>Government Innovation & Startup Enablement Platform</span>
       </div>
 
       {/* Main Headline */}
@@ -335,7 +335,7 @@ export function Landing() {
                 title: 'Procurement Readiness',
                 desc: 'Move validated solutions toward government adoption.',
                 icon: FileCheck,
-                tag: 'GFR 2017 Dossier',
+                tag: 'Procurement Pathway',
               },
             ].map((feature, idx) => {
               const Icon = feature.icon;
