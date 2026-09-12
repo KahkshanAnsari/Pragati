@@ -1,39 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Card, CardFooter } from '../../components/ui/Card';
+import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { KPICard } from '../../components/ui/KPICard';
-import { Skeleton, KPISkeletonGrid } from '../../components/ui/Skeleton';
-import { EmptyState } from '../../components/ui/EmptyState';
+import { Spinner } from '../../components/ui/Spinner';
 import { Pilot } from '../../types';
 import { api } from '../../lib/api';
 import { formatCurrency, formatDate } from '../../lib/utils';
 import { toast } from 'react-hot-toast';
 import {
-  Rocket, Briefcase, Clock, CheckCircle2, AlertTriangle,
-  ExternalLink, ArrowRight, TrendingUp, Activity, ShieldCheck,
-  Building2, IndianRupee,
+  Rocket,
+  Briefcase,
+  Clock,
+  Target,
+  CheckCircle,
+  AlertTriangle,
+  FileSearch,
+  ExternalLink,
+  ShieldCheck,
 } from 'lucide-react';
-
-type TabType = 'all' | 'active' | 'completed' | 'paused';
-
-const STATUS_HEALTH: Record<string, { label: string; variant: string; icon: React.ElementType }> = {
-  active:    { label: 'Active',    variant: 'pilot_active', icon: Activity },
-  completed: { label: 'Completed', variant: 'completed',    icon: CheckCircle2 },
-  paused:    { label: 'Paused',    variant: 'warning',      icon: AlertTriangle },
-};
 
 export const PilotManagement: React.FC = () => {
   const [pilots, setPilots] = useState<Pilot[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<TabType>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'active' | 'completed' | 'paused'>('all');
   const navigate = useNavigate();
 
-  useEffect(() => { fetchPilots(); }, []);
+  useEffect(() => {
+    fetchPilots();
+  }, []);
 
   const fetchPilots = async () => {
     try {
@@ -54,171 +51,162 @@ export const PilotManagement: React.FC = () => {
     return p.status === activeTab;
   });
 
-  const tabCounts: Record<TabType, number> = {
-    all:       pilots.length,
-    active:    pilots.filter(p => p.status === 'active').length,
-    completed: pilots.filter(p => p.status === 'completed').length,
-    paused:    pilots.filter(p => p.status === 'paused').length,
-  };
-
-  const avgProgress = pilots.length > 0
-    ? Math.round(pilots.reduce((s, p) => s + ((p as any).progress_percent ?? 0), 0) / pilots.length)
-    : 0;
-
-  const TABS: TabType[] = ['all', 'active', 'completed', 'paused'];
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 animate-fade-in">
+    <div className="space-y-6">
       <PageHeader
-        title="Pilot Management"
-        subtitle="Track execution progress, milestones, KPIs and field verification across all pilots."
-        actions={
-          <Button variant="outline" size="sm" onClick={() => navigate('/government/monitoring')}>
-            <Activity className="w-3.5 h-3.5 mr-1.5" />
-            Monitoring Dashboard
-          </Button>
-        }
+        title="Pilot Management & Monitoring"
+        subtitle="Track execution progress, milestones, KPIs, and field verification across all active pilots."
       />
 
-      {/* KPI summary */}
-      {loading ? (
-        <KPISkeletonGrid count={4} />
-      ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <KPICard label="Total Pilots"    value={pilots.length}             icon={<Rocket className="w-4 h-4" />}      accentColor="navy" />
-          <KPICard label="Active"          value={tabCounts.active}          icon={<Activity className="w-4 h-4" />}    accentColor="teal" />
-          <KPICard label="Completed"       value={tabCounts.completed}       icon={<CheckCircle2 className="w-4 h-4" />} accentColor="success" />
-          <KPICard label="Avg Progress"    value={`${avgProgress}%`}        icon={<TrendingUp className="w-4 h-4" />}   accentColor="blue" />
-        </div>
-      )}
-
-      {/* Tab bar */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-card p-1 flex gap-0.5 overflow-x-auto">
-        {TABS.map((tab) => (
+      {/* Tabs */}
+      <div className="flex space-x-2 border-b border-gray-200">
+        {(['all', 'active', 'completed', 'paused'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all capitalize ${
+            className={`px-4 py-2 text-sm font-medium capitalize rounded-t-lg transition-colors ${
               activeTab === tab
-                ? 'bg-navy-900 text-white shadow-sm'
-                : 'text-slate-600 hover:bg-slate-50'
+                ? 'text-navy-900 border-b-2 border-navy-900 bg-white font-semibold shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            {tab}
-            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-              activeTab === tab ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'
-            }`}>{tabCounts[tab]}</span>
+            {tab} ({pilots.filter((p) => (tab === 'all' ? true : p.status === tab)).length})
           </button>
         ))}
       </div>
 
-      {/* List */}
-      {loading ? (
-        <div className="space-y-4">{[1,2,3].map(i => <Skeleton key={i} variant="card" className="h-56" />)}</div>
-      ) : filtered.length === 0 ? (
-        <EmptyState
-          variant="pilot"
-          title="No pilots in this category"
-          description="Select startups from the Applications section to launch new pilots."
-          action={{ label: 'Review Applications', onClick: () => navigate('/government/applications') }}
-        />
+      {filtered.length === 0 ? (
+        <div className="text-center py-16 bg-white rounded-xl border border-dashed border-gray-300">
+          <Rocket className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+          <h3 className="text-lg font-semibold text-gray-900">No Pilots Found</h3>
+          <p className="text-sm text-gray-500 max-w-sm mx-auto mt-1">
+            No pilot projects currently in this category. Select startups from the Applications section to launch new pilots.
+          </p>
+          <div className="mt-4">
+            <Button onClick={() => navigate('/government/applications')}>Review Applications</Button>
+          </div>
+        </div>
       ) : (
-        <div className="space-y-4">
-          {filtered.map((pilot, i) => {
-            const progress = (pilot as any).progress_percent || 0;
+        <div className="grid grid-cols-1 gap-6">
+          {filtered.map((pilot) => {
+            const progress = pilot.progress_percent || 0;
             const pilotTitle = (pilot as any).problem?.title || `Pilot ${pilot.pilot_number || pilot.id.substring(0, 8)}`;
             const startupName = (pilot as any).startup?.name || 'Selected Startup';
-            const deptName = (pilot as any).department?.name || (pilot as any).problem?.department?.name || 'Department';
-            const onTrack = progress >= 60 || pilot.status === 'completed';
-            const health = STATUS_HEALTH[pilot.status] || STATUS_HEALTH.active;
-            const HealthIcon = health.icon;
+            const deptName = (pilot as any).department?.name || 'Department';
 
             return (
-              <motion.div
+              <Card
                 key={pilot.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.06, duration: 0.35 }}
+                className="p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
               >
-                <Card padding="">
-                  {/* Header */}
-                  <div className="px-6 py-5 border-b border-slate-100">
-                    <div className="flex items-start justify-between gap-4 flex-wrap">
+                <div className="flex flex-col lg:flex-row justify-between gap-6">
+                  <div className="flex-1 space-y-4">
+                    <div className="flex items-start justify-between gap-3">
                       <div>
-                        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                          <span className="font-mono text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-mono text-xs font-semibold px-2 py-0.5 bg-blue-50 text-blue-700 rounded border border-blue-200">
                             {pilot.pilot_number || `PILOT-${pilot.id.substring(0, 8).toUpperCase()}`}
                           </span>
-                          <Badge variant={health.variant as any} dot>
-                            <HealthIcon className="w-3 h-3 mr-1" />
-                            {health.label}
-                          </Badge>
-                          <Badge variant={onTrack ? 'success' : 'warning'} dot pulse={!onTrack}>
-                            {onTrack ? 'On Track' : 'Needs Attention'}
+                          <Badge variant={pilot.status === 'completed' ? 'success' : 'active'} className="capitalize">
+                            {pilot.status}
                           </Badge>
                         </div>
-                        <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{pilotTitle}</h3>
-                        <div className="flex items-center gap-3 mt-1 text-xs text-slate-500 flex-wrap">
-                          <span className="flex items-center gap-1"><Building2 className="w-3.5 h-3.5" />{startupName}</span>
-                          <span className="text-slate-200">•</span>
-                          <span>{deptName}</span>
+                        <h3 className="text-xl font-bold text-navy-900">{pilotTitle}</h3>
+                        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mt-1">
+                          <span className="font-semibold text-navy-800 flex items-center gap-1">
+                            <Briefcase className="w-4 h-4 text-blue-600" />
+                            Startup: {startupName}
+                          </span>
+                          <span className="text-gray-300">•</span>
+                          <span>Dept: {deptName}</span>
                         </div>
                       </div>
-                      {/* Budget */}
-                      <div className="text-right">
-                        <p className="text-xs text-slate-500 mb-0.5">Budget Utilized</p>
-                        <p className="font-extrabold text-slate-900 text-base">
-                          {formatCurrency((pilot as any).budget_utilized || 0)}
+                    </div>
+
+                    {/* Metrics Bar */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-3 border-y border-gray-100 bg-gray-50/50 -mx-6 px-6">
+                      <div>
+                        <p className="text-xs text-gray-500 font-semibold uppercase">Budget Utilized</p>
+                        <p className="font-bold text-navy-900 text-sm">{formatCurrency(pilot.budget_utilized || 0)}</p>
+                        <p className="text-xs text-gray-400">of {formatCurrency(pilot.budget_allocated)}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 font-semibold uppercase">Duration</p>
+                        <p className="font-bold text-navy-900 text-sm flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5 text-amber-500" /> {pilot.duration_days || 90} Days
                         </p>
-                        <p className="text-[10px] text-slate-400">of {formatCurrency((pilot as any).budget_allocated || 0)}</p>
+                        {pilot.start_date && (
+                          <p className="text-xs text-gray-400">Started {formatDate(pilot.start_date)}</p>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 font-semibold uppercase">Progress</p>
+                        <p className="font-bold text-navy-900 text-sm flex items-center gap-1">
+                          {progress >= 75 ? (
+                            <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                          ) : (
+                            <Rocket className="w-3.5 h-3.5 text-blue-500" />
+                          )}
+                          {Math.round(progress)}%
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 font-semibold uppercase">Procurement</p>
+                        <p className={`font-bold text-sm ${progress >= 75 ? 'text-emerald-600' : 'text-amber-600'}`}>
+                          {progress >= 75 ? 'High Readiness' : 'In Progress'}
+                        </p>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Progress section */}
-                  <div className="px-6 py-4">
-                    <div className="flex justify-between text-xs mb-2">
-                      <span className="font-semibold text-slate-600">Milestone Progress</span>
-                      <span className="font-bold text-slate-900">{Math.round(progress)}%</span>
-                    </div>
-                    <ProgressBar value={progress} color="auto" gradient animated size="md" />
-
-                    {/* Stats grid */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-                      {[
-                        { label: 'Duration', value: `${(pilot as any).duration_days || 90}d`, icon: Clock },
-                        { label: 'Started', value: (pilot as any).start_date ? formatDate((pilot as any).start_date) : '—', icon: Activity },
-                        { label: 'Procurement', value: progress >= 75 ? 'High' : 'In Progress', icon: ShieldCheck },
-                        { label: 'Progress', value: `${Math.round(progress)}%`, icon: TrendingUp },
-                      ].map(stat => {
-                        const StatIcon = stat.icon;
-                        return (
-                          <div key={stat.label} className="bg-slate-50 rounded-lg p-3 border border-slate-100">
-                            <div className="flex items-center gap-1 mb-1">
-                              <StatIcon className="w-3 h-3 text-slate-400" />
-                              <span className="text-[9px] font-bold uppercase tracking-wide text-slate-400">{stat.label}</span>
-                            </div>
-                            <p className="text-sm font-bold text-slate-900">{stat.value}</p>
-                          </div>
-                        );
-                      })}
+                    <div>
+                      <div className="flex justify-between text-xs font-semibold text-gray-700 mb-1.5">
+                        <span>Milestone Execution Progress</span>
+                        <span>{Math.round(progress)}%</span>
+                      </div>
+                      <ProgressBar value={progress} color="navy" />
                     </div>
                   </div>
 
-                  {/* Footer actions */}
-                  <CardFooter className="flex flex-wrap justify-end gap-2">
-                    <Button variant="outline" size="sm" className="text-xs" onClick={() => navigate(`/government/pilots/${pilot.id}/inspection`)}>
+                  {/* Action Column */}
+                  <div className="flex flex-col gap-2.5 lg:w-56 shrink-0 justify-center bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <Button
+                      className="w-full bg-navy-900 hover:bg-navy-800 text-white text-xs font-semibold py-2"
+                      onClick={() => navigate(`/government/pilots/${pilot.id}/workspace`)}
+                    >
+                      Open Pilot Workspace
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      className="w-full text-xs"
+                      onClick={() => navigate(`/government/pilots/${pilot.id}/inspection`)}
+                    >
                       Field Inspections
                     </Button>
-                    <Button variant="outline" size="sm" className="text-xs" onClick={() => navigate(`/government/pilots/${pilot.id}/outcome`)}>
-                      KPI Outcomes
+                    <Button
+                      variant="secondary"
+                      className="w-full text-xs"
+                      onClick={() => navigate(`/government/pilots/${pilot.id}/outcome`)}
+                    >
+                      Pilot Outcome & KPIs
                     </Button>
-                    <Button variant="accent" size="sm" className="text-xs" onClick={() => navigate(`/government/pilots/${pilot.id}/workspace`)}>
-                      Open Workspace <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    <Button
+                      variant="secondary"
+                      className="w-full text-xs text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100"
+                      onClick={() => navigate(`/government/procurement/${pilot.id}`)}
+                    >
+                      Procurement Readiness
                     </Button>
-                  </CardFooter>
-                </Card>
-              </motion.div>
+                  </div>
+                </div>
+              </Card>
             );
           })}
         </div>

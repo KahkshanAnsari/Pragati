@@ -4,7 +4,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { ProblemCardSkeleton } from '../../components/ui/Skeleton';
+import { Spinner } from '../../components/ui/Spinner';
 import { Pilot } from '../../types';
 import { api } from '../../lib/api';
 import { formatCurrency } from '../../lib/utils';
@@ -44,12 +44,8 @@ export const ProcurementOverview: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <PageHeader
-          title="Procurement Readiness"
-          subtitle="Assess pilot completion against GFR 2017 standards for direct government procurement."
-        />
-        <ProblemCardSkeleton count={3} />
+      <div className="flex h-96 items-center justify-center">
+        <Spinner size="lg" />
       </div>
     );
   }

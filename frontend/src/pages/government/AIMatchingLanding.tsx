@@ -5,7 +5,7 @@ import { Problem } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { ProblemCardSkeleton } from '../../components/ui/Skeleton';
+import { Spinner } from '../../components/ui/Spinner';
 import { formatCurrency } from '../../lib/utils';
 import {
   Sparkles,
@@ -133,7 +133,9 @@ export const AIMatchingLanding: React.FC = () => {
 
       {/* Problems List */}
       {loading ? (
-        <ProblemCardSkeleton count={3} />
+        <div className="p-16 flex justify-center">
+          <Spinner size="lg" />
+        </div>
       ) : filteredProblems.length === 0 ? (
         <Card className="p-12 text-center bg-white border border-dashed border-slate-300">
           <CardContent className="space-y-3">

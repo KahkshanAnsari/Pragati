@@ -3,7 +3,7 @@ import { Card } from '../../components/ui/Card';
 import { KPICard } from '../../components/ui/KPICard';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
-import { DashboardAnalyticsSkeleton } from '../../components/ui/Skeleton';
+import { Spinner } from '../../components/ui/Spinner';
 import { Building2, Rocket, FileText, CheckCircle2, ShieldAlert, Award } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area, Legend } from 'recharts';
 import { api } from '../../lib/api';
@@ -48,7 +48,7 @@ export const Dashboard: React.FC = () => {
     }, 800);
   }, []);
 
-  if (loading) return <DashboardAnalyticsSkeleton />;
+  if (loading) return <div className="flex h-full items-center justify-center"><Spinner size="lg" /></div>;
 
   return (
     <div className="space-y-6">

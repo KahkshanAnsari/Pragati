@@ -3,7 +3,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { Skeleton } from '../../components/ui/Skeleton';
+import { Spinner } from '../../components/ui/Spinner';
 import { api } from '../../lib/api';
 import { formatDate } from '../../lib/utils';
 import { useNotificationStore } from '../../stores/notificationStore';
@@ -92,10 +92,8 @@ export const NotificationsPage: React.FC = () => {
       </div>
 
       {loading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} variant="row" />
-          ))}
+        <div className="flex py-12 justify-center">
+          <Spinner size="lg" />
         </div>
       ) : (
         <div className="space-y-3">

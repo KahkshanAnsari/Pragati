@@ -5,7 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Input } from '../../components/ui/Input';
-import { ProblemCardSkeleton } from '../../components/ui/Skeleton';
+import { Spinner } from '../../components/ui/Spinner';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Problem, Application } from '../../types';
 import { api } from '../../lib/api';
@@ -120,12 +120,8 @@ export const DiscoverProblems: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <PageHeader
-          title="Discover Problems"
-          subtitle="Explore open government challenges and apply for funded pilot deployments."
-        />
-        <ProblemCardSkeleton count={4} />
+      <div className="flex h-96 items-center justify-center">
+        <Spinner size="lg" />
       </div>
     );
   }

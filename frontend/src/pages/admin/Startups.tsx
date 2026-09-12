@@ -61,7 +61,7 @@ export const Startups: React.FC = () => {
         <div className="flex gap-2">
           {row.status === 'pending' && (
             <>
-              <Button size="sm" onClick={() => handleVerify(row.id)} className="bg-blue-600 hover:bg-blue-700 text-white shadow-glow-blue">Verify</Button>
+              <Button size="sm" onClick={() => handleVerify(row.id)} className="bg-green-600 hover:bg-green-700 text-white">Verify</Button>
               <Button size="sm" variant="outline" onClick={() => handleReject(row.id)}>Reject</Button>
             </>
           )}

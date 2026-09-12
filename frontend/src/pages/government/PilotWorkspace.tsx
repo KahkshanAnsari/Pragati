@@ -7,7 +7,6 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardHeader, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Spinner } from '../../components/ui/Spinner';
-import { PilotWorkspaceSkeleton } from '../../components/ui/Skeleton';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { Modal } from '../../components/ui/Modal';
@@ -147,7 +146,11 @@ export const PilotWorkspace: React.FC = () => {
   };
 
   if (loading) {
-    return <PilotWorkspaceSkeleton />;
+    return (
+      <div className="p-16 flex justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   if (!pilot) {

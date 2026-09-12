@@ -5,7 +5,6 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
 import { Spinner } from '../../components/ui/Spinner';
-import { SkeletonItem } from '../../components/ui/Skeleton';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Badge } from '../../components/ui/Badge';
 import { Problem, Application } from '../../types';
@@ -103,20 +102,8 @@ export const ApplicationForm: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto space-y-6">
-        <SkeletonItem className="h-8 w-64" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-4">
-            <SkeletonItem className="h-6 w-32" />
-            <SkeletonItem className="h-24 w-full rounded-lg" />
-          </div>
-          <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-6 space-y-4">
-            <SkeletonItem className="h-6 w-48" />
-            <SkeletonItem className="h-10 w-full rounded-lg" />
-            <SkeletonItem className="h-24 w-full rounded-lg" />
-            <SkeletonItem className="h-10 w-40 rounded-lg" />
-          </div>
-        </div>
+      <div className="flex h-64 items-center justify-center">
+        <Spinner size="lg" />
       </div>
     );
   }
@@ -206,7 +193,7 @@ export const ApplicationForm: React.FC = () => {
                   onClick={() => !existingApp && setStep(s)}
                 >
                   {step > s ? (
-                    <CheckCircle2 className="w-5 h-5 text-blue-600" />
+                    <CheckCircle2 className="w-5 h-5 text-green-500" />
                   ) : (
                     <div
                       className={`w-5 h-5 rounded-full border-2 flex items-center justify-center text-xs font-semibold ${
@@ -236,7 +223,7 @@ export const ApplicationForm: React.FC = () => {
           <Card className="p-6">
             {existingApp ? (
               <div className="text-center py-12 space-y-4">
-                <CheckCircle2 className="w-12 h-12 text-blue-600 mx-auto" />
+                <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto" />
                 <h3 className="text-xl font-bold text-navy-900">Application Already Submitted</h3>
                 <p className="text-gray-600 max-w-md mx-auto">
                   Your startup has already submitted an application for this problem. The government evaluation committee is reviewing all shortlisted proposals.

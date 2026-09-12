@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
-import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
-import { KPICard } from '../../components/ui/KPICard';
-import { DashboardAnalyticsSkeleton } from '../../components/ui/Skeleton';
-import { StatusBadge } from '../../components/ui/StatusBadge';
+import { ProgressBar } from '../../components/ui/ProgressBar';
+import { Badge } from '../../components/ui/Badge';
+import { Card } from '../../components/ui/Card';
+import { Spinner } from '../../components/ui/Spinner';
 import {
-  AlertCircle, Rocket, ShoppingBag, Plus,
-  FileText, Sparkles, TrendingUp, ChevronRight,
-  Activity, Building2, CheckCircle2, ShieldCheck,
-  BarChart3, Award, Users,
+  AlertCircle,
+  Rocket,
+  ShieldCheck,
+  ShoppingBag,
+  Plus,
+  Compass,
+  FileText,
+  Users,
+  Sparkles,
+  ArrowRight,
+  TrendingUp,
+  Clock,
+  Briefcase,
+  CheckCircle2,
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { api } from '../../lib/api';
 import { formatCurrency, formatDate } from '../../lib/utils';
+import { toast } from 'react-hot-toast';
 
 export function GovernmentDashboard() {
   const navigate = useNavigate();
-  const { profile } = useAuthStore();
+  const { user, profile } = useAuthStore();
   const date = new Intl.DateTimeFormat('en-IN', { dateStyle: 'full' }).format(new Date());
 
   const [loading, setLoading] = useState(true);
@@ -26,6 +37,7 @@ export function GovernmentDashboard() {
   const [applications, setApplications] = useState<any[]>([]);
   const [pilots, setPilots] = useState<any[]>([]);
   const [solutions, setSolutions] = useState<any[]>([]);
+  const [procurementCases, setProcurementCases] = useState<any[]>([]);
 
   useEffect(() => {
     fetchDashboardData();
@@ -45,14 +57,17 @@ export function GovernmentDashboard() {
         const list = Array.isArray(probRes.value.data) ? probRes.value.data : (probRes.value.data?.data || []);
         setProblems(list);
       }
+
       if (appRes.status === 'fulfilled') {
         const list = Array.isArray(appRes.value.data) ? appRes.value.data : (appRes.value.data?.data || []);
         setApplications(list);
       }
+
       if (pilotRes.status === 'fulfilled') {
         const list = Array.isArray(pilotRes.value.data) ? pilotRes.value.data : (pilotRes.value.data?.data || []);
         setPilots(list);
       }
+
       if (solRes.status === 'fulfilled') {
         const list = Array.isArray(solRes.value.data) ? solRes.value.data : (solRes.value.data?.data || []);
         setSolutions(list);
@@ -64,221 +79,362 @@ export function GovernmentDashboard() {
     }
   };
 
+  const openProblems = problems.filter((p) => p.status === 'published');
   const activePilots = pilots.filter((p) => p.status === 'active');
   const readyPilots = pilots.filter((p) => (p.progress_percent || 0) >= 70);
-  const completedPilots = pilots.filter((p) => p.status === 'completed');
 
-  // Compute metrics
-  const pilotSuccessRate = pilots.length > 0
-    ? Math.round(((completedPilots.length + activePilots.length * 0.8) / pilots.length) * 100)
-    : 92;
+  // Dynamic Pipeline Counts
+  const problemPipeline = {
+    draft: problems.filter((p) => p.status === 'draft').length,
+    open: problems.filter((p) => p.status === 'published').length,
+    matched: problems.filter((p) => p.status === 'matched').length,
+    pilot_active: problems.filter((p) => p.status === 'pilot_active').length,
+    completed: problems.filter((p) => p.status === 'completed').length,
+  };
 
-  const aiMatchesCount = problems.filter((p) => p.status === 'matched' || p.status === 'pilot_active').length * 7;
+  const applicationPipeline = {
+    total: applications.length,
+    submitted: applications.filter((a) => a.status === 'submitted').length,
+    shortlisted: applications.filter((a) => a.status === 'shortlisted').length,
+    selected: applications.filter((a) => a.status === 'selected').length,
+    rejected: applications.filter((a) => a.status === 'rejected').length,
+  };
 
-  const officerProfile = profile as { name?: string; designation?: string; department?: { name?: string } } | null;
-  const greetingHour = new Date().getHours();
-  const greeting = greetingHour < 12 ? 'Good morning' : greetingHour < 17 ? 'Good afternoon' : 'Good evening';
-
-  const pipeline = [
-    { label: 'Problems Posted', count: problems.length,     color: 'bg-navy-900' },
-    { label: 'Proposals',       count: applications.length, color: 'bg-blue-600' },
-    { label: 'Pilots Underway', count: pilots.length,       color: 'bg-cyan-600' },
-    { label: 'Validated Tech',  count: solutions.length,    color: 'bg-blue-700' },
-    { label: 'Ready to Procure',count: readyPilots.length,  color: 'bg-navy-900' },
-  ];
-
-  const quickActions = [
-    { label: 'Post Problem',       icon: Plus,        path: '/government/problems/new' },
-    { label: 'AI Startup Match',   icon: Sparkles,    path: '/government/ai-matching' },
-    { label: 'Review Proposals',   icon: FileText,    path: '/government/applications' },
-    { label: 'Live Monitoring',    icon: Activity,    path: '/government/monitoring' },
-  ];
+  const officerName = (profile as any)?.name || 'Nodal Officer';
+  const deptName = (profile as any)?.department?.name || 'Department of Innovation & Public Procurement';
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto space-y-6">
-        <DashboardAnalyticsSkeleton />
+      <div className="p-16 flex justify-center">
+        <Spinner size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 animate-fade-in">
-      {/* Officer Welcome Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2 border-b border-slate-100">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-navy-900 tracking-tight">
-            {greeting}, {officerProfile?.name?.split(' ')[0] || 'Officer'}
+    <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Header Banner */}
+      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-navy-800 bg-navy-50 px-2.5 py-0.5 rounded border border-navy-200">
+              Government Innovation Command Center
+            </span>
+            <span className="text-xs text-gray-400">•</span>
+            <span className="text-xs text-gray-500">{date}</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-navy-900">
+            Welcome back, {officerName}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-slate-400" />
-            <span className="font-semibold text-slate-700">{officerProfile?.department?.name || 'Department of Innovation'}</span>
-            <span>•</span>
-            <span>{date}</span>
+          <p className="text-xs md:text-sm text-gray-600 flex items-center gap-1.5">
+            <Briefcase className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+            {deptName}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button size="sm" onClick={() => navigate('/government/problems/new')} className="bg-navy-900 hover:bg-slate-800 text-white shadow-card">
-            <Plus className="w-3.5 h-3.5 mr-1.5" /> Post a Problem
+
+        {/* Command Quick Actions */}
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          <Button
+            onClick={() => navigate('/government/problems/new')}
+            className="bg-navy-900 hover:bg-navy-800 text-white text-xs font-semibold py-2.5 px-3 flex items-center gap-1.5 shadow-sm"
+          >
+            <Plus className="w-4 h-4 text-emerald-400" /> Post Problem
           </Button>
-          <Button size="sm" variant="outline" onClick={() => navigate('/government/ai-matching')}>
-            <Sparkles className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> AI Match
+          <Button
+            variant="secondary"
+            onClick={() => navigate('/government/startups')}
+            className="text-xs font-semibold py-2.5 px-3"
+          >
+            Find Startups
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => navigate('/government/applications')}
+            className="text-xs font-semibold py-2.5 px-3"
+          >
+            Applications ({applicationPipeline.submitted})
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => navigate('/government/procurement')}
+            className="text-xs font-semibold py-2.5 px-3 text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100"
+          >
+            Procurement Readiness
           </Button>
         </div>
       </div>
 
-      {/* 6 Core Enterprise Metrics Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-        <KPICard
-          label="Problems Posted"
-          value={problems.length}
-          icon={<AlertCircle className="w-4 h-4" />}
-          accentColor="navy"
-          onClick={() => navigate('/government/problems')}
-        />
-        <KPICard
-          label="Applications"
-          value={applications.length}
-          icon={<FileText className="w-4 h-4" />}
-          accentColor="blue"
-          onClick={() => navigate('/government/applications')}
-        />
-        <KPICard
-          label="Active Pilots"
-          value={activePilots.length}
-          icon={<Rocket className="w-4 h-4" />}
-          accentColor="cyan"
-          onClick={() => navigate('/government/pilots')}
-        />
-        <KPICard
-          label="AI Matches"
-          value={aiMatchesCount || 7}
-          icon={<Sparkles className="w-4 h-4" />}
-          accentColor="blue"
-          onClick={() => navigate('/government/ai-matching')}
-        />
-        <KPICard
-          label="Procurement Ready"
-          value={readyPilots.length}
-          icon={<ShoppingBag className="w-4 h-4" />}
-          accentColor="navy"
-          onClick={() => navigate('/government/procurement')}
-        />
-        <KPICard
-          label="Success Rate"
-          value={`${pilotSuccessRate}%`}
-          icon={<Award className="w-4 h-4" />}
-          accentColor="cyan"
-          onClick={() => navigate('/government/pilots')}
-        />
+      {/* Dynamic 5 KPI Metric Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <Card className="p-4 bg-white border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-semibold text-gray-500 uppercase">Open Problems</span>
+            <AlertCircle className="w-4 h-4 text-blue-600" />
+          </div>
+          <p className="text-2xl font-bold text-navy-900">{openProblems.length}</p>
+          <p className="text-[11px] text-gray-400 mt-1">Open for applications</p>
+        </Card>
+
+        <Card className="p-4 bg-white border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-semibold text-gray-500 uppercase">To Review</span>
+            <FileText className="w-4 h-4 text-amber-500" />
+          </div>
+          <p className="text-2xl font-bold text-navy-900">{applicationPipeline.submitted}</p>
+          <p className="text-[11px] text-amber-700 font-medium mt-1">Awaiting scoring</p>
+        </Card>
+
+        <Card className="p-4 bg-white border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-semibold text-gray-500 uppercase">Active Pilots</span>
+            <Rocket className="w-4 h-4 text-emerald-600" />
+          </div>
+          <p className="text-2xl font-bold text-navy-900">{activePilots.length}</p>
+          <p className="text-[11px] text-gray-400 mt-1">Live field deployments</p>
+        </Card>
+
+        <Card className="p-4 bg-white border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-semibold text-gray-500 uppercase">Procurement Ready</span>
+            <ShoppingBag className="w-4 h-4 text-purple-600" />
+          </div>
+          <p className="text-2xl font-bold text-navy-900">{readyPilots.length}</p>
+          <p className="text-[11px] text-purple-700 font-medium mt-1">Ready for review</p>
+        </Card>
+
+        <Card className="p-4 bg-white border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-semibold text-gray-500 uppercase">Validated Solutions</span>
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          </div>
+          <p className="text-2xl font-bold text-navy-900">{solutions.length}</p>
+          <p className="text-[11px] text-emerald-700 font-medium mt-1">Proven in government</p>
+        </Card>
       </div>
 
-      {/* Innovation Pipeline Stage Visualizer */}
-      <Card padding="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Government Innovation Pipeline Execution
-          </span>
-          <span className="text-xs font-semibold text-blue-600 flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5" /> GFR 2017 Compliant
-          </span>
-        </div>
-        <div className="flex items-center gap-2 overflow-x-auto pb-2">
-          {pipeline.map((stage, i) => (
-            <React.Fragment key={stage.label}>
-              <div className="flex flex-col items-center gap-2 min-w-[100px] flex-1">
-                <div className={`w-full py-3 rounded-xl ${stage.color} text-white flex flex-col items-center justify-center shadow-card`}>
-                  <span className="text-xl font-extrabold tabular-nums leading-none">{stage.count}</span>
-                </div>
-                <span className="text-[11px] font-bold text-slate-700 text-center">{stage.label}</span>
-              </div>
-              {i < pipeline.length - 1 && (
-                <ChevronRight className="w-4 h-4 text-slate-300 shrink-0 mb-6" />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      </Card>
-
-      {/* Two Column Layout: Recent Problems & Operational Panel */}
+      {/* Main Command Center Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left 7 cols: Recent Problems */}
-        <div className="lg:col-span-7 space-y-4">
-          <Card padding="">
-            <CardHeader className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-              <CardTitle>Active Challenges</CardTitle>
-              <Button variant="ghost" size="xs" onClick={() => navigate('/government/problems')} className="text-xs text-blue-600 font-semibold">
-                View All <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+        {/* Left 8 Cols: Active Pilots & Open Challenges */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Active Pilot Monitoring */}
+          <Card className="p-6 border border-gray-200 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Rocket className="w-5 h-5 text-blue-600" />
+                <h2 className="text-lg font-bold text-navy-900">Active Pilot Deployments</h2>
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => navigate('/government/pilots')}>
+                View All Pilots <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </Button>
-            </CardHeader>
-            <div className="divide-y divide-slate-100">
-              {problems.slice(0, 5).map((p) => (
-                <div
-                  key={p.id}
-                  className="px-6 py-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/80 cursor-pointer transition-colors"
-                  onClick={() => navigate(`/government/problems/${p.id}`)}
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm font-bold text-navy-900 truncate hover:text-blue-600 transition-colors">
-                      {p.title}
-                    </p>
-                    <p className="text-[11px] text-slate-500 truncate mt-0.5">
-                      {p.sector || 'Sector'} • {p.pilot_duration_days || 90}d Sandbox • {p.budget_min && p.budget_max ? `${formatCurrency(p.budget_min)} - ${formatCurrency(p.budget_max)}` : 'Budget TBD'}
-                    </p>
-                  </div>
-                  <StatusBadge status={p.status || 'draft'} />
-                </div>
-              ))}
-              {problems.length === 0 && (
-                <div className="px-6 py-8 text-center text-xs text-slate-400">
-                  No challenge statements posted yet.
-                </div>
-              )}
             </div>
-          </Card>
-        </div>
 
-        {/* Right 5 cols: Quick Actions & Application Health */}
-        <div className="lg:col-span-5 space-y-4">
-          <Card padding="p-5">
-            <CardTitle className="mb-3 text-sm">Quick Actions</CardTitle>
-            <div className="grid grid-cols-2 gap-2.5">
-              {quickActions.map((action) => {
-                const Icon = action.icon;
+            <div className="space-y-4">
+              {pilots.map((p) => {
+                const progress = Math.round(p.progress_percent || 0);
+                const title = p.problem?.title || `Pilot ${p.pilot_number}`;
+                const startupName = p.startup?.name || 'Selected Startup';
+
                 return (
-                  <button
-                    key={action.label}
-                    onClick={() => navigate(action.path)}
-                    className="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 hover:border-blue-400 hover:bg-blue-50/30 hover:shadow-card transition-all text-left group"
+                  <div
+                    key={p.id}
+                    className="p-4 rounded-xl border border-gray-200 bg-gray-50/60 hover:bg-gray-50 transition-colors"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                      <Icon className="w-4 h-4" />
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-2 mb-2">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                            {p.pilot_number}
+                          </span>
+                          <Badge variant={p.status === 'completed' ? 'success' : 'active'}>
+                            {p.status.toUpperCase()}
+                          </Badge>
+                          {p.progress_percent < 50 && p.status === 'active' && (
+                            <span className="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 font-medium">
+                              Supply Chain Attention
+                            </span>
+                          )}
+                        </div>
+                        <h3
+                          onClick={() => navigate(`/government/pilots/${p.id}/workspace`)}
+                          className="text-base font-bold text-navy-900 hover:text-blue-600 cursor-pointer transition-colors"
+                        >
+                          {title}
+                        </h3>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          Vendor: <strong className="text-navy-900">{startupName}</strong> • Allocated: {formatCurrency(p.budget_allocated)}
+                        </p>
+                      </div>
+                      <span className="text-base font-bold text-navy-900">{progress}%</span>
                     </div>
-                    <span className="text-xs font-bold text-slate-800">{action.label}</span>
-                  </button>
+
+                    <ProgressBar value={progress} color="navy" />
+
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 text-xs">
+                      <span className="text-gray-500">
+                        Budget Utilized: <strong>{formatCurrency(p.budget_utilized || 0)}</strong>
+                      </span>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="text-xs"
+                          onClick={() => navigate(`/government/pilots/${p.id}/inspection`)}
+                        >
+                          Field Inspections
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="bg-navy-900 hover:bg-navy-800 text-white text-xs font-semibold"
+                          onClick={() => navigate(`/government/pilots/${p.id}/workspace`)}
+                        >
+                          Open Workspace
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </div>
           </Card>
 
-          <Card padding="p-5">
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Application Review Health</span>
-              <span className="text-xs font-bold text-navy-900">{applications.length} Total</span>
+          {/* Open Problems with AI Matching Trigger */}
+          <Card className="p-6 border border-gray-200 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-500" />
+                <h2 className="text-lg font-bold text-navy-900">Department Problem Statements</h2>
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => navigate('/government/problems')}>
+                Problem Registry <ArrowRight className="w-3.5 h-3.5 ml-1" />
+              </Button>
             </div>
-            <div className="grid grid-cols-4 gap-2 text-center">
-              {[
-                { label: 'Submitted',   count: applications.filter(a => a.status === 'submitted').length,   color: 'text-blue-700 bg-blue-50 border-blue-200' },
-                { label: 'Shortlist',   count: applications.filter(a => a.status === 'shortlisted').length, color: 'text-amber-700 bg-amber-50 border-amber-200' },
-                { label: 'Selected',    count: applications.filter(a => a.status === 'selected').length,    color: 'text-cyan-800 bg-cyan-50 border-cyan-200' },
-                { label: 'Rejected',    count: applications.filter(a => a.status === 'rejected').length,    color: 'text-slate-600 bg-slate-100 border-slate-200' },
-              ].map((s) => (
-                <div key={s.label} className={`rounded-xl py-2 px-1 border ${s.color}`}>
-                  <div className="text-base font-black tabular-nums">{s.count}</div>
-                  <div className="text-[9px] font-bold uppercase tracking-wider mt-0.5">{s.label}</div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {openProblems.slice(0, 4).map((prob) => (
+                <div
+                  key={prob.id}
+                  className="p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-all flex flex-col justify-between"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                        {prob.sector}
+                      </span>
+                      <span className="text-[11px] font-bold text-navy-900">
+                        {prob.budget_min ? `₹${Math.round(prob.budget_min / 100000)}L - ₹${Math.round(prob.budget_max / 100000)}L` : 'Standard'}
+                      </span>
+                    </div>
+
+                    <h4
+                      onClick={() => navigate(`/government/problems/${prob.id}`)}
+                      className="font-bold text-navy-900 text-sm hover:text-blue-600 cursor-pointer line-clamp-2"
+                    >
+                      {prob.title}
+                    </h4>
+                    <p className="text-xs text-gray-500">
+                      Pilot Duration: <strong>{prob.pilot_duration_days || 90} Days</strong>
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-3 mt-3 border-t border-gray-100">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="flex-1 text-xs"
+                      onClick={() => navigate(`/government/problems/${prob.id}`)}
+                    >
+                      Details
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="flex-1 bg-navy-900 hover:bg-navy-800 text-white text-xs flex items-center justify-center gap-1"
+                      onClick={() => navigate(`/government/problems/${prob.id}/match`)}
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-400" /> AI Match
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
+          </Card>
+        </div>
+
+        {/* Right 4 Cols: Problem Pipeline & Application Pipeline */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Problem Pipeline */}
+          <Card className="p-6 border border-gray-200 shadow-sm">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-4 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-blue-600" /> Problem Pipeline
+            </h3>
+            <div className="space-y-3 text-xs">
+              <div className="flex items-center justify-between p-2.5 bg-gray-50 rounded-lg">
+                <span className="text-gray-600 font-medium">Draft Specifications</span>
+                <span className="font-bold text-navy-900">{problemPipeline.draft}</span>
+              </div>
+              <div className="flex items-center justify-between p-2.5 bg-blue-50 rounded-lg text-blue-900 font-medium">
+                <span>Published (Open)</span>
+                <span className="font-bold">{problemPipeline.open}</span>
+              </div>
+              <div className="flex items-center justify-between p-2.5 bg-emerald-50 rounded-lg text-emerald-900 font-medium">
+                <span>Under Active Pilot</span>
+                <span className="font-bold">{problemPipeline.pilot_active}</span>
+              </div>
+              <div className="flex items-center justify-between p-2.5 bg-purple-50 rounded-lg text-purple-900 font-medium">
+                <span>Completed / Procured</span>
+                <span className="font-bold">{problemPipeline.completed}</span>
+              </div>
+            </div>
+          </Card>
+
+          {/* Application Pipeline */}
+          <Card className="p-6 border border-gray-200 shadow-sm">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-4 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-purple-600" /> Application Pipeline
+            </h3>
+            <div className="space-y-3 text-xs">
+              <div className="flex items-center justify-between p-2.5 bg-gray-50 rounded-lg">
+                <span className="text-gray-600 font-medium">Total Received</span>
+                <span className="font-bold text-navy-900">{applicationPipeline.total}</span>
+              </div>
+              <div className="flex items-center justify-between p-2.5 bg-amber-50 rounded-lg text-amber-900 font-medium">
+                <span>Awaiting Evaluation</span>
+                <span className="font-bold">{applicationPipeline.submitted}</span>
+              </div>
+              <div className="flex items-center justify-between p-2.5 bg-blue-50 rounded-lg text-blue-900 font-medium">
+                <span>Shortlisted for Review</span>
+                <span className="font-bold">{applicationPipeline.shortlisted}</span>
+              </div>
+              <div className="flex items-center justify-between p-2.5 bg-emerald-50 rounded-lg text-emerald-900 font-medium">
+                <span>Selected for Pilot</span>
+                <span className="font-bold">{applicationPipeline.selected}</span>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3 border-t border-gray-100">
+              <Button
+                className="w-full bg-navy-900 hover:bg-navy-800 text-white text-xs font-semibold py-2"
+                onClick={() => navigate('/government/applications')}
+              >
+                Review Applications
+              </Button>
+            </div>
+          </Card>
+
+          {/* Accelerated Procurement Review Banner */}
+          <Card className="p-5 bg-gradient-to-br from-navy-900 to-blue-900 text-white border-0 shadow-md">
+            <div className="flex items-center gap-2 mb-2">
+              <ShoppingBag className="w-5 h-5 text-emerald-400" />
+              <h4 className="text-sm font-bold text-white">Accelerated Procurement Review</h4>
+            </div>
+            <p className="text-xs text-blue-100 leading-relaxed mb-3">
+              {readyPilots.length} pilots have completed inspection verification and qualify for formal procurement review.
+            </p>
+            <Button
+              className="w-full bg-white hover:bg-blue-50 text-navy-900 text-xs font-bold py-2 border-0"
+              onClick={() => navigate('/government/procurement')}
+            >
+              Review Procurement Readiness Cases
+            </Button>
           </Card>
         </div>
       </div>

@@ -8,7 +8,7 @@ import { Card, CardContent } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
 import { Select } from '../../components/ui/Select';
-import { SkeletonItem } from '../../components/ui/Skeleton';
+import { Spinner } from '../../components/ui/Spinner';
 import { toast } from 'react-hot-toast';
 
 export const FieldInspection: React.FC = () => {
@@ -70,19 +70,7 @@ export const FieldInspection: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="max-w-2xl mx-auto space-y-6">
-        <SkeletonItem className="h-8 w-48" />
-        <div className="bg-white p-6 rounded-xl border border-slate-200 space-y-4">
-          <SkeletonItem className="h-6 w-32" />
-          <SkeletonItem className="h-10 w-full rounded-lg" />
-          <SkeletonItem className="h-24 w-full rounded-lg" />
-          <SkeletonItem className="h-10 w-32 rounded-lg" />
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
