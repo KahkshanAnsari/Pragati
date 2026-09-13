@@ -59,7 +59,7 @@ export function Landing() {
     >
       {/* ── 1. GOVERNMENT OF INDIA ACCESSIBILITY & IDENTITY STRIP ───────────────── */}
       <div className="bg-[#0B192C] text-slate-200 text-xs py-1 px-4 sm:px-6 lg:px-8 border-b border-slate-700/60 z-50">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div className="max-w-[1400px] mx-auto flex flex-wrap items-center justify-between gap-2">
           {/* Government Identity */}
           <div className="flex items-center gap-2">
             <AshokaEmblem className="w-4 h-4 text-slate-200 shrink-0" />
@@ -133,26 +133,26 @@ export function Landing() {
 
       {/* ── 2. HEADER / NAVBAR (EXACT REFERENCE MATCH) ────────────────────────── */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E2E8F0] shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo & Platform Title (No "National Platform" Badge) */}
           <div className="flex items-center gap-2.5 shrink-0">
             <img
               src={pragatiLogo}
               alt="PRAGATI Logo"
-              className="h-10 w-10 object-contain shrink-0"
+              className="h-11 w-11 object-contain shrink-0"
             />
             <div className="flex flex-col">
-              <span className="text-xl font-black text-[#0F2747] tracking-tight leading-none">
+              <span className="text-[22px] font-black text-[#0F2747] tracking-tight leading-none">
                 PRAGATI
               </span>
-              <span className="text-[10px] text-[#64748B] font-medium hidden sm:block mt-0.5">
+              <span className="text-[11px] text-[#64748B] font-medium hidden sm:block mt-0.5">
                 National Government Innovation & Procurement Platform
               </span>
             </div>
           </div>
 
           {/* Clean Single-Line Navigation */}
-          <nav className="hidden lg:flex items-center gap-5 text-[13px] font-medium text-[#64748B] whitespace-nowrap">
+          <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-[#64748B] whitespace-nowrap">
             <a
               href="#main-content"
               className="text-[#0F2747] font-semibold border-b-2 border-[#2563EB] pb-0.5 flex items-center gap-1"
@@ -230,7 +230,7 @@ export function Landing() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#F0F6FF]/60 via-white to-white lg:hidden" />
 
           {/* Content — left-aligned, above gradient */}
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
+          <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
             <div className="w-full lg:max-w-[52%] space-y-5 text-left">
               {/* Sovereign Tag */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EFF6FF] border border-blue-200 text-[#2563EB] text-xs font-semibold">
@@ -317,7 +317,7 @@ export function Landing() {
 
         {/* ── 4. KEY FEATURES (LEFT) + LATEST UPDATES (RIGHT CORNER) ────────────── */}
         <section id="key-features" className="py-8 lg:py-10 bg-white border-b border-[#E2E8F0]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column (8 cols): Key Features (4-Card Grid) */}
               <div className="lg:col-span-8">
@@ -533,7 +533,7 @@ export function Landing() {
 
         {/* ── 5. HOW IT WORKS ─────────────────────────────────────────────────── */}
         <section id="how-it-works" className="py-10 bg-[#F8FAFC] border-b border-[#E2E8F0]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-8 space-y-1">
               <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">
                 Operational Workflow
@@ -608,7 +608,7 @@ export function Landing() {
 
         {/* ── 6. TRUST / FROM CHALLENGE TO ADOPTION ─────────────────────────── */}
         <section id="trust" className="py-10 bg-white border-b border-[#E2E8F0]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-8 space-y-1">
               <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">
                 Platform Value
@@ -670,7 +670,7 @@ export function Landing() {
 
       {/* ── 7. FOOTER ──────────────────────────────────────────────────────── */}
       <footer id="footer" className="bg-[#0F2747] text-slate-300 py-10 border-t border-slate-700/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-slate-700/60">
             {/* Branding */}
             <div className="space-y-2 md:col-span-1">
