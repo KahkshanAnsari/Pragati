@@ -232,13 +232,13 @@ export function GovernmentLogin() {
         style={{ backgroundImage: `url(${govLoginBg})` }}
       >
         {/* Centered Login Card */}
-        <div className="w-full max-w-[390px] bg-white rounded-2xl shadow-xl border border-slate-200/90 p-6 sm:p-8 text-center relative z-10">
-          {/* Card Top: PRAGATI Logo fills the circular container */}
-          <div className="w-14 h-14 rounded-full border border-blue-200 bg-white p-0.5 mx-auto mb-3.5 flex items-center justify-center shadow-xs overflow-hidden">
+        <div className="w-full max-w-[480px] bg-white rounded-2xl shadow-xl border border-slate-200/90 p-7 sm:p-9 text-center relative z-10">
+          {/* Card Top: PRAGATI Logo (border removed as in Image 2) */}
+          <div className="mx-auto mb-3.5 flex items-center justify-center">
             <img
               src={pragatiLogo}
               alt="PRAGATI Logo"
-              className="w-full h-full object-cover scale-[1.08]"
+              className="h-14 w-14 object-contain"
             />
           </div>
 
@@ -251,14 +251,14 @@ export function GovernmentLogin() {
           </p>
 
           {/* Demo Account Indicator Box */}
-          <div className="my-5 p-3 rounded-xl bg-[#F0F6FF] border border-blue-200/90 flex items-center justify-between text-xs text-left">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
+          <div className="my-5 p-3 sm:p-3.5 rounded-xl bg-[#F0F6FF] border border-blue-200/90 flex items-center justify-between text-xs text-left">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0" />
               <div className="min-w-0">
                 <p className="font-bold text-[#0F2747] text-xs leading-tight whitespace-nowrap">
                   {t.demoTitle}
                 </p>
-                <p className="text-[11px] text-blue-600 truncate mt-0.5 whitespace-nowrap">
+                <p className="text-[11px] text-blue-600 mt-0.5 whitespace-nowrap">
                   {t.demoSub}
                 </p>
               </div>
@@ -266,7 +266,7 @@ export function GovernmentLogin() {
             <button
               type="button"
               onClick={handleQuickFill}
-              className="text-xs font-bold text-blue-700 hover:text-blue-900 underline shrink-0 ml-2.5 cursor-pointer whitespace-nowrap"
+              className="text-xs font-bold text-blue-700 hover:text-blue-900 underline shrink-0 ml-4 cursor-pointer whitespace-nowrap"
             >
               {t.useDemo}
             </button>
