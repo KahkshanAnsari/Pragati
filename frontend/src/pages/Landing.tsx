@@ -87,13 +87,7 @@ export function Landing() {
           <div className="flex items-center gap-2">
             <AshokaEmblem className="w-4 h-4 text-slate-200 shrink-0" />
             <span className="font-semibold text-white tracking-wide">
-              {isHindi ? 'भारत सरकार' : 'Government of India'}
-            </span>
-            <span className="text-slate-500">|</span>
-            <span className="text-slate-300 hidden md:inline text-[11px]">
-              {isHindi
-                ? 'कार्मिक, लोक शिकायत और पेंशन मंत्रालय'
-                : 'Ministry of Personnel, Public Grievances & Pensions'}
+              {isHindi ? 'राष्ट्रीय सरकारी नवाचार मंच' : 'National Government Innovation Platform'}
             </span>
           </div>
 
@@ -103,7 +97,7 @@ export function Landing() {
               href="#main-content"
               className="hover:text-white transition-colors underline-offset-4 hover:underline hidden sm:inline"
             >
-              Skip to main content
+              {isHindi ? 'मुख्य सामग्री पर जाएं' : 'Skip to main content'}
             </a>
             <span className="text-slate-600 hidden sm:inline">|</span>
 
@@ -134,22 +128,34 @@ export function Landing() {
 
             <span className="text-slate-600">|</span>
 
-            {/* Language Switch */}
-            <button
-              onClick={() => setIsHindi(!isHindi)}
-              className="flex items-center gap-1 hover:text-white transition-colors"
-              title="Toggle language"
-            >
-              <Globe className="w-3 h-3 text-blue-400" />
-              <span>{isHindi ? 'English' : 'हिंदी'}</span>
-            </button>
-
-            <span className="text-slate-600">|</span>
-
-            {/* Accessibility Symbol */}
-            <span title="Accessible Interface" className="text-slate-300 cursor-default">
-              ♿
-            </span>
+            {/* Language Selector with Selectable Options */}
+            <div className="flex items-center gap-1.5">
+              <Globe className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+              <div className="inline-flex items-center rounded bg-slate-800/90 p-0.5 border border-slate-700">
+                <button
+                  type="button"
+                  onClick={() => setIsHindi(false)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-semibold transition-colors cursor-pointer ${
+                    !isHindi
+                      ? 'bg-blue-600 text-white font-bold shadow-2xs'
+                      : 'text-slate-300 hover:text-white'
+                  }`}
+                >
+                  English
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsHindi(true)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-semibold transition-colors cursor-pointer ${
+                    isHindi
+                      ? 'bg-blue-600 text-white font-bold shadow-2xs'
+                      : 'text-slate-300 hover:text-white'
+                  }`}
+                >
+                  हिंदी
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -169,37 +175,38 @@ export function Landing() {
                 PRAGATI
               </span>
               <span className="text-[11px] text-[#64748B] font-medium hidden sm:block mt-0.5">
-                National Government Innovation & Procurement Platform
+                {isHindi ? 'राष्ट्रीय सरकारी नवाचार और खरीद मंच' : 'National Government Innovation & Procurement Platform'}
               </span>
             </div>
           </div>
 
           {/* Clean Single-Line Navigation */}
           <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-[#64748B] whitespace-nowrap">
-            <a href="#hero" className={navActive('hero')}>Home</a>
-            <a href="#about" className={navActive('about')}>About PRAGATI</a>
-            <a href="#how-it-works" className={navActive('how-it-works')}>How It Works</a>
-            <a href="#key-features" className={navActive('key-features')}>Core Features</a>
-            <a href="#resources" className={navActive('resources')}>Resources</a>
-            <a href="#contact" className={navActive('contact')}>Contact Us</a>
+            <a href="#hero" className={navActive('hero')}>{isHindi ? 'होम' : 'Home'}</a>
+            <a href="#about" className={navActive('about')}>{isHindi ? 'प्रगति के बारे में' : 'About PRAGATI'}</a>
+            <a href="#how-it-works" className={navActive('how-it-works')}>{isHindi ? 'यह कैसे काम करता है' : 'How It Works'}</a>
+            <a href="#key-features" className={navActive('key-features')}>{isHindi ? 'मुख्य विशेषताएँ' : 'Core Features'}</a>
+            <a href="#resources" className={navActive('resources')}>{isHindi ? 'संसाधन' : 'Resources'}</a>
+            <a href="#contact" className={navActive('contact')}>{isHindi ? 'संपर्क करें' : 'Contact Us'}</a>
           </nav>
 
-          {/* Right Action Buttons */}
+          {/* Right Action Buttons - Visually Consistent Style */}
           <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-            <button
+            <Button
+              size="sm"
               onClick={() => navigate('/auth/startup/login')}
-              className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-[#0F172A] hover:bg-slate-50 border border-[#E2E8F0] rounded-lg transition-all shadow-2xs"
+              className="bg-[#0F2747] hover:bg-[#1E3A6E] text-white text-xs sm:text-sm font-semibold px-3.5 sm:px-4 py-2 rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
             >
-              <User className="w-3.5 h-3.5 text-[#2563EB]" />
-              <span>Startup Login</span>
-            </button>
+              <User className="w-3.5 h-3.5 text-blue-300" />
+              <span>{isHindi ? 'स्टार्टअप लॉगिन' : 'Startup Login'}</span>
+            </Button>
             <Button
               size="sm"
               onClick={() => navigate('/auth/government/login')}
               className="bg-[#0F2747] hover:bg-[#1E3A6E] text-white text-xs sm:text-sm font-semibold px-3.5 sm:px-4 py-2 rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
             >
               <Building2 className="w-3.5 h-3.5 text-blue-300" />
-              <span>Government Portal</span>
+              <span>{isHindi ? 'सरकारी पोर्टल' : 'Government Portal'}</span>
             </Button>
           </div>
         </div>
@@ -242,20 +249,29 @@ export function Landing() {
               {/* Sovereign Tag */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EFF6FF] border border-blue-200 text-[#2563EB] text-xs font-semibold">
                 <ShieldCheck className="w-4 h-4 text-[#2563EB] shrink-0" />
-                <span>Government Innovation & Startup Enablement Platform</span>
+                <span>{isHindi ? 'सरकारी नवाचार एवं स्टार्टअप सक्षमता मंच' : 'Government Innovation & Startup Enablement Platform'}</span>
               </div>
 
               {/* Heading */}
               <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-black text-[#0F172A] tracking-tight leading-[1.18]">
-                From Government Problems <br />
-                to <span className="text-[#2563EB]">Scalable Solutions.</span>
+                {isHindi ? (
+                  <>
+                    सरकारी समस्याओं से लेकर <br />
+                    <span className="text-[#2563EB]">स्केलेबल समाधान तक।</span>
+                  </>
+                ) : (
+                  <>
+                    From Government Problems <br />
+                    to <span className="text-[#2563EB]">Scalable Solutions.</span>
+                  </>
+                )}
               </h1>
 
               {/* Subtitle */}
               <p className="text-sm sm:text-base text-[#374151] leading-relaxed max-w-lg">
-                Pragati connects government challenges with capable startups through
-                AI-powered matching, structured pilots, validation and a clear path to
-                adoption.
+                {isHindi
+                  ? 'प्रगति एआई-संचालित मिलान, संरचित पायलट, सत्यापन और स्पष्ट अंगीकरण पथ के माध्यम से सरकारी चुनौतियों को सक्षम स्टार्टअप से जोड़ती है।'
+                  : 'Pragati connects government challenges with capable startups through AI-powered matching, structured pilots, validation and a clear path to adoption.'}
               </p>
 
               {/* Dual CTAs */}
@@ -266,8 +282,7 @@ export function Landing() {
                   className="bg-[#0F2747] hover:bg-[#1E3A6E] text-white font-bold px-6 py-3 text-sm rounded-xl shadow-sm flex items-center justify-center gap-2 transition-all"
                 >
                   <Landmark className="w-4 h-4 text-blue-300" />
-                  <span>Explore Government Portal</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>{isHindi ? 'सरकारी पोर्टल देखें' : 'Explore Government Portal'}</span>
                 </Button>
                 <Button
                   variant="secondary"
@@ -276,7 +291,7 @@ export function Landing() {
                   className="bg-white hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold px-6 py-3 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2 transition-all"
                 >
                   <Rocket className="w-4 h-4 text-[#2563EB]" />
-                  <span>Explore Startup Portal</span>
+                  <span>{isHindi ? 'स्टार्टअप पोर्टल देखें' : 'Explore Startup Portal'}</span>
                 </Button>
               </div>
 
@@ -330,7 +345,7 @@ export function Landing() {
               <div className="lg:col-span-8">
                 <div className="mb-6">
                   <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight">
-                    Key Features
+                    {isHindi ? 'मुख्य विशेषताएँ' : 'Key Features'}
                   </h2>
                   <p className="text-sm text-[#64748B] mt-1">
                     A seamless platform to connect, innovate and implement.
@@ -546,7 +561,7 @@ export function Landing() {
                 Operational Workflow
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight">
-                How It Works
+                {isHindi ? 'यह कैसे काम करता है' : 'How It Works'}
               </h2>
               <p className="text-xs sm:text-sm text-[#64748B]">
                 A structured 4-step horizontal process from challenge posting to national adoption.
@@ -621,7 +636,7 @@ export function Landing() {
                 Platform Overview
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight">
-                About PRAGATI
+                {isHindi ? 'प्रगति के बारे में' : 'About PRAGATI'}
               </h2>
               <p className="text-xs sm:text-sm text-[#64748B]">
                 PRAGATI connects government departments with DPIIT-registered startups to solve real civic challenges through a structured, evidence-based process.
@@ -679,34 +694,81 @@ export function Landing() {
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-8 space-y-1">
               <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">
-                Reference & Guidance
+                Platform Resources
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight">
-                Resources
+                {isHindi ? 'प्रगति संसाधन' : 'PRAGATI Resources'}
               </h2>
               <p className="text-xs sm:text-sm text-[#64748B]">
-                Useful references for government departments, startups and innovation practitioners working with PRAGATI.
+                Guidance and references for government departments, startups and innovation teams working through the PRAGATI platform.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
               {[
-                { title: 'Startup India', desc: 'Official Government of India program to build a strong startup ecosystem. Register as a DPIIT-recognised startup.', url: 'https://www.startupindia.gov.in', tag: 'Government' },
-                { title: 'GeM — Government e-Marketplace', desc: 'National procurement portal for government buyers. Startups can list products and services through the GeM Startup Runway.', url: 'https://gem.gov.in', tag: 'Procurement' },
-                { title: 'DPIIT Startup Recognition', desc: 'Apply for DPIIT startup recognition to access government schemes, tax benefits and procurement privileges.', url: 'https://www.startupindia.gov.in/content/sih/en/startupgov/startup-recognition.html', tag: 'DPIIT' },
-                { title: 'Public Procurement Policy', desc: 'Ministry guidelines for public procurement with special provisions for MSMEs and startups in government tenders.', url: 'https://msme.gov.in', tag: 'Policy' },
-                { title: 'SIDBI — Startup Financing', desc: 'Small Industries Development Bank of India provides funding support and schemes for early-stage startups.', url: 'https://www.sidbi.in', tag: 'Financing' },
-                { title: 'iSPIRT — Digital Public Goods', desc: 'Open-source public digital infrastructure and knowledge resources for building government-ready technology products.', url: 'https://ispirt.in', tag: 'Technology' },
-              ].map((res) => (
-                <a key={res.title} href={res.url} target="_blank" rel="noopener noreferrer"
-                  className="group bg-white border border-[#E2E8F0] rounded-xl p-4 flex flex-col gap-2 hover:shadow-md hover:border-blue-200 transition-all">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#EFF6FF] text-[#2563EB] uppercase tracking-wide">{res.tag}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-[#2563EB] group-hover:translate-x-0.5 transition-all" />
-                  </div>
-                  <h3 className="text-sm font-bold text-[#0F172A] group-hover:text-[#2563EB] transition-colors">{res.title}</h3>
-                  <p className="text-xs text-[#64748B] leading-relaxed">{res.desc}</p>
-                </a>
-              ))}
+                {
+                  title: 'Startup Recognition',
+                  desc: 'Understand DPIIT recognition, startup eligibility and government innovation opportunities.',
+                  tag: 'DPIIT & Eligibility',
+                  icon: ShieldCheck,
+                  url: 'https://www.startupindia.gov.in/content/sih/en/startupgov/startup-recognition.html',
+                  isExternal: true,
+                },
+                {
+                  title: 'Government Procurement',
+                  desc: 'Explore relevant government procurement pathways for validated startup solutions.',
+                  tag: 'Procurement Pathway',
+                  icon: Landmark,
+                  url: 'https://gem.gov.in',
+                  isExternal: true,
+                },
+                {
+                  title: 'Pilot & Validation',
+                  desc: 'Guidance for testing startup solutions through structured government pilots, measurable KPIs and outcome-based validation.',
+                  tag: 'PRAGATI Framework',
+                  icon: FlaskConical,
+                  url: '#how-it-works',
+                  isExternal: false,
+                },
+                {
+                  title: 'Procurement Readiness',
+                  desc: 'Understand how validated solutions can progress from successful pilots toward government adoption.',
+                  tag: 'Adoption Pathway',
+                  icon: FileCheck,
+                  url: '#about',
+                  isExternal: false,
+                },
+              ].map((res) => {
+                const Icon = res.icon;
+                return (
+                  <a
+                    key={res.title}
+                    href={res.url}
+                    {...(res.isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className="group bg-white border border-[#E2E8F0] rounded-xl p-5 flex flex-col justify-between hover:shadow-md hover:border-blue-300 transition-all text-left"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="w-8 h-8 rounded-lg bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-[#EFF6FF] text-[#2563EB] uppercase tracking-wide">
+                          {res.tag}
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-bold text-[#0F172A] group-hover:text-[#2563EB] transition-colors">
+                        {res.title}
+                      </h3>
+                      <p className="text-xs text-[#64748B] leading-relaxed">
+                        {res.desc}
+                      </p>
+                    </div>
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-[#2563EB] group-hover:text-blue-700">
+                      <span>Learn More</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </a>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -719,7 +781,7 @@ export function Landing() {
                 Get In Touch
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight">
-                Contact PRAGATI
+                {isHindi ? 'प्रगति से संपर्क करें' : 'Contact PRAGATI'}
               </h2>
               <p className="text-xs sm:text-sm text-[#64748B]">
                 Reach out through the relevant channel below. Our team will respond within 2 working days.
