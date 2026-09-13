@@ -26,7 +26,7 @@ import {
   Home,
 } from 'lucide-react';
 import pragatiLogo from '../assets/pragati-logo.png';
-import indiaGovHero from '../assets/india-gov-hero.png';
+import indiaGovHero from '../assets/india-gov-hero.jpg';
 
 // Ashoka Emblem SVG Component for National Government Identity
 function AshokaEmblem({ className = "w-4 h-4 text-slate-200" }: { className?: string }) {
@@ -199,101 +199,116 @@ export function Landing() {
       </header>
 
       <main id="main-content" className="flex-1">
-        {/* ── 3. HERO SECTION (EXACT REFERENCE MATCH) ───────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#F0F6FF]/70 via-white to-white pt-8 pb-12 lg:pt-12 lg:pb-16 border-b border-[#E2E8F0]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Left Column: Badge, Headline, Copy, CTAs, Feature Strip */}
-              <div className="lg:col-span-7 space-y-5 text-left">
-                {/* Sovereign Tag */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EFF6FF] border border-blue-200 text-[#2563EB] text-xs font-semibold">
-                  <ShieldCheck className="w-4 h-4 text-[#2563EB] shrink-0" />
-                  <span>Government Innovation & Startup Enablement Platform</span>
-                </div>
+        {/* ── 3. HERO SECTION — FADED BACKGROUND (REFERENCE MATCH) ──────────── */}
+        <section
+          id="hero"
+          className="relative overflow-hidden bg-white border-b border-[#E2E8F0]"
+          style={{ minHeight: '430px' }}
+        >
+          {/* Background image — anchored to right, covers ~62% of width, full height */}
+          <div
+            className="absolute inset-y-0 right-0 hidden lg:block"
+            style={{ width: '62%' }}
+          >
+            <img
+              src={indiaGovHero}
+              alt="Rashtrapati Bhavan, New Delhi"
+              className="w-full h-full object-cover object-center"
+            />
+          </div>
 
-                {/* Heading */}
-                <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-black text-[#0F172A] tracking-tight leading-[1.18]">
-                  From Government Problems <br />
-                  to <span className="text-[#2563EB]">Scalable Solutions.</span>
-                </h1>
+          {/* Gradient overlay: solid white on left → transparent on right */}
+          <div
+            className="absolute inset-0 hidden lg:block"
+            style={{
+              background:
+                'linear-gradient(to right, #ffffff 0%, #ffffff 35%, rgba(255,255,255,0.88) 47%, rgba(255,255,255,0.25) 62%, transparent 76%)',
+            }}
+          />
 
-                {/* Subtitle */}
-                <p className="text-sm sm:text-base text-[#64748B] leading-relaxed max-w-xl">
-                  Pragati connects government challenges with capable startups through
-                  AI-powered matching, structured pilots, validation and a clear path to
-                  adoption.
-                </p>
+          {/* Mobile fallback — light blue tint */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F0F6FF]/60 via-white to-white lg:hidden" />
 
-                {/* Dual CTAs */}
-                <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                  <Button
-                    size="lg"
-                    onClick={() => navigate('/auth/government/login')}
-                    className="bg-[#0F2747] hover:bg-[#1E3A6E] text-white font-bold px-6 py-3 text-sm rounded-xl shadow-sm flex items-center justify-center gap-2 transition-all"
-                  >
-                    <Landmark className="w-4 h-4 text-blue-300" />
-                    <span>Explore Government Portal</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="lg"
-                    onClick={() => navigate('/auth/startup/login')}
-                    className="bg-white hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold px-6 py-3 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2 transition-all"
-                  >
-                    <Rocket className="w-4 h-4 text-[#2563EB]" />
-                    <span>Explore Startup Portal</span>
-                  </Button>
-                </div>
-
-                {/* Feature Strip Below Buttons (4 Compact Pills) */}
-                <div className="pt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-white/80 border border-[#E2E8F0] shadow-2xs">
-                    <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0">
-                      <Target className="w-3.5 h-3.5" />
-                    </div>
-                    <span className="text-[11px] font-semibold text-[#0F172A] leading-tight">
-                      Find Real Government Challenges
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-white/80 border border-[#E2E8F0] shadow-2xs">
-                    <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0">
-                      <Sparkles className="w-3.5 h-3.5" />
-                    </div>
-                    <span className="text-[11px] font-semibold text-[#0F172A] leading-tight">
-                      AI-Powered Startup Matching
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-white/80 border border-[#E2E8F0] shadow-2xs">
-                    <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0">
-                      <FlaskConical className="w-3.5 h-3.5" />
-                    </div>
-                    <span className="text-[11px] font-semibold text-[#0F172A] leading-tight">
-                      Structured Pilot Programs
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-white/80 border border-[#E2E8F0] shadow-2xs">
-                    <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                    </div>
-                    <span className="text-[11px] font-semibold text-[#0F172A] leading-tight">
-                      From Validation to Large Scale Adoption
-                    </span>
-                  </div>
-                </div>
+          {/* Content — left-aligned, above gradient */}
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div className="w-full lg:max-w-[52%] space-y-5 text-left">
+              {/* Sovereign Tag */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EFF6FF] border border-blue-200 text-[#2563EB] text-xs font-semibold">
+                <ShieldCheck className="w-4 h-4 text-[#2563EB] shrink-0" />
+                <span>Government Innovation & Startup Enablement Platform</span>
               </div>
 
-              {/* Right Column: Exact Rashtrapati Bhavan Visual from Reference */}
-              <div className="lg:col-span-5 flex justify-center lg:justify-end">
-                <div className="relative w-full rounded-2xl overflow-hidden shadow-md border border-[#E2E8F0] bg-white">
-                  <img
-                    src={indiaGovHero}
-                    alt="Rashtrapati Bhavan, New Delhi - Innovative India Stronger India"
-                    className="w-full h-auto object-cover"
-                  />
+              {/* Heading */}
+              <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-black text-[#0F172A] tracking-tight leading-[1.18]">
+                From Government Problems <br />
+                to <span className="text-[#2563EB]">Scalable Solutions.</span>
+              </h1>
+
+              {/* Subtitle */}
+              <p className="text-sm sm:text-base text-[#374151] leading-relaxed max-w-lg">
+                Pragati connects government challenges with capable startups through
+                AI-powered matching, structured pilots, validation and a clear path to
+                adoption.
+              </p>
+
+              {/* Dual CTAs */}
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <Button
+                  size="lg"
+                  onClick={() => navigate('/auth/government/login')}
+                  className="bg-[#0F2747] hover:bg-[#1E3A6E] text-white font-bold px-6 py-3 text-sm rounded-xl shadow-sm flex items-center justify-center gap-2 transition-all"
+                >
+                  <Landmark className="w-4 h-4 text-blue-300" />
+                  <span>Explore Government Portal</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => navigate('/auth/startup/login')}
+                  className="bg-white hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold px-6 py-3 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2 transition-all"
+                >
+                  <Rocket className="w-4 h-4 text-[#2563EB]" />
+                  <span>Explore Startup Portal</span>
+                </Button>
+              </div>
+
+              {/* Feature Strip — 4 Compact Pills */}
+              <div className="pt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/90 border border-[#E2E8F0] shadow-2xs backdrop-blur-sm">
+                  <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0">
+                    <Target className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[11px] font-semibold text-[#0F172A] leading-tight">
+                    Find Real Government Challenges
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/90 border border-[#E2E8F0] shadow-2xs backdrop-blur-sm">
+                  <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0">
+                    <Sparkles className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[11px] font-semibold text-[#0F172A] leading-tight">
+                    AI-Powered Startup Matching
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/90 border border-[#E2E8F0] shadow-2xs backdrop-blur-sm">
+                  <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0">
+                    <FlaskConical className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[11px] font-semibold text-[#0F172A] leading-tight">
+                    Structured Pilot Programs
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-white/90 border border-[#E2E8F0] shadow-2xs backdrop-blur-sm">
+                  <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[11px] font-semibold text-[#0F172A] leading-tight">
+                    From Validation to Large Scale Adoption
+                  </span>
                 </div>
               </div>
             </div>
