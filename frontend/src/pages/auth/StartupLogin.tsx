@@ -8,9 +8,12 @@ import { useAuthStore } from '../../stores/authStore';
 import toast from 'react-hot-toast';
 import pragatiLogo from '../../assets/pragati-logo.png';
 
+const DEMO_EMAIL = 'anika@aquasense.ai';
+const DEMO_PASSWORD = 'StartupDemo@2026';
+
 export function StartupLogin() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(DEMO_EMAIL);
+  const [password, setPassword] = useState(DEMO_PASSWORD);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { setSession } = useAuthStore();
@@ -66,11 +69,33 @@ export function StartupLogin() {
   return (
     <div className="min-h-screen bg-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-100 p-8">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <img src={pragatiLogo} alt="PRAGATI" className="h-12 w-12 object-contain mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-blue-600 mb-2">Startup Login</h1>
-          <p className="text-gray-500">Sign in to solve government challenges</p>
+          <h1 className="text-2xl font-bold text-navy-900 mb-2">Startup Portal Login</h1>
+          <p className="text-gray-500 text-sm">Sign in to solve government challenges and deploy pilots</p>
         </div>
+
+        {/* Demo Account Indicator */}
+        <div className="mb-6 p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/80 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse shrink-0" />
+            <div>
+              <p className="font-bold text-emerald-950">Demo Account • Sample Data Included</p>
+              <p className="text-[11px] text-emerald-700">Pre-filled with AquaSense AI founder profile</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setEmail(DEMO_EMAIL);
+              setPassword(DEMO_PASSWORD);
+            }}
+            className="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 underline shrink-0 ml-2"
+          >
+            Use Demo Account
+          </button>
+        </div>
+
         <form onSubmit={handleLogin} className="space-y-4">
           <Input
             label="Email"

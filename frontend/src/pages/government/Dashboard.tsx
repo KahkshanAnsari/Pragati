@@ -7,6 +7,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { Spinner } from '../../components/ui/Spinner';
 import { SkeletonPage } from '../../components/ui/Skeleton';
+import { SmartPilotProgress, getPilotProgressInfo } from '../../components/ui/SmartPilotProgress';
 import {
   AlertCircle,
   Rocket,
@@ -227,7 +228,7 @@ export function GovernmentDashboard() {
 
             <div className="space-y-4">
               {pilots.map((p) => {
-                const progress = Math.round(p.progress_percent || 0);
+                const progressInfo = getPilotProgressInfo(p);
                 const title = p.problem?.title || `Pilot ${p.pilot_number}`;
                 const startupName = p.startup?.name || 'Selected Startup';
 
@@ -236,7 +237,7 @@ export function GovernmentDashboard() {
                     key={p.id}
                     className="p-4 rounded-xl border border-gray-200 bg-gray-50/60 hover:bg-gray-50 transition-colors"
                   >
-                    <div className="flex flex-col sm:flex-row justify-between items-start gap-2 mb-2">
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-2 mb-3">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
@@ -245,11 +246,12 @@ export function GovernmentDashboard() {
                           <Badge variant={p.status === 'completed' ? 'success' : 'active'}>
                             {p.status.toUpperCase()}
                           </Badge>
-                          {p.progress_percent < 50 && p.status === 'active' && (
-                            <span className="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 font-medium">
-                              Supply Chain Attention
-                            </span>
-                          )}
+                          <span
+                            className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${progressInfo.badgeClass}`}
+                          >
+                            <progressInfo.icon className="w-3 h-3" />
+                            {progressInfo.label}
+                          </span>
                         </div>
                         <h3
                           onClick={() => navigate(`/government/pilots/${p.id}/workspace`)}
@@ -261,10 +263,9 @@ export function GovernmentDashboard() {
                           Vendor: <strong className="text-navy-900">{startupName}</strong> • Allocated: {formatCurrency(p.budget_allocated)}
                         </p>
                       </div>
-                      <span className="text-base font-bold text-navy-900">{progress}%</span>
                     </div>
 
-                    <ProgressBar value={progress} color="navy" />
+                    <SmartPilotProgress pilot={p} />
 
                     <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 text-xs">
                       <span className="text-gray-500">

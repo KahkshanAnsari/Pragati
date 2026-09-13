@@ -10,6 +10,7 @@ import { Pilot } from '../../types';
 import { api } from '../../lib/api';
 import { formatCurrency, formatDate } from '../../lib/utils';
 import { toast } from 'react-hot-toast';
+import { SmartPilotProgress, getPilotProgressInfo } from '../../components/ui/SmartPilotProgress';
 import { Clock, Briefcase, Activity, Target, CheckCircle, ArrowRight } from 'lucide-react';
 
 export const ActivePilots: React.FC = () => {
@@ -58,7 +59,7 @@ export const ActivePilots: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {pilots.map((pilot) => {
-            const progress = pilot.progress_percent || 0;
+            const progressInfo = getPilotProgressInfo(pilot);
             const pilotTitle = (pilot as any).problem?.title || `Pilot ${pilot.pilot_number || pilot.id.substring(0, 8)}`;
             const deptName = (pilot as any).department?.name || 'Government Department';
 
@@ -76,6 +77,12 @@ export const ActivePilots: React.FC = () => {
                             {pilot.pilot_number || `PILOT-${pilot.id.substring(0, 8).toUpperCase()}`}
                           </span>
                           <Badge variant="success">Active Deployment</Badge>
+                          <span
+                            className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${progressInfo.badgeClass}`}
+                          >
+                            <progressInfo.icon className="w-3 h-3" />
+                            {progressInfo.label}
+                          </span>
                         </div>
                         <h3
                           onClick={() => navigate(`/startup/pilots/${pilot.id}/workspace`)}
@@ -106,31 +113,27 @@ export const ActivePilots: React.FC = () => {
                         )}
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider font-semibold">Progress</p>
-                        <p className="font-bold text-navy-900 text-sm flex items-center gap-1">
-                          {progress >= 75 ? (
-                            <CheckCircle className="w-3.5 h-3.5 text-green-500" />
-                          ) : (
-                            <Activity className="w-3.5 h-3.5 text-blue-500" />
-                          )}
-                          {Math.round(progress)}%
+                        <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider font-semibold">Schedule Health</p>
+                        <p className={`font-bold text-sm flex items-center gap-1 ${progressInfo.dotColor}`}>
+                          <progressInfo.icon className="w-3.5 h-3.5" />
+                          {progressInfo.label}
+                        </p>
+                        <p className="text-[11px] text-gray-400">
+                          Exp: {progressInfo.expected}% (Δ {progressInfo.delta > 0 ? `+${progressInfo.delta}` : progressInfo.delta}%)
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider font-semibold">KPI Status</p>
-                        <p className={`font-bold text-sm flex items-center gap-1 ${progress >= 70 ? 'text-green-600' : 'text-amber-600'}`}>
+                        <p className="text-xs text-gray-500 mb-1 uppercase tracking-wider font-semibold">Governance</p>
+                        <p className="font-bold text-sm flex items-center gap-1 text-emerald-600">
                           <Target className="w-3.5 h-3.5" />
-                          {progress >= 70 ? 'On Track' : 'In Progress'}
+                          On Track
                         </p>
+                        <p className="text-[11px] text-gray-400">Milestone Tranches</p>
                       </div>
                     </div>
 
                     <div>
-                      <div className="flex justify-between text-xs font-semibold text-gray-700 mb-1.5">
-                        <span>Milestone Execution Progress</span>
-                        <span>{Math.round(progress)}%</span>
-                      </div>
-                      <ProgressBar value={progress} color="navy" />
+                      <SmartPilotProgress pilot={pilot} />
                     </div>
                   </div>
 

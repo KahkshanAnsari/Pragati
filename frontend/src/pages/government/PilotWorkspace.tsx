@@ -10,6 +10,7 @@ import { Spinner } from '../../components/ui/Spinner';
 import { SkeletonPage } from '../../components/ui/Skeleton';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { StatusBadge } from '../../components/ui/StatusBadge';
+import { getPilotProgressInfo } from '../../components/ui/SmartPilotProgress';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
@@ -217,14 +218,26 @@ export const PilotWorkspace: React.FC = () => {
       {/* Top 3 Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6">
-          <span className="text-xs uppercase font-semibold text-gray-400">Milestone Progress</span>
-          <div className="flex justify-between items-end mt-1 mb-2">
-            <span className="text-3xl font-extrabold text-navy-900">{Math.round(pilot.progress_percent || 0)}%</span>
-            <span className="text-xs text-gray-500">
-              Day {Math.max(1, daysElapsed)} of {pilot.duration_days || 90}
-            </span>
-          </div>
-          <ProgressBar value={pilot.progress_percent || 0} color="navy" />
+          {(() => {
+            const progressInfo = getPilotProgressInfo(pilot);
+            return (
+              <>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs uppercase font-semibold text-gray-400">Milestone Progress</span>
+                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${progressInfo.badgeClass}`}>
+                    {progressInfo.label}
+                  </span>
+                </div>
+                <div className="flex justify-between items-end mt-1 mb-2">
+                  <span className="text-3xl font-extrabold text-navy-900">{Math.round(pilot.progress_percent || 0)}%</span>
+                  <span className="text-xs text-gray-500">
+                    Expected: {progressInfo.expected}% • Day {Math.max(1, daysElapsed)} of {pilot.duration_days || 90}
+                  </span>
+                </div>
+                <ProgressBar value={pilot.progress_percent || 0} color={progressInfo.barColor} />
+              </>
+            );
+          })()}
         </Card>
 
         <Card className="p-6">

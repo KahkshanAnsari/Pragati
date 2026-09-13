@@ -8,6 +8,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { Spinner } from '../../components/ui/Spinner';
 import { SkeletonPage } from '../../components/ui/Skeleton';
+import { SmartPilotProgress, getPilotProgressInfo } from '../../components/ui/SmartPilotProgress';
 import {
   Compass,
   FileText,
@@ -221,20 +222,26 @@ export function StartupDashboard() {
             ) : (
               <div className="space-y-4">
                 {activePilots.map((p) => {
-                  const progress = Math.round(p.progress_percent || 0);
+                  const progressInfo = getPilotProgressInfo(p);
                   const title = p.problem?.title || p.target_outcome || `Pilot ${p.pilot_number}`;
                   return (
                     <div
                       key={p.id}
                       className="p-4 rounded-xl border border-gray-200 bg-gray-50/70 hover:bg-gray-50 transition-colors"
                     >
-                      <div className="flex justify-between items-start mb-2">
+                      <div className="flex justify-between items-start mb-3">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
                               {p.pilot_number}
                             </span>
                             <Badge variant="success">Active Deployment</Badge>
+                            <span
+                              className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${progressInfo.badgeClass}`}
+                            >
+                              <progressInfo.icon className="w-3 h-3" />
+                              {progressInfo.label}
+                            </span>
                           </div>
                           <h3
                             onClick={() => navigate(`/startup/pilots/${p.id}/workspace`)}
@@ -246,10 +253,9 @@ export function StartupDashboard() {
                             {p.department?.name || 'Department'} • {p.duration_days || 90} Days Pilot
                           </p>
                         </div>
-                        <span className="text-base font-bold text-navy-900">{progress}%</span>
                       </div>
 
-                      <ProgressBar value={progress} color="navy" />
+                      <SmartPilotProgress pilot={p} />
 
                       <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 text-xs">
                         <span className="text-gray-500">

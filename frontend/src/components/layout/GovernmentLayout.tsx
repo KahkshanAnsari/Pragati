@@ -24,17 +24,50 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { toast } from 'react-hot-toast';
 import pragatiLogo from '../../assets/pragati-logo.png';
 
-const navItems = [
-  { name: 'Dashboard', path: '/government/dashboard', icon: LayoutDashboard },
-  { name: 'Problem Registry', path: '/government/problems', icon: FileSearch },
-  { name: 'AI Matching', path: '/government/ai-matching', icon: Sparkles },
-  { name: 'Startup Directory', path: '/government/startups', icon: Users },
-  { name: 'Applications', path: '/government/applications', icon: FileText },
-  { name: 'Pilot Management', path: '/government/pilots', icon: Rocket },
-  { name: 'Monitoring', path: '/government/monitoring', icon: Activity },
-  { name: 'Procurement Readiness', path: '/government/procurement', icon: ShoppingBag },
-  { name: 'Validated Solutions', path: '/government/solutions', icon: ShieldCheck },
-  { name: 'Compliance & Audit', path: '/government/compliance', icon: AlertTriangle },
+interface NavGroup {
+  title: string;
+  items: Array<{
+    name: string;
+    path: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }>;
+}
+
+const navGroups: NavGroup[] = [
+  {
+    title: 'OVERVIEW',
+    items: [
+      { name: 'Dashboard', path: '/government/dashboard', icon: LayoutDashboard },
+    ],
+  },
+  {
+    title: 'DISCOVER',
+    items: [
+      { name: 'Problem Registry', path: '/government/problems', icon: FileSearch },
+      { name: 'AI Matching', path: '/government/ai-matching', icon: Sparkles },
+      { name: 'Startup Directory', path: '/government/startups', icon: Users },
+    ],
+  },
+  {
+    title: 'EXECUTION',
+    items: [
+      { name: 'Applications', path: '/government/applications', icon: FileText },
+      { name: 'Pilot Management', path: '/government/pilots', icon: Rocket },
+    ],
+  },
+  {
+    title: 'OUTCOMES',
+    items: [
+      { name: 'Procurement Readiness', path: '/government/procurement', icon: ShoppingBag },
+      { name: 'Validated Solutions', path: '/government/solutions', icon: ShieldCheck },
+    ],
+  },
+  {
+    title: 'GOVERNANCE',
+    items: [
+      { name: 'Compliance & Audit', path: '/government/compliance', icon: AlertTriangle },
+    ],
+  },
 ];
 
 export function GovernmentLayout() {
@@ -72,32 +105,39 @@ export function GovernmentLayout() {
           </div>
         </div>
 
-        {/* Navigation Items */}
-        <nav className="flex-1 overflow-y-auto py-3 px-3">
-          <ul className="space-y-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isMatchActive = item.name === 'AI Matching' && location.pathname.includes('/match');
-              return (
-                <li key={item.name}>
-                  <NavLink
-                    to={item.path}
-                    end={item.path === '/government/dashboard'}
-                    className={({ isActive }) =>
-                      `flex items-center px-3 py-2.5 rounded-lg text-xs transition-all ${
-                        isActive || isMatchActive
-                          ? 'bg-blue-50/90 text-blue-800 font-bold border-l-4 border-blue-600 pl-2.5 shadow-2xs'
-                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'
-                      }`
-                    }
-                  >
-                    <Icon className="w-4 h-4 mr-2.5 opacity-85 shrink-0" />
-                    <span className="truncate">{item.name}</span>
-                  </NavLink>
-                </li>
-              );
-            })}
-          </ul>
+        {/* Navigation Items Organized by Sections */}
+        <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-3.5">
+          {navGroups.map((group) => (
+            <div key={group.title}>
+              <div className="px-3 pb-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                {group.title}
+              </div>
+              <ul className="space-y-0.5">
+                {group.items.map((item) => {
+                  const Icon = item.icon;
+                  const isMatchActive = item.name === 'AI Matching' && location.pathname.includes('/match');
+                  return (
+                    <li key={item.name}>
+                      <NavLink
+                        to={item.path}
+                        end={item.path === '/government/dashboard'}
+                        className={({ isActive }) =>
+                          `flex items-center px-3 py-2 rounded-lg text-xs transition-all ${
+                            isActive || isMatchActive
+                              ? 'bg-blue-50/90 text-blue-800 font-bold border-l-4 border-blue-600 pl-2.5 shadow-2xs'
+                              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium'
+                          }`
+                        }
+                      >
+                        <Icon className="w-4 h-4 mr-2.5 opacity-85 shrink-0" />
+                        <span className="truncate">{item.name}</span>
+                      </NavLink>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
         </nav>
 
         {/* Officer Profile Footer */}

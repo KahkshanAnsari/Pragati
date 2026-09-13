@@ -12,6 +12,7 @@ import { Textarea } from '../../components/ui/Textarea';
 import { Pilot, Milestone, KPI } from '../../types';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
+import { getPilotProgressInfo } from '../../components/ui/SmartPilotProgress';
 import { CheckCircle2, Clock, Upload, FileText, AlertCircle } from 'lucide-react';
 
 export const PilotWorkspace: React.FC = () => {
@@ -113,13 +114,30 @@ export const PilotWorkspace: React.FC = () => {
       {/* Progress Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4 border-t-4 border-t-blue-500">
-          <h4 className="text-sm text-gray-500 font-medium mb-2">Milestone Progress</h4>
-          <div className="flex justify-between items-end mb-2">
-            <span className="text-2xl font-bold text-navy-900">
-              {milestones.filter(m => m.status === 'inspector_verified').length || 0} / {milestones.length || 1}
-            </span>
-          </div>
-          <ProgressBar value={40} color="navy" />
+          {(() => {
+            const verifiedCount = milestones.filter((m) => m.status === 'inspector_verified').length;
+            const totalCount = milestones.length || 1;
+            const progressInfo = getPilotProgressInfo(pilot);
+            return (
+              <>
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="text-xs text-gray-500 font-semibold uppercase">Milestone Progress</h4>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${progressInfo.badgeClass}`}>
+                    {progressInfo.label}
+                  </span>
+                </div>
+                <div className="flex justify-between items-end mb-2">
+                  <span className="text-2xl font-bold text-navy-900">
+                    {verifiedCount} / {totalCount}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {progressInfo.actual}% • Exp: {progressInfo.expected}%
+                  </span>
+                </div>
+                <ProgressBar value={progressInfo.actual} color={progressInfo.barColor} />
+              </>
+            );
+          })()}
         </Card>
         
         <Card className="p-4 border-t-4 border-t-emerald-500">
