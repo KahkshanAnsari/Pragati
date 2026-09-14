@@ -7,6 +7,8 @@ import { api } from '../../lib/api';
 import { useAuthStore } from '../../stores/authStore';
 import toast from 'react-hot-toast';
 import pragatiLogo from '../../assets/pragati-logo.png';
+import { HelpCircle } from 'lucide-react';
+import { HelpSupportModal } from '../../components/common/HelpSupportModal';
 
 const DEMO_EMAIL = 'anika@aquasense.ai';
 const DEMO_PASSWORD = 'StartupDemo@2026';
@@ -15,6 +17,7 @@ export function StartupLogin() {
   const [email, setEmail] = useState(DEMO_EMAIL);
   const [password, setPassword] = useState(DEMO_PASSWORD);
   const [loading, setLoading] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const navigate = useNavigate();
   const { setSession } = useAuthStore();
 
@@ -67,8 +70,20 @@ export function StartupLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+    <div className="min-h-screen bg-blue-50/70 flex flex-col justify-between p-4 font-sans relative">
+      {/* Top Bar with Help */}
+      <div className="w-full max-w-5xl mx-auto flex justify-end items-center py-2">
+        <button
+          type="button"
+          onClick={() => setHelpOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-slate-600 hover:text-navy-900 bg-white/80 hover:bg-white border border-slate-200 rounded-lg shadow-2xs transition-colors cursor-pointer"
+        >
+          <HelpCircle className="w-3.5 h-3.5 text-blue-600" />
+          <span>Help</span>
+        </button>
+      </div>
+
+      <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-lg border border-gray-100 p-8 my-auto">
         <div className="text-center mb-6">
           <img src={pragatiLogo} alt="PRAGATI" className="h-12 w-12 object-contain mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-navy-900 mb-2">Startup Portal Login</h1>
@@ -126,6 +141,13 @@ export function StartupLogin() {
           </Link>
         </div>
       </div>
+
+      <div className="py-2" />
+
+      {/* Global Help & Support Modal */}
+      <HelpSupportModal isOpen={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }
+
+export default StartupLogin;

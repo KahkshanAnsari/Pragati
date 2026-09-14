@@ -17,6 +17,7 @@ import { useNotificationStore } from '../../stores/notificationStore';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { toast } from 'react-hot-toast';
 import pragatiLogo from '../../assets/pragati-logo.png';
+import { HelpSupportModal } from '../common/HelpSupportModal';
 
 const navItems = [
   { name: 'Dashboard', path: '/startup/dashboard', icon: LayoutDashboard },
@@ -30,6 +31,7 @@ export function StartupLayout() {
   const { profile, logout } = useAuthStore();
   const { unreadCount } = useNotificationStore();
   const navigate = useNavigate();
+  const [helpOpen, setHelpOpen] = React.useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -128,7 +130,7 @@ export function StartupLayout() {
           <div className="flex items-center space-x-3">
             {/* Help & Support Button */}
             <button
-              onClick={() => toast('Pragati Startup Desk: startup.support@pragati.gov.in (Toll Free: 1800-11-2026)')}
+              onClick={() => setHelpOpen(true)}
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-navy-900 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer"
             >
               <HelpCircle className="w-3.5 h-3.5 text-slate-500" />
@@ -194,6 +196,9 @@ export function StartupLayout() {
           <Outlet />
         </main>
       </div>
+
+      {/* Global Help & Support Modal */}
+      <HelpSupportModal isOpen={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }

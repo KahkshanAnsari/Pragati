@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
 import { ValidatedSolution } from '../../types';
-import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
@@ -25,10 +24,14 @@ import {
   ClipboardCheck,
   Send,
   AlertCircle,
+  Download,
+  DollarSign,
+  Scale,
+  X,
 } from 'lucide-react';
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Enriched demo data for the pilot report modal (keyed by solution list index).
+// Enriched sample data for the pilot report view (keyed by solution list index).
 // Does NOT modify any backend/database/seed data.
 // ──────────────────────────────────────────────────────────────────────────────
 const PILOT_REPORT_ENRICHMENT: Record<
@@ -46,6 +49,8 @@ const PILOT_REPORT_ENRICHMENT: Record<
     evidenceStatus: string;
     verificationStatus: string;
     deploymentScope: string;
+    procurementCost: string;
+    gfrReference: string;
     finalOutcome: string;
   }
 > = {
@@ -53,38 +58,46 @@ const PILOT_REPORT_ENRICHMENT: Record<
     originalProblem:
       'Municipal water distribution network in Nagpur reported non-revenue water (NRW) losses of 41%, causing ₹8.2 crore in annual revenue leakage. Manual pressure monitoring was insufficient to detect pipe burst events and illegal tappings in real time.',
     proposedSolution:
-      'IoT-based water distribution management using pressure sensors, acoustic leak detectors, and real-time AI anomaly detection. Flow telemetry aggregated on a cloud dashboard with auto-alert to field repair teams within 90 seconds of detection.',
+      'IoT-based water distribution management using acoustic leak detectors, high-frequency pressure sensors, and real-time AI anomaly detection. Flow telemetry aggregated on an officer dashboard with automated work orders sent to field teams within 90 seconds of burst identification.',
     pilotDuration: '90 Days (Dec 2025 – Mar 2026)',
     pilotCost: '₹38.5 Lakhs (Allocated) • ₹36.2 Lakhs (Utilized)',
-    baselineKPI: 'NRW Loss: 41% | Leak Detection Time: 72+ hours | Pressure Events: 120/month',
-    targetKPI: 'NRW Loss ≤ 25% | Detection Time ≤ 2 hours | Pressure Events ≤ 30/month',
-    achievedKPI: 'NRW Loss: 22.3% | Detection Time: 82 minutes | Pressure Events: 18/month',
-    improvement: '18.7% reduction in NRW losses • ₹3.1 Cr annual revenue recovered • 94% faster leak detection',
-    fieldInspectionStatus: 'Completed — 3 joint field inspections by WRD Nagpur + PRAGATI Inspector',
-    evidenceStatus: 'Uploaded — IoT telemetry logs, video evidence of pipe repair events, and sensor calibration certificates verified.',
-    verificationStatus: 'Government Verified — Confirmed by Joint Commissioner, Water Resources Dept., Nagpur',
-    deploymentScope: '6 distribution zones covering 48,000 households across Nagpur Municipal Zone 3',
+    baselineKPI: 'NRW Loss: 41% | Leak Detection Time: 72+ hours | Pressure Anomaly Events: 120/month',
+    targetKPI: 'NRW Loss ≤ 25% | Leak Detection Time ≤ 2 hours | Pressure Anomaly Events ≤ 30/month',
+    achievedKPI: 'NRW Loss: 22.3% | Leak Detection Time: 82 minutes | Pressure Anomaly Events: 18/month',
+    improvement: '18.7% absolute reduction in NRW losses • ₹3.1 Cr annual revenue recovered • 94% faster leak detection',
+    fieldInspectionStatus: 'Completed — 3 joint field inspections by WRD Nagpur + PRAGATI Certified Field Inspector (Arjun Mehta)',
+    evidenceStatus: 'Uploaded & Verified — IoT telemetry logs, pressure transducer records, video logs of pipe repairs, and calibration certificates.',
+    verificationStatus: 'Government Verified — Officially certified by Joint Commissioner, Water Resources Department, Nagpur',
+    deploymentScope: '6 distribution zones covering 48,000 households across Nagpur Municipal Corporation Zone 3',
+    procurementCost: 'Projected full municipal scaling: ₹1.45 Cr (Estimated 14-month ROI through water recovery)',
+    gfrReference: 'Compliant under GFR 2017 Rule 149 & Public Procurement of Innovation guidelines (Single-Stage Scaling without Repeat Trials)',
     finalOutcome:
-      'Pilot declared SUCCESSFUL. AquaSense AI exceeded all 3 KPI targets during the 90-day pilot in Nagpur. The solution is eligible for full-scale procurement and replication in other urban bodies under GFR 2017 provisions.',
+      'Pilot declared SUCCESSFUL. AquaSense AI exceeded all 3 KPI targets during the 90-day pilot in Nagpur. The solution is certified for immediate inter-departmental replication and direct public procurement.',
   },
 };
 
-function getPilotEnrichment(idx: number) {
+function getPilotEnrichment(idx: number, sol?: ValidatedSolution) {
   return (
     PILOT_REPORT_ENRICHMENT[idx] ?? {
-      originalProblem: 'Government department identified a critical service delivery gap affecting citizens and civic operations. A structured pilot was initiated to evaluate a technology-based solution.',
-      proposedSolution: 'A technology-enabled solution was deployed in a controlled zone for evidence-based evaluation, with KPI tracking and third-party inspection.',
+      originalProblem:
+        sol?.problem_description ||
+        'Government department identified a critical operational bottleneck in service delivery. A structured government pilot was initiated to evaluate a technology-driven startup solution with clear baseline indicators.',
+      proposedSolution:
+        'Technology-driven automated deployment integrated with field telemetry, predictive analytics, and real-time monitoring to address operational inefficiencies.',
       pilotDuration: '90 Days',
-      pilotCost: 'As per approved pilot budget',
-      baselineKPI: 'Baseline KPIs measured at pilot commencement',
-      targetKPI: 'Improvement targets defined in pilot agreement',
-      achievedKPI: 'KPI targets met or exceeded during pilot period',
-      improvement: 'Measured improvement over baseline — details in pilot report',
-      fieldInspectionStatus: 'Field inspections completed by designated inspector team',
-      evidenceStatus: 'Evidence uploaded and verified by inspection team',
-      verificationStatus: 'Verified by competent government authority',
-      deploymentScope: 'Pilot jurisdiction as specified in the pilot agreement',
-      finalOutcome: 'Pilot completed with satisfactory outcome. Solution eligible for adoption under applicable procurement framework.',
+      pilotCost: 'Allocated as per approved pilot project budget',
+      baselineKPI: 'Baseline operational metrics recorded at pilot commencement',
+      targetKPI: 'Target benchmarks established in the tripartite pilot agreement',
+      achievedKPI: 'KPI targets successfully met or exceeded during the pilot evaluation period',
+      improvement: `Demonstrated measurable outcome with ${sol?.kpi_achievement_percent || 90}% overall target fulfillment`,
+      fieldInspectionStatus: 'Completed by designated departmental inspection committee',
+      evidenceStatus: 'Field logs, telemetry datasets, and verification certificates verified',
+      verificationStatus: 'Government Verified by competent authority',
+      deploymentScope: `Designated pilot jurisdiction at ${sol?.deployment_location || 'Field Site'}`,
+      procurementCost: 'Calculated based on standard departmental unit rates and scale requirements',
+      gfrReference: 'Statutory compliance under GFR 2017 Rule 149 for adoption of validated innovative solutions',
+      finalOutcome:
+        'Pilot successfully completed with verified KPI performance. The solution is certified for scaling and inter-departmental adoption.',
     }
   );
 }
@@ -102,6 +115,7 @@ export const ValidatedSolutions: React.FC = () => {
   const [reportOpen, setReportOpen] = useState(false);
 
   // Adoption modal state
+  const [adoptSolution, setAdoptSolution] = useState<ValidatedSolution | null>(null);
   const [adoptModalOpen, setAdoptModalOpen] = useState(false);
   const [adoptNotes, setAdoptNotes] = useState('');
   const [submittingAdopt, setSubmittingAdopt] = useState(false);
@@ -125,30 +139,163 @@ export const ValidatedSolutions: React.FC = () => {
   };
 
   const handleAISearch = async () => {
-    if (!search.trim()) return;
     setIsSearchingAI(true);
+    const query = search.trim();
+
+    // 1. If query is empty, sort all solutions by KPI outcome
+    if (!query) {
+      try {
+        const res = await api.get('/api/solutions');
+        const list: ValidatedSolution[] = Array.isArray(res.data) ? res.data : (res.data?.data || []);
+        const sorted = [...list].sort((a, b) => (b.kpi_achievement_percent || 0) - (a.kpi_achievement_percent || 0));
+        setSolutions(sorted);
+        toast.success('Semantic ranking active — solutions sorted by verified KPI outcome.');
+      } catch {
+        setSolutions((prev) => [...prev].sort((a, b) => (b.kpi_achievement_percent || 0) - (a.kpi_achievement_percent || 0)));
+        toast.success('Semantic ranking active — solutions sorted by verified KPI outcome.');
+      } finally {
+        setIsSearchingAI(false);
+      }
+      return;
+    }
+
+    // 2. Try backend API first
     try {
-      const res = await api.post('/api/solutions/search', { query: search });
-      const list = Array.isArray(res.data) ? res.data : (res.data?.data || []);
+      const res = await api.post('/api/solutions/search', { query });
+      const list: ValidatedSolution[] = Array.isArray(res.data) ? res.data : (res.data?.data || []);
       if (list.length > 0) {
         setSolutions(list);
-        toast.success(`AI identified ${list.length} relevant validated solutions!`);
-      } else {
-        toast('No direct semantic matches found. Showing standard results.');
+        toast.success(`Semantic search identified ${list.length} relevant validated solutions.`);
+        setIsSearchingAI(false);
+        return;
       }
     } catch {
-      toast.error('AI search encountered an issue');
+      // Backend not responding or serverless route -> use client-side semantic scoring
+    }
+
+    // 3. Client-side semantic & relevance ranking fallback
+    try {
+      const qTokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+      const scored = solutions.map((sol) => {
+        let score = 0;
+        const textToSearch = [
+          sol.solution_name || '',
+          sol.problem_description || '',
+          sol.sector || '',
+          sol.deployment_location || '',
+          sol.startup?.name || '',
+          sol.department?.name || '',
+          ...(sol.technologies || []),
+        ].join(' ').toLowerCase();
+
+        for (const token of qTokens) {
+          if (textToSearch.includes(token)) score += 6;
+          // Concept associations
+          if (['water', 'leak', 'pipeline', 'flow', 'aquasense', 'pressure', 'nrw'].some((k) => token.includes(k)) &&
+              textToSearch.includes('water')) score += 4;
+          if (['ai', 'iot', 'sensor', 'smart', 'machine', 'telemetry', 'camera'].some((k) => token.includes(k)) &&
+              (textToSearch.includes('ai') || textToSearch.includes('iot') || textToSearch.includes('sensor'))) score += 4;
+          if (['clean', 'energy', 'solar', 'grid', 'power', 'battery'].some((k) => token.includes(k)) &&
+              (textToSearch.includes('energy') || textToSearch.includes('solar'))) score += 4;
+          if (['health', 'hospital', 'clinic', 'patient', 'medical'].some((k) => token.includes(k)) &&
+              textToSearch.includes('health')) score += 4;
+          if (['traffic', 'road', 'transit', 'mobility', 'transport'].some((k) => token.includes(k)) &&
+              (textToSearch.includes('mobility') || textToSearch.includes('traffic'))) score += 4;
+        }
+
+        score += (sol.kpi_achievement_percent || 0) * 0.05;
+        return { sol, score };
+      });
+
+      const matched = scored.filter((s) => s.score > 0).sort((a, b) => b.score - a.score).map((s) => s.sol);
+      if (matched.length > 0) {
+        setSolutions(matched);
+        toast.success(`Semantic search identified ${matched.length} relevant solutions.`);
+      } else {
+        toast('No direct semantic matches found. Showing all verified solutions.');
+      }
+    } catch {
+      toast.error('Search completed.');
     } finally {
       setIsSearchingAI(false);
     }
   };
 
+  const handleDownloadReport = (sol: ValidatedSolution, enrich: ReturnType<typeof getPilotEnrichment>) => {
+    const docId = `PRAGATI/VAL-RPT/${sol.id.slice(0, 8).toUpperCase()}`;
+    const reportText = `================================================================================
+PRAGATI — NATIONAL GOVERNMENT INNOVATION & PROCUREMENT PLATFORM
+OFFICIAL PILOT VALIDATION & PROCUREMENT ASSESSMENT REPORT
+================================================================================
+DOCUMENT REFERENCE : ${docId}
+DATE OF ISSUE      : ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}
+STATUS             : CERTIFIED VALIDATED SOLUTION • GFR 2017 COMPLIANT
+--------------------------------------------------------------------------------
+
+1. SOLUTION OVERVIEW
+   - Solution Name      : ${sol.solution_name}
+   - Startup / Vendor   : ${sol.startup?.name || 'AquaSense Technologies'}
+   - Host Department    : ${sol.department?.name || 'Water Resources Department'}
+   - Sector             : ${sol.sector}
+   - Technologies       : ${sol.technologies?.join(', ') || 'AI, IoT, Cloud Telemetry'}
+   - Deployment Scope   : ${enrich.deploymentScope}
+
+2. ORIGINAL GOVERNMENT PROBLEM
+   ${enrich.originalProblem}
+
+3. PROPOSED SOLUTION & ARCHITECTURE
+   ${enrich.proposedSolution}
+
+4. PILOT DURATION & INVESTMENT
+   - Pilot Duration     : ${enrich.pilotDuration}
+   - Pilot Investment   : ${enrich.pilotCost}
+   - Deployment Site    : ${sol.deployment_location}
+
+5. KPI PERFORMANCE & MEASURED OUTCOMES
+   - Baseline KPI       : ${enrich.baselineKPI}
+   - Target KPI         : ${enrich.targetKPI}
+   - Achieved KPI       : ${enrich.achievedKPI}
+   - Target Met         : ${sol.kpi_achievement_percent}%
+   - Net Improvement    : ${enrich.improvement}
+
+6. VALIDATION & FIELD INSPECTION
+   - Field Inspection   : ${enrich.fieldInspectionStatus}
+   - Telemetry Evidence : ${enrich.evidenceStatus}
+   - Official Sign-Off  : ${enrich.verificationStatus}
+
+7. STATUTORY & PROCUREMENT COMPLIANCE (GFR 2017)
+   - Rule Alignment     : General Financial Rules (GFR) 2017 - Rule 149 / Innovation Procurement
+   - Inter-Dept Reuse   : Eligible for direct replication without repeat trial pilots
+   - Audit Trail        : Tamper-evident pilot milestones, telemetry logs & joint inspection sign-offs
+
+8. FINAL VALIDATION OUTCOME
+   ${enrich.finalOutcome}
+
+================================================================================
+AUTHORIZED BY:
+PRAGATI Central Evaluation & Innovation Scaling Committee
+Government Innovation & Public Procurement Repository
+================================================================================
+`;
+
+    const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `PRAGATI_Validation_Report_${sol.solution_name.replace(/\s+/g, '_')}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success('Official Validation Report downloaded successfully.');
+  };
+
   const handleAdoptRequest = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!reportSolution) return;
+    if (!adoptSolution) return;
     try {
       setSubmittingAdopt(true);
-      await api.post(`/api/solutions/${reportSolution.id}/adopt`, {
+      await api.post(`/api/solutions/${adoptSolution.id}/adopt`, {
         context_notes: adoptNotes || 'Interested in replicating pilot deployment in our jurisdiction under GFR 2017.',
       });
       toast.success('Cross-department adoption request submitted!');
@@ -182,25 +329,33 @@ export const ValidatedSolutions: React.FC = () => {
     );
   }
 
-  const enrichment = reportSolution ? getPilotEnrichment(reportIdx) : null;
+  const enrichment = reportSolution ? getPilotEnrichment(reportIdx, reportSolution) : null;
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      <PageHeader
-        title="National Validated Solutions Repository"
-        subtitle="Pilot Once — Verify — Reuse — Scale. Replicate proven startup innovations across state & central departments without repeat trials."
-      />
+    <div className="space-y-6 max-w-7xl mx-auto font-sans">
+      {/* ── 1. REPOSITORY HERO HEADING ────────────────────────────────────────── */}
+      <div className="pb-5 border-b border-gray-200">
+        <span className="text-[11px] font-bold tracking-wider uppercase text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200 inline-block mb-2">
+          VALIDATED INNOVATION REPOSITORY
+        </span>
+        <h1 className="text-2xl md:text-3xl font-bold text-navy-900 tracking-tight">
+          Proven Solutions, Ready for Reuse
+        </h1>
+        <p className="mt-1.5 text-xs md:text-sm text-gray-600 max-w-4xl leading-relaxed">
+          Discover startup solutions that have completed structured government pilots, demonstrated measurable outcomes, and are ready for informed adoption across departments.
+        </p>
+      </div>
 
-      {/* Advisory Banner */}
+      {/* ── 2. DARK BLUE REPOSITORY BANNER ───────────────────────────────────── */}
       <Card className="bg-gradient-to-r from-navy-900 via-blue-900 to-navy-800 text-white border-0 shadow-md p-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-3xl">
             <div className="flex items-center gap-2 text-xs font-semibold text-blue-300 uppercase tracking-wider">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" /> Statutory Inter-Departmental Reusability
+              <ShieldCheck className="w-4 h-4 text-emerald-400" /> PROVEN &amp; REUSABLE
             </div>
-            <h2 className="text-2xl font-bold text-white leading-tight">Don't reinvent the wheel.</h2>
+            <h2 className="text-2xl font-bold text-white leading-tight">Adopt What Has Already Been Proven</h2>
             <p className="text-xs md:text-sm text-blue-100 leading-relaxed">
-              Explore solutions that have successfully completed structured government pilots with third-party field inspection, telemetry KPIs, and statutory compliance under GFR 2017. Fast-track adoption in your department.
+              Explore solutions that have completed structured government pilots with field validation, measurable KPI outcomes, and procurement-readiness checks. Reduce duplicate trials and move proven innovations toward wider adoption.
             </p>
           </div>
           <div className="bg-white/10 px-6 py-4 rounded-xl text-center backdrop-blur-xs shrink-0 border border-white/10">
@@ -212,7 +367,7 @@ export const ValidatedSolutions: React.FC = () => {
         </div>
       </Card>
 
-      {/* Search & Sector Filter Bar */}
+      {/* ── 3. SEARCH & SECTOR FILTER BAR WITH ENABLED SEMANTIC SEARCH ────────── */}
       <div className="flex flex-col md:flex-row gap-3">
         <div className="flex-1">
           <Input
@@ -237,8 +392,8 @@ export const ValidatedSolutions: React.FC = () => {
         />
         <Button
           onClick={handleAISearch}
-          disabled={isSearchingAI || !search.trim()}
-          className="bg-navy-900 hover:bg-navy-800 text-white text-xs font-semibold px-4 flex items-center justify-center gap-1.5 shrink-0"
+          disabled={isSearchingAI}
+          className="bg-navy-900 hover:bg-navy-800 text-white text-xs font-semibold px-4 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer shadow-xs"
         >
           {isSearchingAI ? (
             <Spinner size="sm" />
@@ -250,7 +405,7 @@ export const ValidatedSolutions: React.FC = () => {
         </Button>
       </div>
 
-      {/* Solutions Cards Grid */}
+      {/* ── 4. SOLUTIONS CARDS GRID (BOTH VIEW REPORT & REQUEST ADOPTION) ─────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredSolutions.map((sol, idx) => (
           <Card
@@ -304,19 +459,31 @@ export const ValidatedSolutions: React.FC = () => {
               </div>
             </div>
 
-            {/* Primary action: View Pilot Report */}
-            <div className="pt-4 mt-4 border-t border-gray-100">
+            {/* Actions: View Report + Request Adoption on Card */}
+            <div className="pt-4 mt-4 border-t border-gray-100 flex items-center gap-2">
               <Button
                 size="sm"
-                className="w-full bg-navy-900 hover:bg-navy-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5"
+                variant="secondary"
+                className="flex-1 text-xs font-semibold flex items-center justify-center gap-1"
                 onClick={() => {
                   setReportSolution(sol);
                   setReportIdx(idx);
                   setReportOpen(true);
                 }}
               >
-                <FileText className="w-3.5 h-3.5" />
-                View Pilot Report
+                <FileText className="w-3.5 h-3.5 text-blue-600" />
+                View Report
+              </Button>
+              <Button
+                size="sm"
+                className="flex-1 bg-navy-900 hover:bg-navy-800 text-white text-xs font-semibold flex items-center justify-center gap-1"
+                onClick={() => {
+                  setAdoptSolution(sol);
+                  setAdoptModalOpen(true);
+                }}
+              >
+                <Send className="w-3.5 h-3.5" />
+                Request Adoption
               </Button>
             </div>
           </Card>
@@ -331,222 +498,295 @@ export const ValidatedSolutions: React.FC = () => {
         )}
       </div>
 
-      {/* ── PILOT SUCCESS REPORT MODAL ──────────────────────────────────────────── */}
-      {reportSolution && enrichment && (
-        <Modal
-          isOpen={reportOpen}
-          onClose={() => setReportOpen(false)}
-          title="Pilot Success Report"
-          size="2xl"
+      {/* ── 5. FULL DEDICATED OFFICIAL REPORT PANEL ───────────────────────────── */}
+      {reportSolution && enrichment && reportOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-3 sm:p-6 overflow-y-auto"
+          onClick={() => setReportOpen(false)}
         >
-          <div className="space-y-5 text-sm overflow-y-auto max-h-[72vh] pr-1">
-
-            {/* Report header strip */}
-            <div className="bg-gradient-to-r from-navy-900 to-blue-900 text-white rounded-xl p-5">
-              <div className="flex items-start justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-blue-300">
-                    PRAGATI — Official Pilot Evaluation Report
-                  </div>
-                  <h2 className="text-lg font-extrabold leading-snug">{reportSolution.solution_name}</h2>
-                  <p className="text-xs text-blue-200">
-                    {reportSolution.startup?.name || 'Partner Startup'} &nbsp;•&nbsp; {reportSolution.sector}
-                  </p>
+          <div
+            className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Official Report Header */}
+            <div className="bg-[#123158] text-white px-6 py-5 flex items-start justify-between gap-4 shrink-0 border-b border-blue-900">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-blue-300 bg-blue-950/80 px-2 py-0.5 rounded border border-blue-800">
+                    GOVERNMENT OF INDIA • PRAGATI
+                  </span>
+                  <span className="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-400" /> GFR 2017 CERTIFIED
+                  </span>
                 </div>
-                <span className="shrink-0 inline-flex items-center gap-1.5 text-[11px] font-bold bg-emerald-500/20 text-emerald-300 px-3 py-1.5 rounded-full border border-emerald-500/40">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Procurement Verified
-                </span>
+                <h2 className="text-xl font-black tracking-tight text-white leading-tight">
+                  Official Pilot Validation &amp; Procurement Assessment Report
+                </h2>
+                <p className="text-xs text-slate-300">
+                  Document Reference: PRAGATI/VAL-RPT/{reportSolution.id.slice(0, 8).toUpperCase()} • Solution: {reportSolution.solution_name}
+                </p>
+              </div>
+
+              {/* Top Quick Actions */}
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => handleDownloadReport(reportSolution, enrichment)}
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-xs transition-colors cursor-pointer"
+                  title="Download Official Report"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download Report</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setReportOpen(false)}
+                  className="p-1.5 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  aria-label="Close Report"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
             </div>
 
-            {/* 1. Solution Overview */}
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
-                <Building2 className="w-3.5 h-3.5 text-blue-600" /> Solution Overview
-              </h3>
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                {[
-                  { label: 'Solution Name', value: reportSolution.solution_name },
-                  { label: 'Startup / Vendor', value: reportSolution.startup?.name || 'Partner Startup' },
-                  { label: 'Government Department', value: reportSolution.department?.name || 'Government Department' },
-                  { label: 'Sector', value: reportSolution.sector },
-                ].map(({ label, value }) => (
-                  <div key={label} className="bg-gray-50 rounded-lg p-3 border border-gray-100">
-                    <span className="block text-[10px] font-bold uppercase text-gray-400 mb-1">{label}</span>
-                    <span className="font-semibold text-navy-900">{value}</span>
-                  </div>
-                ))}
-              </div>
-              {reportSolution.technologies && reportSolution.technologies.length > 0 && (
-                <div className="mt-3 bg-blue-50 rounded-lg p-3 border border-blue-100">
-                  <span className="block text-[10px] font-bold uppercase text-blue-500 mb-1.5">Technologies Deployed</span>
-                  <div className="flex flex-wrap gap-1.5">
+            {/* Scrollable Report Body */}
+            <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 text-xs text-slate-700">
+              
+              {/* 1. Solution Overview */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-blue-600" /> 1. Solution Overview
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {[
+                    { label: 'Solution Name', value: reportSolution.solution_name },
+                    { label: 'Startup / Vendor', value: reportSolution.startup?.name || 'AquaSense Technologies' },
+                    { label: 'Host Department', value: reportSolution.department?.name || 'Water Resources Department' },
+                    { label: 'Sector', value: reportSolution.sector },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80">
+                      <span className="block text-[10px] font-bold uppercase text-slate-400 mb-1">{label}</span>
+                      <span className="font-bold text-navy-900 text-xs">{value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {reportSolution.technologies && reportSolution.technologies.length > 0 && (
+                  <div className="mt-3 bg-blue-50/70 rounded-xl p-3 border border-blue-100 flex items-center gap-2 flex-wrap">
+                    <span className="text-[10px] font-bold uppercase text-blue-700 shrink-0">Technologies Deployed:</span>
                     {reportSolution.technologies.map((t, i) => (
-                      <span key={i} className="text-[11px] bg-white text-navy-900 border border-blue-200 px-2 py-0.5 rounded font-medium">
+                      <span key={i} className="text-[11px] bg-white text-navy-900 border border-blue-200 px-2 py-0.5 rounded font-semibold">
                         {t}
                       </span>
                     ))}
                   </div>
-                </div>
-              )}
-            </div>
-
-            <div className="border-t border-gray-100" />
-
-            {/* 2. Original Government Problem */}
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
-                <AlertCircle className="w-3.5 h-3.5 text-amber-500" /> Original Government Problem
-              </h3>
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 leading-relaxed">
-                {enrichment.originalProblem}
+                )}
               </div>
-            </div>
 
-            <div className="border-t border-gray-100" />
+              <div className="border-t border-slate-200" />
 
-            {/* 3. Pilot Details */}
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
-                <Calendar className="w-3.5 h-3.5 text-purple-600" /> Pilot Details
-              </h3>
-              <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-xs space-y-3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* 2. Original Government Problem */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-amber-600" /> 2. Original Government Problem
+                </h3>
+                <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-4 text-xs text-amber-950 leading-relaxed font-medium">
+                  {enrichment.originalProblem}
+                </div>
+              </div>
+
+              <div className="border-t border-slate-200" />
+
+              {/* 3. Proposed Solution & Architecture */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-blue-600" /> 3. Proposed Solution &amp; Technical Architecture
+                </h3>
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-800 leading-relaxed">
+                  {enrichment.proposedSolution}
+                </div>
+              </div>
+
+              <div className="border-t border-slate-200" />
+
+              {/* 4. Pilot Duration & Location */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-purple-600" /> 4. Pilot Duration &amp; Host Jurisdiction
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
-                    { label: 'Duration', value: enrichment.pilotDuration },
+                    { label: 'Pilot Duration', value: enrichment.pilotDuration },
                     { label: 'Deployment Location', value: reportSolution.deployment_location },
-                    { label: 'Pilot Cost / Investment', value: enrichment.pilotCost },
+                    { label: 'Pilot Investment', value: enrichment.pilotCost },
                     { label: 'Deployment Scope', value: enrichment.deploymentScope },
                   ].map(({ label, value }) => (
-                    <div key={label}>
-                      <span className="block font-bold text-gray-400 text-[10px] uppercase mb-0.5">{label}</span>
-                      <span className="font-semibold text-gray-800">{value}</span>
+                    <div key={label} className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80">
+                      <span className="block text-[10px] font-bold uppercase text-slate-400 mb-1">{label}</span>
+                      <span className="font-semibold text-slate-800 text-xs">{value}</span>
                     </div>
                   ))}
                 </div>
-                <div className="pt-2 border-t border-gray-200">
-                  <span className="block font-bold text-gray-400 text-[10px] uppercase mb-1">Proposed Solution Approach</span>
-                  <p className="text-gray-700 leading-relaxed">{enrichment.proposedSolution}</p>
+              </div>
+
+              <div className="border-t border-slate-200" />
+
+              {/* 5. KPI Baseline vs Achieved */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                  <BarChart2 className="w-4 h-4 text-blue-600" /> 5. KPI Performance — Baseline vs. Achieved
+                </h3>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+                      <span className="block text-[10px] font-bold uppercase text-slate-400 mb-1">Baseline KPI</span>
+                      <p className="text-slate-700 font-semibold leading-snug">{enrichment.baselineKPI}</p>
+                    </div>
+                    <div className="bg-blue-50/80 border border-blue-200 rounded-xl p-3.5">
+                      <span className="block text-[10px] font-bold uppercase text-blue-600 mb-1">Target Benchmark</span>
+                      <p className="text-blue-950 font-semibold leading-snug">{enrichment.targetKPI}</p>
+                    </div>
+                    <div className="bg-emerald-50/80 border border-emerald-200 rounded-xl p-3.5">
+                      <span className="block text-[10px] font-bold uppercase text-emerald-600 mb-1">KPI Achieved in Field</span>
+                      <p className="text-emerald-950 font-bold leading-snug">{enrichment.achievedKPI}</p>
+                    </div>
+                  </div>
+
+                  {/* Highlight Improvement */}
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center justify-between gap-4">
+                    <div className="flex items-start gap-3">
+                      <TrendingUp className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                      <div>
+                        <span className="block text-[10px] font-bold uppercase text-emerald-700">Measured Outcome &amp; Net Improvement</span>
+                        <p className="text-emerald-950 font-bold mt-0.5">{enrichment.improvement}</p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="text-2xl font-black text-emerald-600">{reportSolution.kpi_achievement_percent}%</span>
+                      <p className="text-[10px] font-bold text-emerald-700 uppercase">Target Exceeded</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="border-t border-gray-100" />
+              <div className="border-t border-slate-200" />
 
-            {/* 4. KPI Performance */}
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
-                <BarChart2 className="w-3.5 h-3.5 text-blue-600" /> Performance — KPI Results
-              </h3>
-              <div className="space-y-3 text-xs">
+              {/* 6. Validation & Field Inspection */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                  <ClipboardCheck className="w-4 h-4 text-purple-600" /> 6. Validation &amp; Field Inspection
+                </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
-                    <span className="block text-[10px] font-bold uppercase text-gray-400 mb-1">Baseline KPI</span>
-                    <p className="text-gray-700 leading-snug font-medium">{enrichment.baselineKPI}</p>
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px] mb-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Field Inspection
+                    </div>
+                    <p className="text-slate-700 font-medium">{enrichment.fieldInspectionStatus}</p>
                   </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-3">
-                    <span className="block text-[10px] font-bold uppercase text-blue-400 mb-1">Target KPI</span>
-                    <p className="text-blue-800 leading-snug font-medium">{enrichment.targetKPI}</p>
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px] mb-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Telemetry Evidence
+                    </div>
+                    <p className="text-slate-700 font-medium">{enrichment.evidenceStatus}</p>
                   </div>
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-                    <span className="block text-[10px] font-bold uppercase text-emerald-500 mb-1">KPI Achieved</span>
-                    <p className="text-emerald-800 leading-snug font-bold">{enrichment.achievedKPI}</p>
+                  <div className="bg-emerald-50/80 border border-emerald-200 rounded-xl p-3.5">
+                    <div className="flex items-center gap-1.5 text-emerald-800 font-bold text-[11px] mb-1">
+                      <ShieldCheck className="w-3.5 h-3.5" /> Government Sign-Off
+                    </div>
+                    <p className="text-emerald-950 font-semibold">{enrichment.verificationStatus}</p>
                   </div>
                 </div>
-                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start gap-3">
-                  <TrendingUp className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <span className="block text-[10px] font-bold uppercase text-emerald-500 mb-0.5">Overall Improvement / Outcome</span>
-                    <p className="text-emerald-900 font-semibold">{enrichment.improvement}</p>
+              </div>
+
+              <div className="border-t border-slate-200" />
+
+              {/* 7. Procurement & GFR 2017 Compliance */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+                  <Scale className="w-4 h-4 text-blue-600" /> 7. Procurement &amp; Statutory GFR 2017 Compliance
+                </h3>
+                <div className="space-y-3">
+                  <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
+                    <DollarSign className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="block text-[10px] font-bold uppercase text-blue-700">Scaling Cost Assessment</span>
+                      <p className="text-blue-950 font-semibold mt-0.5">{enrichment.procurementCost}</p>
+                    </div>
                   </div>
-                  <div className="ml-auto shrink-0 text-right">
-                    <span className="text-3xl font-extrabold text-emerald-600">{reportSolution.kpi_achievement_percent}%</span>
-                    <p className="text-[10px] text-emerald-600 font-bold uppercase">KPI Target Met</p>
+
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-3">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="block text-[10px] font-bold uppercase text-slate-500">Statutory Authorization</span>
+                      <p className="text-slate-800 font-medium mt-0.5">{enrichment.gfrReference}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-slate-200" />
+
+              {/* 8. Final Validation Outcome */}
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" /> 8. Final Validation Outcome
+                </h3>
+                <div className="bg-navy-900 text-white rounded-xl p-5 leading-relaxed">
+                  <p className="font-medium">{enrichment.finalOutcome}</p>
+                  <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
+                    <span className="text-emerald-300 font-bold flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      Status: {reportSolution.validation_status === 'government_verified'
+                        ? 'Government Verified'
+                        : reportSolution.validation_status === 'scaled'
+                        ? 'Scaled & Adopted'
+                        : 'Pilot Completed'}
+                    </span>
+                    <span className="text-[11px] text-slate-300">
+                      Eligible for Inter-Departmental Adoption
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-gray-100" />
-
-            {/* 5. Validation */}
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
-                <ClipboardCheck className="w-3.5 h-3.5 text-purple-600" /> Validation &amp; Verification
-              </h3>
-              <div className="space-y-2 text-xs">
-                <div className="flex items-start gap-3 bg-gray-50 border border-gray-200 rounded-xl p-3">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="block font-bold text-gray-400 text-[10px] uppercase mb-0.5">Field Inspection Status</span>
-                    <p className="font-medium text-gray-800">{enrichment.fieldInspectionStatus}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 bg-gray-50 border border-gray-200 rounded-xl p-3">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="block font-bold text-gray-400 text-[10px] uppercase mb-0.5">Evidence Status</span>
-                    <p className="font-medium text-gray-800">{enrichment.evidenceStatus}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="block font-bold text-emerald-600 text-[10px] uppercase mb-0.5">Verification Status</span>
-                    <p className="font-semibold text-emerald-800">{enrichment.verificationStatus}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t border-gray-100" />
-
-            {/* 6. Final Outcome */}
-            <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
-                <ShieldCheck className="w-3.5 h-3.5" /> Final Pilot Outcome
-              </h3>
-              <div className="bg-navy-900 text-white rounded-xl p-4 text-xs leading-relaxed">
-                <p>{enrichment.finalOutcome}</p>
-                <div className="mt-3 pt-3 border-t border-white/10 flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span className="font-semibold text-emerald-300">
-                    Validation Status:{' '}
-                    {reportSolution.validation_status === 'government_verified'
-                      ? 'Government Verified'
-                      : reportSolution.validation_status === 'scaled'
-                      ? 'Scaled & Adopted'
-                      : 'Pilot Completed'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Request Adoption — only available after viewing the full report */}
-            <div className="pt-2 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center gap-3 justify-between">
-              <p className="text-xs text-gray-500 leading-relaxed max-w-md">
-                This solution has completed government-validated piloting and is eligible for cross-department adoption under GFR 2017.
+            {/* Bottom Actions Bar */}
+            <div className="bg-slate-50 border-t border-slate-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+              <p className="text-xs text-slate-500 text-center sm:text-left">
+                Certified ready for inter-departmental replication under GFR 2017 provisions.
               </p>
-              <Button
-                className="shrink-0 bg-navy-900 hover:bg-navy-800 text-white font-semibold text-xs px-5 py-2.5 flex items-center gap-2"
-                onClick={() => {
-                  setReportOpen(false);
-                  setAdoptModalOpen(true);
-                }}
-              >
-                <Send className="w-3.5 h-3.5" />
-                Request Adoption
-              </Button>
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="flex-1 sm:flex-initial text-xs font-bold flex items-center justify-center gap-1.5"
+                  onClick={() => handleDownloadReport(reportSolution, enrichment)}
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Download Report
+                </Button>
+                <Button
+                  type="button"
+                  className="flex-1 sm:flex-initial bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold flex items-center justify-center gap-1.5"
+                  onClick={() => {
+                    setAdoptSolution(reportSolution);
+                    setAdoptModalOpen(true);
+                  }}
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  Request Adoption
+                </Button>
+              </div>
             </div>
           </div>
-        </Modal>
+        </div>
       )}
 
-      {/* ── ADOPTION REQUEST MODAL ─────────────────────────────────────────────── */}
+      {/* ── 6. ADOPTION REQUEST MODAL ─────────────────────────────────────────── */}
       <Modal
         isOpen={adoptModalOpen}
         onClose={() => setAdoptModalOpen(false)}
-        title={`Request Adoption: ${reportSolution?.solution_name}`}
+        title={`Request Adoption: ${adoptSolution?.solution_name || reportSolution?.solution_name}`}
       >
         <form onSubmit={handleAdoptRequest} className="space-y-4 pt-2 text-xs">
           <p className="text-gray-600">
@@ -554,9 +794,9 @@ export const ValidatedSolutions: React.FC = () => {
           </p>
           <div className="p-3 bg-blue-50 rounded-lg border border-blue-200 space-y-1">
             <span className="font-bold text-blue-950">Original Pilot Department:</span>
-            <p className="text-blue-900">{reportSolution?.department?.name || 'Partner Department'}</p>
+            <p className="text-blue-900">{adoptSolution?.department?.name || reportSolution?.department?.name || 'Partner Department'}</p>
             <span className="font-bold text-blue-950 block pt-1">Validated Vendor:</span>
-            <p className="text-blue-900">{reportSolution?.startup?.name || 'Startup'}</p>
+            <p className="text-blue-900">{adoptSolution?.startup?.name || reportSolution?.startup?.name || 'Startup'}</p>
           </div>
           <div>
             <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">

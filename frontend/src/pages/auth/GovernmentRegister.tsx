@@ -15,6 +15,7 @@ import {
   HelpCircle,
   Check,
 } from 'lucide-react';
+import { HelpSupportModal } from '../../components/common/HelpSupportModal';
 
 export function GovernmentRegister() {
   const [formData, setFormData] = useState({
@@ -193,11 +194,14 @@ export function GovernmentRegister() {
         </div>
       </header>
 
-      {/* ── CENTER AREA: Same background image as GovernmentLogin ── */}
-      <main
-        className="flex-1 relative flex items-center justify-center p-4 sm:p-6 bg-[#F0F7FC] bg-no-repeat bg-center bg-cover"
+      {/* ── FIXED BACKGROUND LAYER: Exact Tricolour Left + Parliament Right Composition ── */}
+      <div
+        className="fixed inset-0 z-0 bg-[#F0F7FC] bg-no-repeat bg-cover bg-center pointer-events-none"
         style={{ backgroundImage: `url(${govLoginBg})` }}
-      >
+      />
+
+      {/* ── CENTER AREA: Registration Card ── */}
+      <main className="flex-1 relative z-10 flex items-center justify-center p-4 sm:p-6 min-h-[520px]">
         {/* ── EXISTING REGISTRATION CARD — UNCHANGED ── */}
         <div className="w-full max-w-lg bg-white rounded-xl shadow-sm border border-gray-200 p-8 relative z-10 my-6">
           <div className="text-center mb-8">
@@ -289,54 +293,7 @@ export function GovernmentRegister() {
       </footer>
 
       {/* ── HELP / SUPPORT MODAL ── */}
-      {helpModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-          onClick={() => setHelpModalOpen(false)}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-sm mx-4 p-8 text-center relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setHelpModalOpen(false)}
-              className="absolute top-4 right-4 p-1 rounded-full hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-700 cursor-pointer"
-              aria-label="Close"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <div className="mb-4 flex justify-center">
-              <div className="w-12 h-12 rounded-full bg-[#123158] flex items-center justify-center">
-                <HelpCircle className="w-6 h-6 text-white" />
-              </div>
-            </div>
-            <h2 className="text-lg font-bold text-[#0F2747] mb-1">PRAGATI Support Desk</h2>
-            <p className="text-xs text-slate-500 mb-6">We're here to help government officers</p>
-            <div className="space-y-4 text-sm">
-              <div className="bg-blue-50 border border-blue-100 rounded-xl px-5 py-3.5">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-blue-500 mb-1">Email</p>
-                <a href="mailto:support@pragati.gov.in" className="font-semibold text-[#0F2747] hover:text-blue-700 transition-colors">
-                  support@pragati.gov.in
-                </a>
-              </div>
-              <div className="bg-blue-50 border border-blue-100 rounded-xl px-5 py-3.5">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-blue-500 mb-1">Toll Free</p>
-                <p className="font-semibold text-[#0F2747]">1800-11-2026</p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setHelpModalOpen(false)}
-              className="mt-6 w-full bg-[#0E2442] hover:bg-[#16335a] text-white font-bold py-2.5 px-4 text-sm rounded-lg transition-all cursor-pointer"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      <HelpSupportModal isOpen={helpModalOpen} onClose={() => setHelpModalOpen(false)} />
     </div>
   );
 }
