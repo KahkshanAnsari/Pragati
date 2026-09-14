@@ -33,6 +33,7 @@ import { ProcurementOverview } from '../pages/government/ProcurementOverview';
 import { ProcurementReadiness } from '../pages/government/ProcurementReadiness';
 import { ValidatedSolutions } from '../pages/government/ValidatedSolutions';
 import { ComplianceOverview } from '../pages/government/ComplianceOverview';
+import { ReportingStructure } from '../pages/government/ReportingStructure';
 
 // Startup Pages
 import { StartupDashboard } from '../pages/startup/Dashboard';
@@ -124,6 +125,7 @@ const router = createBrowserRouter([
           { path: 'procurement/:id', element: <ProcurementReadiness /> },
           { path: 'solutions', element: <ValidatedSolutions /> },
           { path: 'compliance', element: <ComplianceOverview /> },
+          { path: 'reporting-structure', element: <ReportingStructure /> },
           { path: 'notifications', element: <NotificationsPage /> },
           { path: '*', element: <NotFound /> },
         ],

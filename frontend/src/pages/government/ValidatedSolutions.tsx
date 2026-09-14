@@ -3,14 +3,13 @@ import { api } from '../../lib/api';
 import { ValidatedSolution } from '../../types';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
-import { Card, CardContent } from '../../components/ui/Card';
+import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Modal } from '../../components/ui/Modal';
 import { Textarea } from '../../components/ui/Textarea';
 import { Spinner } from '../../components/ui/Spinner';
-import { formatDate } from '../../lib/utils';
 import { toast } from 'react-hot-toast';
 import {
   ShieldCheck,
@@ -18,11 +17,77 @@ import {
   MapPin,
   Building2,
   Sparkles,
-  ExternalLink,
   Layers,
-  ArrowRight,
+  FileText,
+  TrendingUp,
+  Calendar,
+  BarChart2,
+  ClipboardCheck,
   Send,
+  AlertCircle,
 } from 'lucide-react';
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Enriched demo data for the pilot report modal (keyed by solution list index).
+// Does NOT modify any backend/database/seed data.
+// ──────────────────────────────────────────────────────────────────────────────
+const PILOT_REPORT_ENRICHMENT: Record<
+  number,
+  {
+    originalProblem: string;
+    proposedSolution: string;
+    pilotDuration: string;
+    pilotCost: string;
+    baselineKPI: string;
+    targetKPI: string;
+    achievedKPI: string;
+    improvement: string;
+    fieldInspectionStatus: string;
+    evidenceStatus: string;
+    verificationStatus: string;
+    deploymentScope: string;
+    finalOutcome: string;
+  }
+> = {
+  0: {
+    originalProblem:
+      'Municipal water distribution network in Nagpur reported non-revenue water (NRW) losses of 41%, causing ₹8.2 crore in annual revenue leakage. Manual pressure monitoring was insufficient to detect pipe burst events and illegal tappings in real time.',
+    proposedSolution:
+      'IoT-based water distribution management using pressure sensors, acoustic leak detectors, and real-time AI anomaly detection. Flow telemetry aggregated on a cloud dashboard with auto-alert to field repair teams within 90 seconds of detection.',
+    pilotDuration: '90 Days (Dec 2025 – Mar 2026)',
+    pilotCost: '₹38.5 Lakhs (Allocated) • ₹36.2 Lakhs (Utilized)',
+    baselineKPI: 'NRW Loss: 41% | Leak Detection Time: 72+ hours | Pressure Events: 120/month',
+    targetKPI: 'NRW Loss ≤ 25% | Detection Time ≤ 2 hours | Pressure Events ≤ 30/month',
+    achievedKPI: 'NRW Loss: 22.3% | Detection Time: 82 minutes | Pressure Events: 18/month',
+    improvement: '18.7% reduction in NRW losses • ₹3.1 Cr annual revenue recovered • 94% faster leak detection',
+    fieldInspectionStatus: 'Completed — 3 joint field inspections by WRD Nagpur + PRAGATI Inspector',
+    evidenceStatus: 'Uploaded — IoT telemetry logs, video evidence of pipe repair events, and sensor calibration certificates verified.',
+    verificationStatus: 'Government Verified — Confirmed by Joint Commissioner, Water Resources Dept., Nagpur',
+    deploymentScope: '6 distribution zones covering 48,000 households across Nagpur Municipal Zone 3',
+    finalOutcome:
+      'Pilot declared SUCCESSFUL. AquaSense AI exceeded all 3 KPI targets during the 90-day pilot in Nagpur. The solution is eligible for full-scale procurement and replication in other urban bodies under GFR 2017 provisions.',
+  },
+};
+
+function getPilotEnrichment(idx: number) {
+  return (
+    PILOT_REPORT_ENRICHMENT[idx] ?? {
+      originalProblem: 'Government department identified a critical service delivery gap affecting citizens and civic operations. A structured pilot was initiated to evaluate a technology-based solution.',
+      proposedSolution: 'A technology-enabled solution was deployed in a controlled zone for evidence-based evaluation, with KPI tracking and third-party inspection.',
+      pilotDuration: '90 Days',
+      pilotCost: 'As per approved pilot budget',
+      baselineKPI: 'Baseline KPIs measured at pilot commencement',
+      targetKPI: 'Improvement targets defined in pilot agreement',
+      achievedKPI: 'KPI targets met or exceeded during pilot period',
+      improvement: 'Measured improvement over baseline — details in pilot report',
+      fieldInspectionStatus: 'Field inspections completed by designated inspector team',
+      evidenceStatus: 'Evidence uploaded and verified by inspection team',
+      verificationStatus: 'Verified by competent government authority',
+      deploymentScope: 'Pilot jurisdiction as specified in the pilot agreement',
+      finalOutcome: 'Pilot completed with satisfactory outcome. Solution eligible for adoption under applicable procurement framework.',
+    }
+  );
+}
 
 export const ValidatedSolutions: React.FC = () => {
   const [solutions, setSolutions] = useState<ValidatedSolution[]>([]);
@@ -31,8 +96,12 @@ export const ValidatedSolutions: React.FC = () => {
   const [sector, setSector] = useState('');
   const [isSearchingAI, setIsSearchingAI] = useState(false);
 
-  // Adoption modal
-  const [selectedSolution, setSelectedSolution] = useState<ValidatedSolution | null>(null);
+  // Pilot Report modal state
+  const [reportSolution, setReportSolution] = useState<ValidatedSolution | null>(null);
+  const [reportIdx, setReportIdx] = useState<number>(0);
+  const [reportOpen, setReportOpen] = useState(false);
+
+  // Adoption modal state
   const [adoptModalOpen, setAdoptModalOpen] = useState(false);
   const [adoptNotes, setAdoptNotes] = useState('');
   const [submittingAdopt, setSubmittingAdopt] = useState(false);
@@ -67,7 +136,7 @@ export const ValidatedSolutions: React.FC = () => {
       } else {
         toast('No direct semantic matches found. Showing standard results.');
       }
-    } catch (err) {
+    } catch {
       toast.error('AI search encountered an issue');
     } finally {
       setIsSearchingAI(false);
@@ -76,16 +145,16 @@ export const ValidatedSolutions: React.FC = () => {
 
   const handleAdoptRequest = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedSolution) return;
+    if (!reportSolution) return;
     try {
       setSubmittingAdopt(true);
-      await api.post(`/api/solutions/${selectedSolution.id}/adopt`, {
+      await api.post(`/api/solutions/${reportSolution.id}/adopt`, {
         context_notes: adoptNotes || 'Interested in replicating pilot deployment in our jurisdiction under GFR 2017.',
       });
       toast.success('Cross-department adoption request submitted!');
       setAdoptModalOpen(false);
       setAdoptNotes('');
-    } catch (err) {
+    } catch {
       toast.error('Failed to submit adoption request');
     } finally {
       setSubmittingAdopt(false);
@@ -113,11 +182,13 @@ export const ValidatedSolutions: React.FC = () => {
     );
   }
 
+  const enrichment = reportSolution ? getPilotEnrichment(reportIdx) : null;
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       <PageHeader
         title="National Validated Solutions Repository"
-        subtitle="Pilot Once → Verify → Reuse → Scale. Replicate proven startup innovations across state & central departments without repeat trials."
+        subtitle="Pilot Once — Verify — Reuse — Scale. Replicate proven startup innovations across state & central departments without repeat trials."
       />
 
       {/* Advisory Banner */}
@@ -143,7 +214,7 @@ export const ValidatedSolutions: React.FC = () => {
 
       {/* Search & Sector Filter Bar */}
       <div className="flex flex-col md:flex-row gap-3">
-        <div className="flex-1 relative">
+        <div className="flex-1">
           <Input
             placeholder="Search by problem, technology, startup, or deployment location..."
             value={search}
@@ -181,7 +252,7 @@ export const ValidatedSolutions: React.FC = () => {
 
       {/* Solutions Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredSolutions.map((sol) => (
+        {filteredSolutions.map((sol, idx) => (
           <Card
             key={sol.id}
             className="p-5 border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col justify-between"
@@ -203,18 +274,16 @@ export const ValidatedSolutions: React.FC = () => {
 
               <p className="text-xs text-gray-600 line-clamp-3 leading-relaxed">{sol.problem_description}</p>
 
-              {/* Technologies */}
               {sol.technologies && sol.technologies.length > 0 && (
                 <div className="flex flex-wrap gap-1">
-                  {sol.technologies.slice(0, 3).map((t, idx) => (
-                    <span key={idx} className="text-[10px] bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded">
+                  {sol.technologies.slice(0, 3).map((t, i) => (
+                    <span key={i} className="text-[10px] bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded">
                       {t}
                     </span>
                   ))}
                 </div>
               )}
 
-              {/* KPI Score Box */}
               <div className="bg-gray-50 rounded-lg p-3 border border-gray-100 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] text-gray-400 uppercase font-bold block">KPI Target Achieved</span>
@@ -235,17 +304,19 @@ export const ValidatedSolutions: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-4 mt-4 border-t border-gray-100 flex gap-2">
+            {/* Primary action: View Pilot Report */}
+            <div className="pt-4 mt-4 border-t border-gray-100">
               <Button
-                variant="secondary"
                 size="sm"
-                className="flex-1 text-xs"
+                className="w-full bg-navy-900 hover:bg-navy-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5"
                 onClick={() => {
-                  setSelectedSolution(sol);
-                  setAdoptModalOpen(true);
+                  setReportSolution(sol);
+                  setReportIdx(idx);
+                  setReportOpen(true);
                 }}
               >
-                Request Adoption
+                <FileText className="w-3.5 h-3.5" />
+                View Pilot Report
               </Button>
             </div>
           </Card>
@@ -260,11 +331,222 @@ export const ValidatedSolutions: React.FC = () => {
         )}
       </div>
 
-      {/* Adoption Request Modal */}
+      {/* ── PILOT SUCCESS REPORT MODAL ──────────────────────────────────────────── */}
+      {reportSolution && enrichment && (
+        <Modal
+          isOpen={reportOpen}
+          onClose={() => setReportOpen(false)}
+          title="Pilot Success Report"
+          size="2xl"
+        >
+          <div className="space-y-5 text-sm overflow-y-auto max-h-[72vh] pr-1">
+
+            {/* Report header strip */}
+            <div className="bg-gradient-to-r from-navy-900 to-blue-900 text-white rounded-xl p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-blue-300">
+                    PRAGATI — Official Pilot Evaluation Report
+                  </div>
+                  <h2 className="text-lg font-extrabold leading-snug">{reportSolution.solution_name}</h2>
+                  <p className="text-xs text-blue-200">
+                    {reportSolution.startup?.name || 'Partner Startup'} &nbsp;•&nbsp; {reportSolution.sector}
+                  </p>
+                </div>
+                <span className="shrink-0 inline-flex items-center gap-1.5 text-[11px] font-bold bg-emerald-500/20 text-emerald-300 px-3 py-1.5 rounded-full border border-emerald-500/40">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Procurement Verified
+                </span>
+              </div>
+            </div>
+
+            {/* 1. Solution Overview */}
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
+                <Building2 className="w-3.5 h-3.5 text-blue-600" /> Solution Overview
+              </h3>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                {[
+                  { label: 'Solution Name', value: reportSolution.solution_name },
+                  { label: 'Startup / Vendor', value: reportSolution.startup?.name || 'Partner Startup' },
+                  { label: 'Government Department', value: reportSolution.department?.name || 'Government Department' },
+                  { label: 'Sector', value: reportSolution.sector },
+                ].map(({ label, value }) => (
+                  <div key={label} className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                    <span className="block text-[10px] font-bold uppercase text-gray-400 mb-1">{label}</span>
+                    <span className="font-semibold text-navy-900">{value}</span>
+                  </div>
+                ))}
+              </div>
+              {reportSolution.technologies && reportSolution.technologies.length > 0 && (
+                <div className="mt-3 bg-blue-50 rounded-lg p-3 border border-blue-100">
+                  <span className="block text-[10px] font-bold uppercase text-blue-500 mb-1.5">Technologies Deployed</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {reportSolution.technologies.map((t, i) => (
+                      <span key={i} className="text-[11px] bg-white text-navy-900 border border-blue-200 px-2 py-0.5 rounded font-medium">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-gray-100" />
+
+            {/* 2. Original Government Problem */}
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-500" /> Original Government Problem
+              </h3>
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 leading-relaxed">
+                {enrichment.originalProblem}
+              </div>
+            </div>
+
+            <div className="border-t border-gray-100" />
+
+            {/* 3. Pilot Details */}
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
+                <Calendar className="w-3.5 h-3.5 text-purple-600" /> Pilot Details
+              </h3>
+              <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-xs space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    { label: 'Duration', value: enrichment.pilotDuration },
+                    { label: 'Deployment Location', value: reportSolution.deployment_location },
+                    { label: 'Pilot Cost / Investment', value: enrichment.pilotCost },
+                    { label: 'Deployment Scope', value: enrichment.deploymentScope },
+                  ].map(({ label, value }) => (
+                    <div key={label}>
+                      <span className="block font-bold text-gray-400 text-[10px] uppercase mb-0.5">{label}</span>
+                      <span className="font-semibold text-gray-800">{value}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-2 border-t border-gray-200">
+                  <span className="block font-bold text-gray-400 text-[10px] uppercase mb-1">Proposed Solution Approach</span>
+                  <p className="text-gray-700 leading-relaxed">{enrichment.proposedSolution}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-100" />
+
+            {/* 4. KPI Performance */}
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
+                <BarChart2 className="w-3.5 h-3.5 text-blue-600" /> Performance — KPI Results
+              </h3>
+              <div className="space-y-3 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
+                    <span className="block text-[10px] font-bold uppercase text-gray-400 mb-1">Baseline KPI</span>
+                    <p className="text-gray-700 leading-snug font-medium">{enrichment.baselineKPI}</p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-3">
+                    <span className="block text-[10px] font-bold uppercase text-blue-400 mb-1">Target KPI</span>
+                    <p className="text-blue-800 leading-snug font-medium">{enrichment.targetKPI}</p>
+                  </div>
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                    <span className="block text-[10px] font-bold uppercase text-emerald-500 mb-1">KPI Achieved</span>
+                    <p className="text-emerald-800 leading-snug font-bold">{enrichment.achievedKPI}</p>
+                  </div>
+                </div>
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start gap-3">
+                  <TrendingUp className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <span className="block text-[10px] font-bold uppercase text-emerald-500 mb-0.5">Overall Improvement / Outcome</span>
+                    <p className="text-emerald-900 font-semibold">{enrichment.improvement}</p>
+                  </div>
+                  <div className="ml-auto shrink-0 text-right">
+                    <span className="text-3xl font-extrabold text-emerald-600">{reportSolution.kpi_achievement_percent}%</span>
+                    <p className="text-[10px] text-emerald-600 font-bold uppercase">KPI Target Met</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-100" />
+
+            {/* 5. Validation */}
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
+                <ClipboardCheck className="w-3.5 h-3.5 text-purple-600" /> Validation &amp; Verification
+              </h3>
+              <div className="space-y-2 text-xs">
+                <div className="flex items-start gap-3 bg-gray-50 border border-gray-200 rounded-xl p-3">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="block font-bold text-gray-400 text-[10px] uppercase mb-0.5">Field Inspection Status</span>
+                    <p className="font-medium text-gray-800">{enrichment.fieldInspectionStatus}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 bg-gray-50 border border-gray-200 rounded-xl p-3">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="block font-bold text-gray-400 text-[10px] uppercase mb-0.5">Evidence Status</span>
+                    <p className="font-medium text-gray-800">{enrichment.evidenceStatus}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="block font-bold text-emerald-600 text-[10px] uppercase mb-0.5">Verification Status</span>
+                    <p className="font-semibold text-emerald-800">{enrichment.verificationStatus}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-100" />
+
+            {/* 6. Final Outcome */}
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-2">
+                <ShieldCheck className="w-3.5 h-3.5" /> Final Pilot Outcome
+              </h3>
+              <div className="bg-navy-900 text-white rounded-xl p-4 text-xs leading-relaxed">
+                <p>{enrichment.finalOutcome}</p>
+                <div className="mt-3 pt-3 border-t border-white/10 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span className="font-semibold text-emerald-300">
+                    Validation Status:{' '}
+                    {reportSolution.validation_status === 'government_verified'
+                      ? 'Government Verified'
+                      : reportSolution.validation_status === 'scaled'
+                      ? 'Scaled & Adopted'
+                      : 'Pilot Completed'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Request Adoption — only available after viewing the full report */}
+            <div className="pt-2 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center gap-3 justify-between">
+              <p className="text-xs text-gray-500 leading-relaxed max-w-md">
+                This solution has completed government-validated piloting and is eligible for cross-department adoption under GFR 2017.
+              </p>
+              <Button
+                className="shrink-0 bg-navy-900 hover:bg-navy-800 text-white font-semibold text-xs px-5 py-2.5 flex items-center gap-2"
+                onClick={() => {
+                  setReportOpen(false);
+                  setAdoptModalOpen(true);
+                }}
+              >
+                <Send className="w-3.5 h-3.5" />
+                Request Adoption
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* ── ADOPTION REQUEST MODAL ─────────────────────────────────────────────── */}
       <Modal
         isOpen={adoptModalOpen}
         onClose={() => setAdoptModalOpen(false)}
-        title={`Request Adoption: ${selectedSolution?.solution_name}`}
+        title={`Request Adoption: ${reportSolution?.solution_name}`}
       >
         <form onSubmit={handleAdoptRequest} className="space-y-4 pt-2 text-xs">
           <p className="text-gray-600">
@@ -272,13 +554,13 @@ export const ValidatedSolutions: React.FC = () => {
           </p>
           <div className="p-3 bg-blue-50 rounded-lg border border-blue-200 space-y-1">
             <span className="font-bold text-blue-950">Original Pilot Department:</span>
-            <p className="text-blue-900">{selectedSolution?.department?.name || 'Partner Department'}</p>
+            <p className="text-blue-900">{reportSolution?.department?.name || 'Partner Department'}</p>
             <span className="font-bold text-blue-950 block pt-1">Validated Vendor:</span>
-            <p className="text-blue-900">{selectedSolution?.startup?.name || 'Startup'}</p>
+            <p className="text-blue-900">{reportSolution?.startup?.name || 'Startup'}</p>
           </div>
           <div>
             <label className="block text-xs font-semibold uppercase text-gray-500 mb-1">
-              Context Notes & Jurisdictional Requirement
+              Context Notes &amp; Jurisdictional Requirement
             </label>
             <Textarea
               rows={4}
@@ -307,3 +589,5 @@ export const ValidatedSolutions: React.FC = () => {
 };
 
 export default ValidatedSolutions;
+
+

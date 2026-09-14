@@ -74,6 +74,7 @@ export function GovernmentLogin() {
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState<'en' | 'hi'>('en');
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
@@ -215,14 +216,15 @@ export function GovernmentLogin() {
 
           <span className="text-slate-500">|</span>
 
-          {/* Help Link */}
-          <Link
-            to="/#footer"
-            className="flex items-center gap-1 hover:text-white transition-colors py-1 px-1.5 rounded hover:bg-slate-700/40"
+          {/* Help Button — opens support modal */}
+          <button
+            type="button"
+            onClick={() => setHelpModalOpen(true)}
+            className="flex items-center gap-1 hover:text-white transition-colors py-1 px-1.5 rounded hover:bg-slate-700/40 cursor-pointer"
           >
             <HelpCircle className="w-3.5 h-3.5 text-blue-300" />
             <span className="hidden sm:inline">{t.help}</span>
-          </Link>
+          </button>
         </div>
       </header>
 
@@ -353,6 +355,64 @@ export function GovernmentLogin() {
           {t.contactUs}
         </Link>
       </footer>
+      {/* ── HELP / SUPPORT MODAL ── */}
+      {helpModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={() => setHelpModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-sm mx-4 p-8 text-center relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={() => setHelpModalOpen(false)}
+              className="absolute top-4 right-4 p-1 rounded-full hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-700 cursor-pointer"
+              aria-label="Close"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* PRAGATI logo */}
+            <div className="mb-4 flex justify-center">
+              <div className="w-12 h-12 rounded-full bg-[#123158] flex items-center justify-center">
+                <HelpCircle className="w-6 h-6 text-white" />
+              </div>
+            </div>
+
+            <h2 className="text-lg font-bold text-[#0F2747] mb-1">PRAGATI Support Desk</h2>
+            <p className="text-xs text-slate-500 mb-6">We're here to help government officers</p>
+
+            <div className="space-y-4 text-sm">
+              <div className="bg-blue-50 border border-blue-100 rounded-xl px-5 py-3.5">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-blue-500 mb-1">Email</p>
+                <a
+                  href="mailto:support@pragati.gov.in"
+                  className="font-semibold text-[#0F2747] hover:text-blue-700 transition-colors"
+                >
+                  support@pragati.gov.in
+                </a>
+              </div>
+              <div className="bg-blue-50 border border-blue-100 rounded-xl px-5 py-3.5">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-blue-500 mb-1">Toll Free</p>
+                <p className="font-semibold text-[#0F2747]">1800-11-2026</p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setHelpModalOpen(false)}
+              className="mt-6 w-full bg-[#0E2442] hover:bg-[#16335a] text-white font-bold py-2.5 px-4 text-sm rounded-lg transition-all cursor-pointer"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

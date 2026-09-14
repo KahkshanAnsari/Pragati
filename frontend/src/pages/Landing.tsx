@@ -84,8 +84,7 @@ export function Landing() {
       <div className="bg-[#0B192C] text-slate-200 text-xs py-1 px-4 sm:px-6 lg:px-8 border-b border-slate-700/60 z-50">
         <div className="max-w-[1400px] mx-auto flex flex-wrap items-center justify-between gap-2">
           {/* Government Identity */}
-          <div className="flex items-center gap-2">
-            <AshokaEmblem className="w-4 h-4 text-slate-200 shrink-0" />
+          <div className="flex items-center">
             <span className="font-semibold text-white tracking-wide">
               {isHindi ? 'राष्ट्रीय सरकारी नवाचार मंच' : 'National Government Innovation Platform'}
             </span>
@@ -285,12 +284,11 @@ export function Landing() {
                   <span>{isHindi ? 'सरकारी पोर्टल देखें' : 'Explore Government Portal'}</span>
                 </Button>
                 <Button
-                  variant="secondary"
                   size="lg"
                   onClick={() => navigate('/auth/startup/login')}
-                  className="bg-white hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold px-6 py-3 text-sm rounded-xl shadow-xs flex items-center justify-center gap-2 transition-all"
+                  className="bg-[#0F2747] hover:bg-[#1E3A6E] text-white font-bold px-6 py-3 text-sm rounded-xl shadow-sm flex items-center justify-center gap-2 transition-all"
                 >
-                  <Rocket className="w-4 h-4 text-[#2563EB]" />
+                  <Rocket className="w-4 h-4 text-blue-300" />
                   <span>{isHindi ? 'स्टार्टअप पोर्टल देखें' : 'Explore Startup Portal'}</span>
                 </Button>
               </div>
@@ -644,45 +642,45 @@ export function Landing() {
             </div>
 
             <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-5 sm:p-6 shadow-2xs">
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-3 items-center">
-                <div className="bg-white p-3.5 rounded-lg border border-[#E2E8F0] text-center shadow-2xs">
-                  <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center mx-auto mb-1.5">
-                    <Building2 className="w-3.5 h-3.5" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 items-stretch">
+                <div className="bg-[#F0F6FF]/70 hover:bg-[#F0F6FF] p-4 rounded-xl border border-blue-100/90 text-center shadow-2xs hover:shadow-xs transition-all flex flex-col items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-white text-[#2563EB] border border-blue-100 flex items-center justify-center mx-auto mb-2 shadow-2xs">
+                    <Building2 className="w-4 h-4" />
                   </div>
                   <h4 className="text-xs font-bold text-[#0F172A]">Government Challenge</h4>
-                  <p className="text-[10px] text-[#64748B] mt-0.5">Real civic problems with baseline KPIs</p>
+                  <p className="text-[11px] text-[#64748B] mt-1 leading-snug">Real civic problems with baseline KPIs</p>
                 </div>
 
-                <div className="bg-white p-3.5 rounded-lg border border-[#E2E8F0] text-center shadow-2xs">
-                  <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center mx-auto mb-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
+                <div className="bg-[#F0F6FF]/70 hover:bg-[#F0F6FF] p-4 rounded-xl border border-blue-100/90 text-center shadow-2xs hover:shadow-xs transition-all flex flex-col items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-white text-[#2563EB] border border-blue-100 flex items-center justify-center mx-auto mb-2 shadow-2xs">
+                    <Sparkles className="w-4 h-4" />
                   </div>
                   <h4 className="text-xs font-bold text-[#0F172A]">AI-Powered Matching</h4>
-                  <p className="text-[10px] text-[#64748B] mt-0.5">Objective DPIIT & capability ranking</p>
+                  <p className="text-[11px] text-[#64748B] mt-1 leading-snug">Objective DPIIT & capability ranking</p>
                 </div>
 
-                <div className="bg-white p-3.5 rounded-lg border border-[#E2E8F0] text-center shadow-2xs">
-                  <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center mx-auto mb-1.5">
-                    <FlaskConical className="w-3.5 h-3.5" />
+                <div className="bg-[#F0F6FF]/70 hover:bg-[#F0F6FF] p-4 rounded-xl border border-blue-100/90 text-center shadow-2xs hover:shadow-xs transition-all flex flex-col items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-white text-[#2563EB] border border-blue-100 flex items-center justify-center mx-auto mb-2 shadow-2xs">
+                    <FlaskConical className="w-4 h-4" />
                   </div>
                   <h4 className="text-xs font-bold text-[#0F172A]">Pilot Validation</h4>
-                  <p className="text-[10px] text-[#64748B] mt-0.5">90-day sandbox with field inspection</p>
+                  <p className="text-[11px] text-[#64748B] mt-1 leading-snug">90-day sandbox with field inspection</p>
                 </div>
 
-                <div className="bg-white p-3.5 rounded-lg border border-[#E2E8F0] text-center shadow-2xs">
-                  <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center mx-auto mb-1.5">
-                    <FileCheck className="w-3.5 h-3.5" />
+                <div className="bg-[#F0F6FF]/70 hover:bg-[#F0F6FF] p-4 rounded-xl border border-blue-100/90 text-center shadow-2xs hover:shadow-xs transition-all flex flex-col items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-white text-[#2563EB] border border-blue-100 flex items-center justify-center mx-auto mb-2 shadow-2xs">
+                    <FileCheck className="w-4 h-4" />
                   </div>
                   <h4 className="text-xs font-bold text-[#0F172A]">Evidence-Based Decision</h4>
-                  <p className="text-[10px] text-[#64748B] mt-0.5">Verified KPI attainment replaces claims</p>
+                  <p className="text-[11px] text-[#64748B] mt-1 leading-snug">Verified KPI attainment replaces claims</p>
                 </div>
 
-                <div className="bg-white p-3.5 rounded-lg border-2 border-[#2563EB] text-center shadow-2xs">
-                  <div className="w-7 h-7 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center mx-auto mb-1.5">
-                    <Layers className="w-3.5 h-3.5" />
+                <div className="bg-[#F0F6FF]/70 hover:bg-[#F0F6FF] p-4 rounded-xl border border-blue-100/90 text-center shadow-2xs hover:shadow-xs transition-all flex flex-col items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-white text-[#2563EB] border border-blue-100 flex items-center justify-center mx-auto mb-2 shadow-2xs">
+                    <Layers className="w-4 h-4" />
                   </div>
                   <h4 className="text-xs font-bold text-[#0F172A]">Scale & Adoption</h4>
-                  <p className="text-[10px] text-[#64748B] mt-0.5">Validated solutions ready for wider adoption</p>
+                  <p className="text-[11px] text-[#64748B] mt-1 leading-snug">Validated solutions ready for wider adoption</p>
                 </div>
               </div>
             </div>
@@ -818,13 +816,27 @@ export function Landing() {
               </div>
             </div>
             <div className="bg-white border border-[#E2E8F0] rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold text-[#0F172A]">Smart India Hackathon 2026 — PRAGATI</p>
-                <p className="text-xs text-[#64748B] mt-0.5">Ministry of Personnel, Public Grievances &amp; Pensions, New Delhi, India.</p>
+              <div className="max-w-3xl">
+                <p className="text-sm font-semibold text-[#0F172A] leading-relaxed">
+                  PRAGATI is India's National Innovation &amp; Procurement Platform, connecting government challenges with innovative startups and supporting structured validation, field pilots, and public procurement adoption.
+                </p>
+                <p className="text-xs text-[#64748B] mt-1 font-medium">
+                  Ministry of Personnel, Public Grievances &amp; Pensions, New Delhi, India.
+                </p>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button onClick={() => navigate('/auth/government/login')} className="px-4 py-2 text-xs font-semibold bg-[#0F2747] text-white rounded-lg hover:bg-[#1E3A6E] transition-colors">Government Portal</button>
-                <button onClick={() => navigate('/auth/startup/login')} className="px-4 py-2 text-xs font-semibold border border-[#E2E8F0] text-[#0F172A] rounded-lg hover:bg-slate-50 transition-colors">Startup Portal</button>
+              <div className="flex items-center gap-2.5 shrink-0">
+                <button
+                  onClick={() => navigate('/auth/government/login')}
+                  className="px-4 py-2 text-xs font-semibold bg-[#0F2747] text-white rounded-lg hover:bg-[#1E3A6E] transition-colors shadow-xs"
+                >
+                  Government Portal
+                </button>
+                <button
+                  onClick={() => navigate('/auth/startup/login')}
+                  className="px-4 py-2 text-xs font-semibold bg-[#0F2747] text-white rounded-lg hover:bg-[#1E3A6E] transition-colors shadow-xs"
+                >
+                  Startup Portal
+                </button>
               </div>
             </div>
           </div>
@@ -911,10 +923,6 @@ export function Landing() {
               <p className="text-xs text-slate-400 leading-relaxed mb-2">
                 Ministry of Personnel, Public Grievances & Pensions, New Delhi, India.
               </p>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-800 text-[11px] text-slate-300 border border-slate-700">
-                <AshokaEmblem className="w-3.5 h-3.5 text-slate-200" />
-                <span>Smart India Hackathon 2026</span>
-              </div>
             </div>
           </div>
 

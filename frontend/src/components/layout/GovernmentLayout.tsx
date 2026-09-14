@@ -66,6 +66,7 @@ const navGroups: NavGroup[] = [
     title: 'GOVERNANCE',
     items: [
       { name: 'Compliance & Audit', path: '/government/compliance', icon: AlertTriangle },
+      { name: 'Reporting Structure', path: '/government/reporting-structure', icon: Users },
     ],
   },
 ];
