@@ -222,7 +222,7 @@ export function GovernmentDashboard() {
                 <h2 className="text-lg font-bold text-navy-900">Active Pilot Deployments</h2>
               </div>
               <Button variant="ghost" size="sm" onClick={() => navigate('/government/pilots')}>
-                View All Pilots <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                View All Pilots
               </Button>
             </div>
 
@@ -303,7 +303,7 @@ export function GovernmentDashboard() {
                 <h2 className="text-lg font-bold text-navy-900">Department Problem Statements</h2>
               </div>
               <Button variant="ghost" size="sm" onClick={() => navigate('/government/problems')}>
-                Problem Registry <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                Problem Registry
               </Button>
             </div>
 

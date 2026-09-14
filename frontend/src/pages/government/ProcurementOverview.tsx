@@ -119,7 +119,7 @@ export const ProcurementOverview: React.FC = () => {
                       onClick={() => navigate(`/government/procurement/${pilot.id}`)}
                     >
                       <FileCheck className="w-4 h-4 mr-1" />
-                      Review Procurement Case <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                      Review Procurement Case
                     </Button>
                   </div>
                 </div>
