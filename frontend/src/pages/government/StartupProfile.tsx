@@ -11,6 +11,8 @@ import { Spinner } from '../../components/ui/Spinner';
 import { Modal } from '../../components/ui/Modal';
 import { Select } from '../../components/ui/Select';
 import { toast } from 'react-hot-toast';
+import { getStartupPerformanceSummary } from '../../lib/ratingService';
+import { formatDate } from '../../lib/utils';
 import {
   Building2,
   MapPin,
@@ -27,6 +29,8 @@ import {
   Briefcase,
   Layers,
   Cpu,
+  Star,
+  UserCheck,
 } from 'lucide-react';
 
 export const StartupProfile: React.FC = () => {
@@ -116,6 +120,8 @@ export const StartupProfile: React.FC = () => {
     );
   }
 
+  const perf = getStartupPerformanceSummary(startup, pilots);
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Top Breadcrumb & Action */}
@@ -201,6 +207,109 @@ export const StartupProfile: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Trust Profile, Technologies, Pilots */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Government Performance Card */}
+          {perf && (
+            <Card className="p-6 border border-gray-200 shadow-xs">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-gray-100">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200 shrink-0">
+                    <Star className="w-5 h-5 fill-amber-400 text-amber-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-navy-900 leading-tight">Government Performance</h3>
+                    <p className="text-xs text-gray-500">
+                      {perf.hasEvaluations
+                        ? `Based on ${perf.ratingCount} verified government pilot ${perf.ratingCount === 1 ? 'evaluation' : 'evaluations'}`
+                        : (startup.government_pilots || 0) > 0
+                        ? `Based on ${startup.government_pilots} completed government pilots across departments`
+                        : 'Performance appraisal generated upon completion of government pilots'}
+                    </p>
+                  </div>
+                </div>
+
+                {perf.averageRating > 0 ? (
+                  <div className="flex items-center gap-2 bg-amber-50/80 border border-amber-200 px-3.5 py-1.5 rounded-xl">
+                    <Star className="w-5 h-5 fill-amber-400 text-amber-500" />
+                    <span className="text-2xl font-black text-navy-900">{perf.averageRating.toFixed(1)}</span>
+                    <span className="text-xs font-semibold text-gray-400">/ 5</span>
+                  </div>
+                ) : (
+                  <Badge variant="pending" className="text-xs">No Completed Pilots Yet</Badge>
+                )}
+              </div>
+
+              {/* Metrics Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-2 text-xs">
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <span className="block text-[10px] font-bold uppercase text-gray-400">Successful Pilots</span>
+                  <p className="text-base font-extrabold text-navy-900 mt-0.5">{perf.successfulPilots}</p>
+                  <span className="text-[10px] text-gray-500">Verified Deployments</span>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <span className="block text-[10px] font-bold uppercase text-gray-400">Gov Departments</span>
+                  <p className="text-base font-extrabold text-navy-900 mt-0.5">{perf.departmentsCount}</p>
+                  <span className="text-[10px] text-gray-500">Inter-Agency Footprint</span>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <span className="block text-[10px] font-bold uppercase text-gray-400">Avg KPI Achievement</span>
+                  <p className="text-base font-extrabold text-emerald-600 mt-0.5">{perf.averageKpi}%</p>
+                  <span className="text-[10px] text-gray-500">Target Benchmark Met</span>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <span className="block text-[10px] font-bold uppercase text-gray-400">Platform Trust Score</span>
+                  <p className="text-base font-extrabold text-navy-900 mt-0.5">{startup.trust_score || 90}/100</p>
+                  <span className="text-[10px] text-gray-500">Statutory Compliance</span>
+                </div>
+              </div>
+
+              {/* Verified Evaluations & Feedback */}
+              {perf.evaluations.length > 0 && (
+                <div className="mt-5 pt-4 border-t border-gray-100 space-y-3">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+                    <FileText className="w-3.5 h-3.5 text-blue-600" /> Verified Government Officer Evaluations ({perf.evaluations.length})
+                  </h4>
+                  <div className="space-y-3">
+                    {perf.evaluations.map((ev: any) => (
+                      <div key={ev.id} className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                        <div className="flex justify-between items-start gap-2 flex-wrap">
+                          <div>
+                            <div className="flex items-center gap-1.5">
+                              <div className="flex items-center">
+                                {[1, 2, 3, 4, 5].map((s) => (
+                                  <Star
+                                    key={s}
+                                    className={`w-3.5 h-3.5 ${
+                                      s <= ev.overall_rating
+                                        ? 'fill-amber-400 text-amber-500'
+                                        : 'fill-gray-200 text-gray-300'
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                              <span className="text-xs font-bold text-navy-900">{ev.overall_rating}.0/5</span>
+                              <span className="text-[10px] text-gray-400 font-mono">({ev.pilot_number})</span>
+                            </div>
+                            <p className="text-xs font-semibold text-navy-900 mt-0.5">{ev.department_name}</p>
+                          </div>
+                          <span className="text-[10px] text-gray-400">{formatDate(ev.evaluated_at)}</span>
+                        </div>
+                        {ev.feedback && (
+                          <p className="text-xs text-gray-700 italic bg-white p-2.5 rounded-lg border border-gray-100 leading-relaxed">
+                            "{ev.feedback}"
+                          </p>
+                        )}
+                        <div className="text-[10px] text-gray-500 flex items-center gap-1">
+                          <UserCheck className="w-3 h-3 text-emerald-600" />
+                          <span>Signed off by {ev.officer_designation || 'Competent Department Authority'}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </Card>
+          )}
+
           {/* Statutory Verification Card */}
           <Card className="p-6 border border-gray-200">
             <h3 className="text-lg font-bold text-navy-900 mb-4 flex items-center gap-2">

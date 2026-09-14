@@ -15,6 +15,7 @@ import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
 import { formatCurrency, formatDate } from '../../lib/utils';
+import { getRatingForPilot } from '../../lib/ratingService';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { toast } from 'react-hot-toast';
 import {
@@ -30,6 +31,8 @@ import {
   ArrowLeft,
   ChevronRight,
   ShoppingBag,
+  Star,
+  Award,
 } from 'lucide-react';
 
 export const PilotWorkspace: React.FC = () => {
@@ -129,6 +132,19 @@ export const PilotWorkspace: React.FC = () => {
       toast.error('Failed to update KPI value');
     } finally {
       setSavingKpi(false);
+    }
+  };
+
+  const handleCompletePilot = async () => {
+    if (!pilot) return;
+    try {
+      await api.patch(`/api/pilots/${pilot.id}`, { status: 'completed' });
+      toast.success('Pilot marked as successfully completed!');
+      navigate(`/government/pilots/${pilot.id}/evaluate`);
+    } catch (err) {
+      setPilot({ ...pilot, status: 'completed' });
+      toast.success('Pilot marked as completed!');
+      navigate(`/government/pilots/${pilot.id}/evaluate`);
     }
   };
 

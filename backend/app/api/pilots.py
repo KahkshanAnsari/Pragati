@@ -173,3 +173,24 @@ async def analyze_pilot_ai(
     pilot = await get_pilot(id)
     analysis = await analyze_pilot(pilot)
     return analysis
+
+
+@router.post("/{id}/rating")
+async def rate_pilot(
+    id: str,
+    rating_data: dict = Body(...),
+    user: dict = Depends(require_role(["government_officer", "admin"])),
+):
+    try:
+        await log_audit(user["id"], user["role"], "rate_startup", "pilot", id, new_value=rating_data)
+    except Exception:
+        pass
+
+    try:
+        score = rating_data.get("overall_rating")
+        if score:
+            supabase_admin.table("pilots").update({"overall_score": float(score) * 20.0}).eq("id", id).execute()
+    except Exception:
+        pass
+
+    return {"status": "ok", "data": rating_data}

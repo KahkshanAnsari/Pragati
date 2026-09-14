@@ -29,6 +29,7 @@ import { PilotWorkspace as GovPilotWorkspace } from '../pages/government/PilotWo
 import { FieldInspection } from '../pages/government/FieldInspection';
 import { IssueReporting } from '../pages/government/IssueReporting';
 import { PilotOutcome } from '../pages/government/PilotOutcome';
+import { PilotEvaluation } from '../pages/government/PilotEvaluation';
 import { ProcurementOverview } from '../pages/government/ProcurementOverview';
 import { ProcurementReadiness } from '../pages/government/ProcurementReadiness';
 import { ValidatedSolutions } from '../pages/government/ValidatedSolutions';
@@ -120,6 +121,8 @@ const router = createBrowserRouter([
           { path: 'pilots/:id/inspection', element: <FieldInspection /> },
           { path: 'pilots/:id/issues', element: <IssueReporting /> },
           { path: 'pilots/:id/outcome', element: <PilotOutcome /> },
+          { path: 'pilots/:id/evaluate', element: <PilotEvaluation /> },
+          { path: 'pilots/:id/rate', element: <PilotEvaluation /> },
           { path: 'monitoring', element: <PilotManagement /> },
           { path: 'procurement', element: <ProcurementOverview /> },
           { path: 'procurement/:id', element: <ProcurementReadiness /> },

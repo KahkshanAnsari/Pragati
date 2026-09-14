@@ -12,6 +12,8 @@ import { SkeletonList } from '../../components/ui/Skeleton';
 import { Badge } from '../../components/ui/Badge';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { toast } from 'react-hot-toast';
+import { getStartupPerformanceSummary } from '../../lib/ratingService';
+import { Star, Award } from 'lucide-react';
 
 export const StartupDirectory: React.FC = () => {
   const navigate = useNavigate();
@@ -20,6 +22,8 @@ export const StartupDirectory: React.FC = () => {
   const [search, setSearch] = useState('');
   const [sector, setSector] = useState('');
   const [status, setStatus] = useState('');
+  const [minRating, setMinRating] = useState('');
+  const [govExp, setGovExp] = useState('');
 
   useEffect(() => {
     const fetchStartups = async () => {

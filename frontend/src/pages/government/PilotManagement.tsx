@@ -13,6 +13,7 @@ import { formatCurrency, formatDate } from '../../lib/utils';
 import { toast } from 'react-hot-toast';
 import { SmartPilotProgress, getPilotProgressInfo } from '../../components/ui/SmartPilotProgress';
 import { Milestone, KPI, IssueReport, FieldInspection } from '../../types';
+import { getRatingForPilot } from '../../lib/ratingService';
 import {
   Rocket,
   Briefcase,
@@ -28,6 +29,8 @@ import {
   FileCheck,
   AlertCircle,
   FolderOpen,
+  Star,
+  Award,
 } from 'lucide-react';
 
 type PilotSectionTab = 'overview' | 'milestones' | 'kpis' | 'evidence' | 'issues';

@@ -7,6 +7,8 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Spinner } from '../../components/ui/Spinner';
 import { toast } from 'react-hot-toast';
+import { getStartupPerformanceSummary } from '../../lib/ratingService';
+import { Star } from 'lucide-react';
 import {
   Sparkles,
   ArrowLeft,

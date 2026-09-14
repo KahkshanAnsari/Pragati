@@ -8,6 +8,8 @@ import { Card, CardHeader, CardContent } from '../../components/ui/Card';
 import { Spinner } from '../../components/ui/Spinner';
 import { SkeletonCard } from '../../components/ui/Skeleton';
 import { toast } from 'react-hot-toast';
+import { getRatingForPilot } from '../../lib/ratingService';
+import { Star, Award } from 'lucide-react';
 
 export const PilotOutcome: React.FC = () => {
   const { id } = useParams();
