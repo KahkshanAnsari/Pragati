@@ -160,6 +160,17 @@ export const Applications: React.FC = () => {
                     {app.status === 'submitted' || app.status === 'shortlisted' ? 'Evaluate & Score' : 'View Proposal'}
                   </Button>
 
+                  {app.status === 'shortlisted' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 md:w-36 text-xs text-red-700 border-red-200 hover:bg-red-50 hover:text-red-800 font-semibold py-2"
+                      onClick={() => navigate(`/government/applications/${app.id}/reject`)}
+                    >
+                      Reject Application
+                    </Button>
+                  )}
+
                   {app.status === 'selected' && (
                     <Button
                       variant="secondary"

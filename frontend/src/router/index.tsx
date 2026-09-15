@@ -25,6 +25,7 @@ import { StartupDirectory } from '../pages/government/StartupDirectory';
 import { StartupProfile as GovStartupProfile } from '../pages/government/StartupProfile';
 import { Applications } from '../pages/government/Applications';
 import { EvaluationForm } from '../pages/government/EvaluationForm';
+import { ApplicationRejection } from '../pages/government/ApplicationRejection';
 import { PilotManagement } from '../pages/government/PilotManagement';
 import { PilotWorkspace as GovPilotWorkspace } from '../pages/government/PilotWorkspace';
 import { FieldInspection } from '../pages/government/FieldInspection';
@@ -123,6 +124,7 @@ const router = createBrowserRouter([
           { path: 'applications', element: <Applications /> },
           { path: 'applications/:id', element: <EvaluationForm /> },
           { path: 'applications/:id/evaluate', element: <EvaluationForm /> },
+          { path: 'applications/:id/reject', element: <ApplicationRejection /> },
           { path: 'pilots', element: <PilotManagement /> },
           { path: 'pilots/:id', element: <GovPilotWorkspace /> },
           { path: 'pilots/:id/workspace', element: <GovPilotWorkspace /> },

@@ -150,30 +150,48 @@ async def update_status(
         raise HTTPException(status_code=404, detail="Application not found")
 
     app_rec = existing.data[0]
-    response = supabase_admin.table("applications").update({"status": status}).eq("id", id).execute()
+    
+    update_data = {"status": status}
+    rejection_reason = payload.get("rejection_reason")
+    rejection_feedback = payload.get("rejection_feedback")
 
-    # Save evaluation if provided
-    eval_data = payload.get("evaluation")
-    if eval_data and isinstance(eval_data, dict):
-        off_res = supabase_admin.table("government_officers").select("id").eq("user_id", user["id"]).execute()
-        off_id = off_res.data[0]["id"] if off_res.data else None
-        eval_record = {
-            "application_id": id,
-            "officer_id": off_id,
-            "technical_fit": eval_data.get("technical_fit", 8),
-            "feasibility": eval_data.get("feasibility", 8),
-            "cost_effectiveness": eval_data.get("cost_effectiveness", 8),
-            "team_capability": eval_data.get("team_capability", 8),
-            "expected_impact": eval_data.get("expected_impact", 8),
-            "scalability": eval_data.get("scalability", 8),
-            "decision": eval_data.get("decision", "select" if status == "selected" else "shortlist"),
-            "notes": eval_data.get("notes", ""),
-            "evaluated_at": datetime.now(timezone.utc).isoformat(),
-        }
-        try:
-            supabase_admin.table("evaluations").upsert(eval_record, on_conflict="application_id").execute()
-        except Exception:
-            pass
+    if rejection_reason:
+        update_data["rejection_reason"] = rejection_reason
+    if rejection_feedback is not None:
+        update_data["rejection_feedback"] = rejection_feedback
+
+    try:
+        response = supabase_admin.table("applications").update(update_data).eq("id", id).execute()
+    except Exception:
+        # Fallback if rejection_reason / rejection_feedback columns don't exist yet
+        response = supabase_admin.table("applications").update({"status": status}).eq("id", id).execute()
+
+    # Save evaluation / rejection notes
+    off_res = supabase_admin.table("government_officers").select("id").eq("user_id", user["id"]).execute()
+    off_id = off_res.data[0]["id"] if off_res.data else None
+
+    eval_data = payload.get("evaluation") or {}
+    notes_text = rejection_feedback or eval_data.get("notes", "")
+    if rejection_reason and "Reason:" not in (notes_text or ""):
+        notes_text = f"Reason: {rejection_reason}\n{notes_text}".strip()
+
+    eval_record = {
+        "application_id": id,
+        "officer_id": off_id,
+        "technical_fit": eval_data.get("technical_fit", 5),
+        "feasibility": eval_data.get("feasibility", 5),
+        "cost_effectiveness": eval_data.get("cost_effectiveness", 5),
+        "team_capability": eval_data.get("team_capability", 5),
+        "expected_impact": eval_data.get("expected_impact", 5),
+        "scalability": eval_data.get("scalability", 5),
+        "decision": "reject" if status == "rejected" else eval_data.get("decision", "shortlist"),
+        "notes": notes_text,
+        "evaluated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    try:
+        supabase_admin.table("evaluations").upsert(eval_record, on_conflict="application_id").execute()
+    except Exception:
+        pass
 
     # If selected, auto-create pilot workspace if not already created
     if status == "selected":

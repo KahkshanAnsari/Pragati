@@ -168,6 +168,8 @@ export interface Application {
   previous_work: string;
   expected_outcome: string;
   status: 'submitted' | 'shortlisted' | 'selected' | 'rejected';
+  rejection_reason?: string;
+  rejection_feedback?: string;
   created_at: string;
 }
 

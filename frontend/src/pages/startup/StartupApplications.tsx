@@ -160,8 +160,21 @@ export const StartupApplications: React.FC = () => {
                     )}
 
                     {app.status === 'rejected' && (
-                      <div className="mt-2 p-2.5 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg text-xs">
-                        Application evaluated. Another startup was selected for this specific problem statement.
+                      <div className="mt-2 p-3 bg-red-50/60 border border-red-200 text-red-800 rounded-lg text-xs space-y-1">
+                        <div className="flex items-center justify-between font-semibold">
+                          <span>Evaluation Outcome: Application Not Selected</span>
+                          <button
+                            onClick={() => setSelectedApp(app)}
+                            className="text-red-700 underline hover:text-red-900 font-bold ml-2"
+                          >
+                            View Feedback
+                          </button>
+                        </div>
+                        {app.rejection_reason && (
+                          <p className="text-gray-700 mt-1">
+                            <strong>Reason:</strong> {app.rejection_reason}
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>
@@ -186,12 +199,79 @@ export const StartupApplications: React.FC = () => {
                         Active Pilot
                       </Button>
                     )}
+                    {app.status === 'rejected' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 md:w-36 text-xs text-red-700 border-red-200 hover:bg-red-50 font-semibold"
+                        onClick={() => setSelectedApp(app)}
+                      >
+                        View Feedback
+                      </Button>
+                    )}
                   </div>
                 </div>
               </Card>
             );
           })}
         </div>
+      )}
+
+      {/* Feedback Modal */}
+      {selectedApp && (
+        <Modal
+          isOpen={!!selectedApp}
+          onClose={() => setSelectedApp(null)}
+          title="Evaluation & Feedback Details"
+        >
+          <div className="space-y-4 text-sm">
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <h4 className="font-semibold text-red-900 text-xs uppercase tracking-wider mb-1">
+                Application Status
+              </h4>
+              <p className="text-red-800 font-medium">
+                Not Selected for Pilot Phase
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-gray-900 text-xs uppercase tracking-wider mb-1">
+                Challenge Statement
+              </h4>
+              <p className="text-gray-800 font-semibold">
+                {(selectedApp.problem as any)?.title || selectedApp.solution || 'Proposal'}
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-gray-900 text-xs uppercase tracking-wider mb-1">
+                Rejection Reason
+              </h4>
+              <p className="text-gray-800 bg-gray-50 p-3 rounded-lg border border-gray-200 font-medium">
+                {selectedApp.rejection_reason || 'Technical & Feasibility Requirements Review'}
+              </p>
+            </div>
+
+            {selectedApp.rejection_feedback && (
+              <div>
+                <h4 className="font-semibold text-gray-900 text-xs uppercase tracking-wider mb-1">
+                  Detailed Officer Feedback
+                </h4>
+                <p className="text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-200 whitespace-pre-wrap">
+                  {selectedApp.rejection_feedback}
+                </p>
+              </div>
+            )}
+
+            <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg text-xs text-blue-800">
+              💡 <strong>Note:</strong> Feedback is provided by department evaluators to help refine your solution for future government procurement challenges.
+            </div>
+
+            <div className="flex justify-end pt-2">
+              <Button onClick={() => setSelectedApp(null)}>Close</Button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );
