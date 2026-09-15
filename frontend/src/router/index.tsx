@@ -13,6 +13,7 @@ import { GovernmentLogin } from '../pages/auth/GovernmentLogin';
 import { GovernmentRegister } from '../pages/auth/GovernmentRegister';
 import { StartupLogin } from '../pages/auth/StartupLogin';
 import { StartupRegister } from '../pages/auth/StartupRegister';
+import { AdminLogin } from '../pages/auth/AdminLogin';
 
 // Government Pages
 import { GovernmentDashboard } from '../pages/government/Dashboard';
@@ -93,6 +94,7 @@ const router = createBrowserRouter([
   { path: '/auth/government/register', element: <GovernmentRegister /> },
   { path: '/auth/startup/login', element: <StartupLogin /> },
   { path: '/auth/startup/register', element: <StartupRegister /> },
+  { path: '/auth/admin/login', element: <AdminLogin /> },
 
   // Government portal
   {
