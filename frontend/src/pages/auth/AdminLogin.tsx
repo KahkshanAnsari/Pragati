@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { supabase } from '../../lib/supabase';
+import { api } from '../../lib/api';
 import { useAuthStore } from '../../stores/authStore';
 import toast from 'react-hot-toast';
 import pragatiLogo from '../../assets/pragati-logo.png';
@@ -25,20 +26,57 @@ export function AdminLogin() {
 
     try {
       const cleanEmail = email.trim();
-      const { data, error } = await supabase.auth.signInWithPassword({
+      let { data, error } = await supabase.auth.signInWithPassword({
         email: cleanEmail,
         password,
       });
 
+      // Handle unconfirmed email error by auto-confirming and retrying
+      if (error && error.message.toLowerCase().includes('confirm')) {
+        try {
+          await api.post('/api/auth/auto-confirm', { email: cleanEmail });
+          const retry = await supabase.auth.signInWithPassword({
+            email: cleanEmail,
+            password,
+          });
+          data = retry.data;
+          error = retry.error;
+        } catch {
+          // If auto-confirm fails, continue with original error
+        }
+      }
+
       if (error) {
         toast.error(error.message);
       } else if (data?.session) {
-        const userRole = data.session.user?.user_metadata?.role;
+        let userRole = data.session.user?.user_metadata?.role;
+
+        // Fallback: check users database table if role not found in metadata
+        if (!userRole) {
+          try {
+            const { data: dbUser } = await supabase
+              .from('users')
+              .select('role')
+              .eq('id', data.session.user.id)
+              .maybeSingle();
+            if (dbUser?.role) {
+              userRole = dbUser.role;
+              data.session.user.user_metadata = {
+                ...data.session.user.user_metadata,
+                role: dbUser.role,
+              };
+            }
+          } catch (e) {
+            console.error('Error checking user role in database:', e);
+          }
+        }
+
         if (userRole !== 'admin') {
           toast.error('Access denied. This portal is for platform administrators only.');
           await supabase.auth.signOut();
           return;
         }
+
         setSession(data.session);
         toast.success('Welcome to PRAGATI Admin Portal');
         navigate('/admin/dashboard');

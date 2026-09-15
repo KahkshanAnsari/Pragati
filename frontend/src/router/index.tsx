@@ -52,7 +52,13 @@ import { NotificationsPage } from '../pages/common/NotificationsPage';
 
 // Admin Pages
 import AdminDashboardPage from '../pages/admin/Dashboard';
+import AdminUsersPage from '../pages/admin/Users';
+import AdminDepartmentsPage from '../pages/admin/Departments';
 import AdminStartupsPage from '../pages/admin/Startups';
+import AdminVerificationPage from '../pages/admin/Verification';
+import AdminProblemsPage from '../pages/admin/Problems';
+import AdminPilotsPage from '../pages/admin/Pilots';
+import AdminReportsPage from '../pages/admin/Reports';
 import AdminAnalyticsPage from '../pages/admin/Analytics';
 
 // Fallback page
@@ -175,7 +181,13 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="dashboard" replace /> },
           { path: 'dashboard', element: <AdminDashboardPage /> },
+          { path: 'users', element: <AdminUsersPage /> },
+          { path: 'departments', element: <AdminDepartmentsPage /> },
           { path: 'startups', element: <AdminStartupsPage /> },
+          { path: 'verification', element: <AdminVerificationPage /> },
+          { path: 'problems', element: <AdminProblemsPage /> },
+          { path: 'pilots', element: <AdminPilotsPage /> },
+          { path: 'reports', element: <AdminReportsPage /> },
           { path: 'analytics', element: <AdminAnalyticsPage /> },
           { path: '*', element: <NotFound /> },
         ],
