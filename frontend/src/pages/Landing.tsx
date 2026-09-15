@@ -98,48 +98,107 @@ export function Landing() {
       }`}
     >
       {/* ── 1. GOVERNMENT OF INDIA ACCESSIBILITY & IDENTITY STRIP ───────────────── */}
-      <div className="bg-[#0B192C] text-slate-200 text-xs py-1 px-4 sm:px-6 lg:px-8 border-b border-slate-700/60 z-50">
+      <div className="bg-[#0B192C] text-slate-200 text-xs py-1.5 px-4 sm:px-6 lg:px-8 border-b border-slate-700/60 z-50">
+        {/* Hidden Skip Link for Accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-4 focus:z-50 focus:px-3 focus:py-1.5 focus:bg-blue-600 focus:text-white focus:rounded focus:shadow-lg focus:outline-none text-xs font-medium"
+        >
+          {isHindi ? 'मुख्य सामग्री पर जाएं' : 'Skip to main content'}
+        </a>
+
         <div className="max-w-[1400px] mx-auto flex flex-wrap items-center justify-between gap-2">
           {/* Government Identity */}
           <div className="flex items-center">
-            <span className="font-semibold text-white tracking-wide">
+            <span className="font-semibold text-white tracking-wide text-xs sm:text-[13px]">
               {isHindi ? 'राष्ट्रीय सरकारी नवाचार मंच' : 'National Government Innovation Platform'}
             </span>
           </div>
 
-          {/* Accessibility & Language Controls */}
+          {/* Top Header Right Controls: Portal Access | English | हिंदी */}
           <div className="flex items-center gap-3 text-[11px] font-medium text-slate-300">
-            <a
-              href="#main-content"
-              className="hover:text-white transition-colors underline-offset-4 hover:underline hidden sm:inline"
-            >
-              {isHindi ? 'मुख्य सामग्री पर जाएं' : 'Skip to main content'}
-            </a>
-            <span className="text-slate-600 hidden sm:inline">|</span>
+            {/* Moved Portal Access Dropdown */}
+            <div className="relative" ref={portalDropdownRef}>
+              <button
+                type="button"
+                id="portal-access-btn"
+                onClick={() => setPortalDropdownOpen((prev) => !prev)}
+                className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-800/90 border border-slate-700 hover:bg-slate-700 text-slate-200 hover:text-white text-[11px] font-semibold rounded transition-colors cursor-pointer"
+                aria-haspopup="true"
+                aria-expanded={portalDropdownOpen}
+              >
+                <Lock className="w-3 h-3 text-slate-400" />
+                <span>{isHindi ? 'पोर्टल एक्सेस' : 'Portal Access'}</span>
+                <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${portalDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
 
-            {/* Font Resize Controls */}
-            <div className="flex items-center gap-1.5 font-mono">
-              <button
-                onClick={() => setFontScale('larger')}
-                title="Increase font size"
-                className={`px-1 rounded hover:bg-slate-800 ${fontScale === 'larger' ? 'text-white font-bold' : 'text-slate-300'}`}
-              >
-                A+
-              </button>
-              <button
-                onClick={() => setFontScale('large')}
-                title="Default font size"
-                className={`px-1 rounded hover:bg-slate-800 ${fontScale === 'large' ? 'text-white font-bold' : 'text-slate-300'}`}
-              >
-                A
-              </button>
-              <button
-                onClick={() => setFontScale('normal')}
-                title="Compact font size"
-                className={`px-1 rounded hover:bg-slate-800 ${fontScale === 'normal' ? 'text-white font-bold' : 'text-slate-300'}`}
-              >
-                A-
-              </button>
+              {portalDropdownOpen && (
+                <div
+                  className="absolute right-0 top-full mt-1.5 w-64 bg-white text-slate-900 rounded-xl shadow-xl border border-[#E2E8F0] overflow-hidden z-50"
+                  role="menu"
+                >
+                  {/* Header */}
+                  <div className="px-4 py-2.5 border-b border-[#F1F5F9] bg-[#F8FAFC]">
+                    <p className="text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
+                      {isHindi ? 'पोर्टल एक्सेस' : 'Portal Access'}
+                    </p>
+                  </div>
+
+                  {/* Startup Portal */}
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => { setPortalDropdownOpen(false); navigate('/auth/startup/login'); }}
+                    className="w-full flex items-start gap-3 px-4 py-3.5 hover:bg-[#F8FAFC] transition-colors text-left group cursor-pointer"
+                  >
+                    <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-blue-100 transition-colors">
+                      <Rocket className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[#0F172A]">{isHindi ? 'स्टार्टअप पोर्टल' : 'Startup Portal'}</p>
+                      <p className="text-[11px] text-[#64748B] mt-0.5">{isHindi ? 'पंजीकृत स्टार्टअप के लिए' : 'For registered startups'}</p>
+                    </div>
+                  </button>
+
+                  {/* Divider */}
+                  <div className="h-px bg-[#F1F5F9] mx-4" />
+
+                  {/* Government Portal */}
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => { setPortalDropdownOpen(false); navigate('/auth/government/login'); }}
+                    className="w-full flex items-start gap-3 px-4 py-3.5 hover:bg-[#F8FAFC] transition-colors text-left group cursor-pointer"
+                  >
+                    <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-indigo-100 transition-colors">
+                      <Building2 className="w-4 h-4 text-indigo-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[#0F172A]">{isHindi ? 'सरकारी पोर्टल' : 'Government Portal'}</p>
+                      <p className="text-[11px] text-[#64748B] mt-0.5">{isHindi ? 'सरकारी विभागों के लिए' : 'For government departments'}</p>
+                    </div>
+                  </button>
+
+                  {/* Divider */}
+                  <div className="h-px bg-[#F1F5F9] mx-4" />
+
+                  {/* Admin Portal */}
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => { setPortalDropdownOpen(false); navigate('/auth/admin/login'); }}
+                    className="w-full flex items-start gap-3 px-4 py-3.5 hover:bg-[#F8FAFC] transition-colors text-left group cursor-pointer"
+                  >
+                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-slate-200 transition-colors">
+                      <ShieldCheck className="w-4 h-4 text-slate-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[#0F172A]">{isHindi ? 'एडमिन पोर्टल' : 'Admin Portal'}</p>
+                      <p className="text-[11px] text-[#64748B] mt-0.5">{isHindi ? 'प्लेटफ़ॉर्म निगरानी के लिए' : 'For platform monitoring'}</p>
+                    </div>
+                  </button>
+                </div>
+              )}
             </div>
 
             <span className="text-slate-600">|</span>
@@ -176,10 +235,10 @@ export function Landing() {
         </div>
       </div>
 
-      {/* ── 2. HEADER / NAVBAR (EXACT REFERENCE MATCH) ────────────────────────── */}
+      {/* ── 2. HEADER / NAVBAR ────────────────────────── */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E2E8F0] shadow-xs">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          {/* Logo & Platform Title (No "National Platform" Badge) */}
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+          {/* Logo & Platform Title */}
           <div className="flex items-center gap-2.5 shrink-0">
             <img
               src={pragatiLogo}
@@ -197,7 +256,7 @@ export function Landing() {
           </div>
 
           {/* Clean Single-Line Navigation */}
-          <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-[#64748B] whitespace-nowrap">
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium text-[#64748B] whitespace-nowrap">
             <a href="#hero" className={navActive('hero')}>{isHindi ? 'होम' : 'Home'}</a>
             <a href="#about" className={navActive('about')}>{isHindi ? 'प्रगति के बारे में' : 'About PRAGATI'}</a>
             <a href="#how-it-works" className={navActive('how-it-works')}>{isHindi ? 'यह कैसे काम करता है' : 'How It Works'}</a>
@@ -207,11 +266,11 @@ export function Landing() {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-3 sm:gap-3.5 shrink-0 ml-auto lg:ml-6 xl:ml-10">
             <Button
               size="sm"
               onClick={() => navigate('/auth/startup/login')}
-              className="bg-[#0F2747] hover:bg-[#1E3A6E] text-white text-xs sm:text-sm font-semibold px-3.5 sm:px-4 py-2 rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
+              className="bg-[#0F2747] hover:bg-[#1E3A6E] text-white text-xs sm:text-sm font-semibold px-4 sm:px-4.5 py-2 rounded-lg shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
             >
               <User className="w-3.5 h-3.5 text-blue-300" />
               <span>{isHindi ? 'स्टार्टअप लॉगिन' : 'Startup Login'}</span>
@@ -219,95 +278,11 @@ export function Landing() {
             <Button
               size="sm"
               onClick={() => navigate('/auth/government/login')}
-              className="bg-[#0F2747] hover:bg-[#1E3A6E] text-white text-xs sm:text-sm font-semibold px-3.5 sm:px-4 py-2 rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
+              className="bg-[#0F2747] hover:bg-[#1E3A6E] text-white text-xs sm:text-sm font-semibold px-4 sm:px-4.5 py-2 rounded-lg shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
             >
               <Building2 className="w-3.5 h-3.5 text-blue-300" />
               <span>{isHindi ? 'सरकारी पोर्टल' : 'Government Portal'}</span>
             </Button>
-
-            {/* Portal Access Dropdown */}
-            <div className="relative" ref={portalDropdownRef}>
-              <button
-                type="button"
-                id="portal-access-btn"
-                onClick={() => setPortalDropdownOpen((prev) => !prev)}
-                className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-white border border-[#CBD5E1] hover:border-[#94A3B8] text-[#0F2747] text-xs sm:text-sm font-semibold rounded-lg shadow-xs transition-all"
-                aria-haspopup="true"
-                aria-expanded={portalDropdownOpen}
-              >
-                <Lock className="w-3.5 h-3.5 text-slate-500" />
-                <span className="hidden sm:inline">{isHindi ? 'पोर्टल एक्सेस' : 'Portal Access'}</span>
-                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${portalDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {portalDropdownOpen && (
-                <div
-                  className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-xl border border-[#E2E8F0] overflow-hidden z-50"
-                  role="menu"
-                >
-                  {/* Header */}
-                  <div className="px-4 py-2.5 border-b border-[#F1F5F9] bg-[#F8FAFC]">
-                    <p className="text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
-                      {isHindi ? 'पोर्टल एक्सेस' : 'Portal Access'}
-                    </p>
-                  </div>
-
-                  {/* Startup Portal */}
-                  <button
-                    type="button"
-                    role="menuitem"
-                    onClick={() => { setPortalDropdownOpen(false); navigate('/auth/startup/login'); }}
-                    className="w-full flex items-start gap-3 px-4 py-3.5 hover:bg-[#F8FAFC] transition-colors text-left group"
-                  >
-                    <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-blue-100 transition-colors">
-                      <Rocket className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-[#0F172A]">{isHindi ? 'स्टार्टअप पोर्टल' : 'Startup Portal'}</p>
-                      <p className="text-[11px] text-[#64748B] mt-0.5">{isHindi ? 'पंजीकृत स्टार्टअप के लिए' : 'For registered startups'}</p>
-                    </div>
-                  </button>
-
-                  {/* Divider */}
-                  <div className="h-px bg-[#F1F5F9] mx-4" />
-
-                  {/* Government Portal */}
-                  <button
-                    type="button"
-                    role="menuitem"
-                    onClick={() => { setPortalDropdownOpen(false); navigate('/auth/government/login'); }}
-                    className="w-full flex items-start gap-3 px-4 py-3.5 hover:bg-[#F8FAFC] transition-colors text-left group"
-                  >
-                    <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-indigo-100 transition-colors">
-                      <Building2 className="w-4 h-4 text-indigo-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-[#0F172A]">{isHindi ? 'सरकारी पोर्टल' : 'Government Portal'}</p>
-                      <p className="text-[11px] text-[#64748B] mt-0.5">{isHindi ? 'सरकारी विभागों के लिए' : 'For government departments'}</p>
-                    </div>
-                  </button>
-
-                  {/* Divider */}
-                  <div className="h-px bg-[#F1F5F9] mx-4" />
-
-                  {/* Admin Portal */}
-                  <button
-                    type="button"
-                    role="menuitem"
-                    onClick={() => { setPortalDropdownOpen(false); navigate('/auth/admin/login'); }}
-                    className="w-full flex items-start gap-3 px-4 py-3.5 hover:bg-[#F8FAFC] transition-colors text-left group"
-                  >
-                    <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-slate-200 transition-colors">
-                      <ShieldCheck className="w-4 h-4 text-slate-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-[#0F172A]">{isHindi ? 'एडमिन पोर्टल' : 'Admin Portal'}</p>
-                      <p className="text-[11px] text-[#64748B] mt-0.5">{isHindi ? 'प्लेटफ़ॉर्म निगरानी के लिए' : 'For platform monitoring'}</p>
-                    </div>
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </header>
