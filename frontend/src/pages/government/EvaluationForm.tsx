@@ -32,7 +32,19 @@ export const EvaluationForm: React.FC = () => {
     const fetchApp = async () => {
       try {
         const res = await api.get(`/api/applications/${id}`);
-        setApp(res.data?.data || res.data);
+        const data = res.data?.data || res.data;
+        setApp(data);
+        if (data?.evaluation) {
+          setScores({
+            technical_fit: data.evaluation.technical_fit || 0,
+            feasibility: data.evaluation.feasibility || 0,
+            cost_effectiveness: data.evaluation.cost_effectiveness || 0,
+            team_capability: data.evaluation.team_capability || 0,
+            expected_impact: data.evaluation.expected_impact || 0,
+            scalability: data.evaluation.scalability || 0,
+          });
+          setNotes(data.evaluation.notes || '');
+        }
       } catch (err) {
         toast.error('Failed to load application');
       } finally {
@@ -91,6 +103,23 @@ export const EvaluationForm: React.FC = () => {
         <Button variant="secondary" onClick={() => navigate(-1)}>← Back</Button>
       </div>
       <PageHeader title="Evaluate Application" subtitle={`Reviewing solution from ${app.startup?.name}`} />
+
+      {app.status === 'rejected' && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-900 text-sm space-y-2">
+          <h4 className="font-bold text-base flex items-center gap-2 text-red-800">
+            <span>Application Status: Rejected</span>
+          </h4>
+          {app.rejection_reason && (
+            <p><strong>Reason:</strong> {app.rejection_reason}</p>
+          )}
+          {app.rejection_feedback && (
+            <div className="mt-1 text-gray-700 bg-white p-3 rounded-lg border border-red-100 whitespace-pre-wrap">
+              <strong>Feedback provided to startup:</strong>
+              <p className="mt-1 text-xs text-gray-800">{app.rejection_feedback}</p>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Summary */}

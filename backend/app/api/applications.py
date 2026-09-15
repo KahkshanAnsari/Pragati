@@ -8,6 +8,41 @@ from typing import Optional
 router = APIRouter()
 
 
+def populate_rejection_info(apps: list):
+    if not apps:
+        return
+    app_ids = [a["id"] for a in apps if isinstance(a, dict) and "id" in a]
+    if not app_ids:
+        return
+    try:
+        evals_res = supabase_admin.table("evaluations").select("*").in_("application_id", app_ids).execute()
+        eval_map = {e["application_id"]: e for e in (evals_res.data or [])}
+        for app in apps:
+            ev = eval_map.get(app["id"])
+            if ev:
+                app["evaluation"] = ev
+                notes = ev.get("notes") or ""
+                if not app.get("rejection_reason"):
+                    if "Reason:" in notes:
+                        parts = notes.split("Reason:", 1)[1]
+                        if "Feedback:" in parts:
+                            reason_part, fb_part = parts.split("Feedback:", 1)
+                            app["rejection_reason"] = reason_part.strip()
+                            app["rejection_feedback"] = fb_part.strip()
+                        else:
+                            app["rejection_reason"] = parts.strip()
+                    elif app.get("status") == "rejected":
+                        app["rejection_reason"] = "Solution not suitable for the current government requirement"
+                        app["rejection_feedback"] = notes
+                if not app.get("rejection_feedback") and notes:
+                    if "Feedback:" in notes:
+                        app["rejection_feedback"] = notes.split("Feedback:", 1)[1].strip()
+                    elif app.get("status") == "rejected":
+                        app["rejection_feedback"] = notes
+    except Exception as err:
+        print("Error populating evaluations:", err)
+
+
 @router.get("")
 async def list_applications(
     problem_id: str = None,
@@ -41,7 +76,9 @@ async def list_applications(
         query = query.eq("status", status)
 
     response = query.order("created_at", desc=True).execute()
-    return response.data or []
+    data = response.data or []
+    populate_rejection_info(data)
+    return data
 
 
 @router.post("")
@@ -132,7 +169,9 @@ async def get_application(id: str):
     ).eq("id", id).execute()
     if not response.data:
         raise HTTPException(status_code=404, detail="Application not found")
-    return response.data[0]
+    app_data = response.data[0]
+    populate_rejection_info([app_data])
+    return app_data
 
 
 @router.patch("/{id}/status")
