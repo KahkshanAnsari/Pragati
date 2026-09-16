@@ -4,8 +4,8 @@ import { api } from '../../lib/api';
 import { Application } from '../../types';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { StatusBadge } from '../../components/ui/StatusBadge';
+import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
-import { Spinner } from '../../components/ui/Spinner';
 import { SkeletonList } from '../../components/ui/Skeleton';
 import { Card } from '../../components/ui/Card';
 import { formatDate, formatCurrency } from '../../lib/utils';
@@ -18,6 +18,10 @@ import {
   CheckCircle2,
   ArrowRight,
   Filter,
+  ShieldCheck,
+  Award,
+  FolderKanban,
+  Rocket,
 } from 'lucide-react';
 
 export const Applications: React.FC = () => {
@@ -108,83 +112,141 @@ export const Applications: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4">
-          {filteredApps.map((app) => (
-            <Card
-              key={app.id}
-              className="p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-                <div className="space-y-2 flex-1">
-                  <div className="flex items-center gap-2.5 flex-wrap">
-                    <StatusBadge status={app.status} />
-                    <span className="text-xs text-gray-400 font-medium">
-                      Applied {formatDate(app.created_at)}
-                    </span>
+          {filteredApps.map((app) => {
+            const isPilotCompleted =
+              app.lifecycle_stage === 'pilot_completed' ||
+              app.pilot?.status === 'completed' ||
+              (app.pilot?.progress_percent || 0) >= 100;
+            const isPilotActive =
+              app.lifecycle_stage === 'pilot_active' ||
+              app.pilot?.status === 'active';
+
+            return (
+              <Card
+                key={app.id}
+                className="p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                  <div className="space-y-2 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {isPilotCompleted ? (
+                        <>
+                          <Badge variant="success">Pilot Completed</Badge>
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                            Validated Solution
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200">
+                            <Award className="w-3 h-3 text-blue-600" />
+                            Procurement Approved
+                          </span>
+                        </>
+                      ) : isPilotActive ? (
+                        <>
+                          <Badge variant="active">Active Pilot ({Math.round(app.pilot?.progress_percent || 0)}%)</Badge>
+                          <span className="text-xs font-mono font-bold px-2 py-0.5 bg-blue-50 text-blue-700 rounded border border-blue-200">
+                            {app.pilot?.pilot_number || 'PILOT-ACTIVE'}
+                          </span>
+                        </>
+                      ) : (
+                        <StatusBadge status={app.status} />
+                      )}
+                      <span className="text-xs text-gray-400 font-medium">
+                        Applied {formatDate(app.created_at)}
+                      </span>
+                    </div>
+
+                    <h3
+                      onClick={() => navigate(`/government/applications/${app.id}/evaluate`)}
+                      className="text-lg font-bold text-navy-900 hover:text-blue-600 cursor-pointer transition-colors"
+                    >
+                      {app.problem?.title || 'Challenge Statement'}
+                    </h3>
+
+                    <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
+                      <span className="font-semibold text-navy-800 flex items-center gap-1">
+                        <Briefcase className="w-4 h-4 text-blue-600" />
+                        {app.startup?.name}
+                      </span>
+                      <span className="text-gray-300">•</span>
+                      <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200">
+                        {app.startup?.sector || 'Innovation'}
+                      </span>
+                      <span className="text-gray-300">•</span>
+                      <span className="font-semibold text-navy-900 flex items-center gap-1">
+                        <IndianRupee className="w-3.5 h-3.5 text-gray-400" />
+                        {app.cost_proposed ? formatCurrency(app.cost_proposed) : 'Cost on review'}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-gray-600 line-clamp-2 bg-gray-50 p-2.5 rounded-lg border border-gray-100">
+                      <strong>Solution Summary:</strong> {app.solution}
+                    </p>
                   </div>
 
-                  <h3
-                    onClick={() => navigate(`/government/applications/${app.id}/evaluate`)}
-                    className="text-lg font-bold text-navy-900 hover:text-blue-600 cursor-pointer transition-colors"
-                  >
-                    {app.problem?.title || 'Challenge Statement'}
-                  </h3>
+                  <div className="flex flex-row md:flex-col gap-2 shrink-0 w-full md:w-auto pt-2 md:pt-0">
+                    <Button
+                      variant={app.status === 'submitted' || app.status === 'shortlisted' ? 'primary' : 'secondary'}
+                      size="sm"
+                      className="flex-1 md:w-36 text-xs font-semibold py-2 cursor-pointer"
+                      onClick={() => navigate(`/government/applications/${app.id}/evaluate`)}
+                    >
+                      {app.status === 'submitted' || app.status === 'shortlisted' ? 'Evaluate & Score' : 'View Proposal'}
+                    </Button>
 
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
-                    <span className="font-semibold text-navy-800 flex items-center gap-1">
-                      <Briefcase className="w-4 h-4 text-blue-600" />
-                      {app.startup?.name}
-                    </span>
-                    <span className="text-gray-300">•</span>
-                    <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200">
-                      {app.startup?.sector || 'Innovation'}
-                    </span>
-                    <span className="text-gray-300">•</span>
-                    <span className="font-semibold text-navy-900 flex items-center gap-1">
-                      <IndianRupee className="w-3.5 h-3.5 text-gray-400" />
-                      {app.cost_proposed ? formatCurrency(app.cost_proposed) : 'Cost on review'}
-                    </span>
+                    {app.status === 'shortlisted' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 md:w-36 text-xs text-red-700 border-red-200 hover:bg-red-50 hover:text-red-800 font-semibold py-2 cursor-pointer"
+                        onClick={() => navigate(`/government/applications/${app.id}/reject`)}
+                      >
+                        Reject Application
+                      </Button>
+                    )}
+
+                    {isPilotCompleted ? (
+                      <>
+                        <Button
+                          size="sm"
+                          className="flex-1 md:w-36 text-xs bg-navy-900 text-white cursor-pointer"
+                          onClick={() => navigate('/government/pilots')}
+                        >
+                          Completed Pilot
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          className="flex-1 md:w-36 text-xs text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100 flex items-center justify-center gap-1 cursor-pointer"
+                          onClick={() => navigate('/government/projects')}
+                        >
+                          <FolderKanban className="w-3 h-3" />
+                          View Project
+                        </Button>
+                      </>
+                    ) : isPilotActive ? (
+                      <Button
+                        size="sm"
+                        className="flex-1 md:w-36 text-xs bg-navy-900 text-white cursor-pointer"
+                        onClick={() => navigate('/government/pilots')}
+                      >
+                        Active Pilot
+                      </Button>
+                    ) : app.status === 'selected' ? (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="flex-1 md:w-36 text-xs text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100 cursor-pointer"
+                        onClick={() => navigate('/government/pilots')}
+                      >
+                        View in Pilots
+                      </Button>
+                    ) : null}
                   </div>
-
-                  <p className="text-xs text-gray-600 line-clamp-2 bg-gray-50 p-2.5 rounded-lg border border-gray-100">
-                    <strong>Solution Summary:</strong> {app.solution}
-                  </p>
                 </div>
-
-                <div className="flex flex-row md:flex-col gap-2 shrink-0 w-full md:w-auto pt-2 md:pt-0">
-                  <Button
-                    variant={app.status === 'submitted' || app.status === 'shortlisted' ? 'primary' : 'secondary'}
-                    size="sm"
-                    className="flex-1 md:w-36 text-xs font-semibold py-2"
-                    onClick={() => navigate(`/government/applications/${app.id}/evaluate`)}
-                  >
-                    {app.status === 'submitted' || app.status === 'shortlisted' ? 'Evaluate & Score' : 'View Proposal'}
-                  </Button>
-
-                  {app.status === 'shortlisted' && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 md:w-36 text-xs text-red-700 border-red-200 hover:bg-red-50 hover:text-red-800 font-semibold py-2"
-                      onClick={() => navigate(`/government/applications/${app.id}/reject`)}
-                    >
-                      Reject Application
-                    </Button>
-                  )}
-
-                  {app.status === 'selected' && (
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="flex-1 md:w-36 text-xs text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100"
-                      onClick={() => navigate('/government/pilots')}
-                    >
-                      View in Pilots
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

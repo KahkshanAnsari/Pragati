@@ -40,7 +40,7 @@ export const PilotManagement: React.FC = () => {
   const [pilots, setPilots] = useState<Pilot[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<PilotSectionTab>('overview');
-  const [activeStatusTab, setActiveStatusTab] = useState<'all' | 'active' | 'completed' | 'paused'>('all');
+  const [activeStatusTab, setActiveStatusTab] = useState<'active' | 'completed' | 'all'>('active');
   const [selectedPilotId, setSelectedPilotId] = useState<string>('');
 
   // Monitoring sub-tab data
@@ -109,9 +109,21 @@ export const PilotManagement: React.FC = () => {
     loadMonitoringData();
   }, [selectedPilotId, activeSection]);
 
+  const runningPilots = pilots.filter(
+    (p) => p.status === 'active' && (p.progress_percent || 0) < 100
+  );
+  const completedPilots = pilots.filter(
+    (p) => p.status === 'completed' || (p.progress_percent || 0) >= 100
+  );
+
   const filtered = pilots.filter((p) => {
-    if (activeStatusTab === 'all') return true;
-    return p.status === activeStatusTab;
+    if (activeStatusTab === 'active') {
+      return p.status === 'active' && (p.progress_percent || 0) < 100;
+    }
+    if (activeStatusTab === 'completed') {
+      return p.status === 'completed' || (p.progress_percent || 0) >= 100;
+    }
+    return true;
   });
 
   const activePilot = pilots.find((p) => p.id === selectedPilotId) || pilots[0];
@@ -182,19 +194,32 @@ export const PilotManagement: React.FC = () => {
       {/* ── SECTION 1: OVERVIEW & PILOT CARDS ─────────────────── */}
       {activeSection === 'overview' && (
         <div className="space-y-6">
-          {/* Status Filter Tabs */}
+          {/* Status Filter Tabs: Active Pilots | Completed Pilots | All */}
           <div className="flex space-x-2">
-            {(['all', 'active', 'completed', 'paused'] as const).map((tab) => (
+            {[
+              { id: 'active', label: 'Active Pilots', count: runningPilots.length },
+              { id: 'completed', label: 'Completed Pilots', count: completedPilots.length },
+              { id: 'all', label: 'All Pilots', count: pilots.length },
+            ].map((tab) => (
               <button
-                key={tab}
-                onClick={() => setActiveStatusTab(tab)}
-                className={`px-3.5 py-1.5 text-xs font-semibold capitalize rounded-lg transition-all ${
-                  activeStatusTab === tab
+                key={tab.id}
+                onClick={() => setActiveStatusTab(tab.id as any)}
+                className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
+                  activeStatusTab === tab.id
                     ? 'bg-navy-900 text-white shadow-xs'
                     : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                {tab} ({pilots.filter((p) => (tab === 'all' ? true : p.status === tab)).length})
+                <span>{tab.label}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
+                    activeStatusTab === tab.id
+                      ? 'bg-navy-800 text-blue-200'
+                      : 'bg-slate-100 text-slate-600'
+                  }`}
+                >
+                  {tab.count}
+                </span>
               </button>
             ))}
           </div>

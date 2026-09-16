@@ -169,6 +169,13 @@ export function GovernmentProjectDetail() {
               <div className="text-xs font-mono font-bold text-slate-800">{project.work_order_number || 'WO-GOV-2026'}</div>
             </div>
             <div>
+              <div className="text-[11px] text-slate-500 font-medium">Traceable to Pilot</div>
+              <div className="text-xs font-mono font-bold text-slate-900 flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-blue-600" />
+                {project.pilot?.pilot_number || (project.id === 'gp000002-1111-4111-8111-000000000002' ? 'PILOT-WRD-2025-001' : 'PILOT-VERIFIED')}
+              </div>
+            </div>
+            <div>
               <div className="text-[11px] text-slate-500 font-medium">GeM Procurement Ref</div>
               <div className="text-xs font-mono font-bold text-blue-700">{project.procurement_reference || 'GEM/2026/0411'}</div>
             </div>
@@ -189,10 +196,10 @@ export function GovernmentProjectDetail() {
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70">
             <div className="flex justify-between items-center text-xs text-slate-500 font-medium">
               <span>Overall Progress</span>
-              <span className="font-bold text-blue-700">{project.progress_percent}%</span>
+              <span className="font-bold text-slate-900">{project.progress_percent}%</span>
             </div>
             <div className="mt-2">
-              <ProgressBar value={project.progress_percent} size="sm" showLabel />
+              <ProgressBar value={project.progress_percent} size="sm" />
             </div>
             <div className="text-[11px] text-slate-500 mt-2 font-medium">
               {completedMilestones} of {totalMilestones} Milestones Completed
@@ -206,7 +213,7 @@ export function GovernmentProjectDetail() {
               <span className="font-bold text-slate-800">{budgetPct}%</span>
             </div>
             <div className="mt-2">
-              <ProgressBar value={budgetPct} size="sm" showLabel />
+              <ProgressBar value={budgetPct} size="sm" />
             </div>
             <div className="text-[11px] text-slate-500 mt-2 font-medium">
               <span className="font-bold text-slate-900">{formatCurrency(project.budget_utilized)}</span> of {formatCurrency(project.budget_allocated)}
@@ -220,7 +227,7 @@ export function GovernmentProjectDetail() {
               <span className="font-bold text-emerald-700">{deployPct}%</span>
             </div>
             <div className="mt-2">
-              <ProgressBar value={deployPct} size="sm" showLabel />
+              <ProgressBar value={deployPct} size="sm" />
             </div>
             <div className="text-[11px] text-slate-500 mt-2 font-medium">
               <span className="font-bold text-slate-900">{project.deployment_current}</span> of {project.deployment_target} {project.deployment_unit || 'Units'}

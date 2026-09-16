@@ -1,7 +1,7 @@
 import { api } from './api';
 import { GovernmentProject, ProjectMilestone, ProjectUpdate } from '../types';
 
-const STORAGE_KEY = 'pragati_government_projects_v1';
+const STORAGE_KEY = 'pragati_government_projects_v2';
 
 export const CANONICAL_PROJECTS: GovernmentProject[] = [
   {
@@ -12,6 +12,12 @@ export const CANONICAL_PROJECTS: GovernmentProject[] = [
       'Comprehensive statewide deployment of KrishiVision drone multi-spectral imaging and automated pest surveillance covering 2,500 hectares of farm land across Nashik and Baramati districts. Scaled following 100% successful pilot validation.',
     sector: 'Agriculture',
     pilot_id: '0a000003-1111-4111-8111-000000000003',
+    pilot: {
+      id: '0a000003-1111-4111-8111-000000000003',
+      pilot_number: 'PILOT-AGR-2025-003',
+      status: 'completed',
+      progress_percent: 100,
+    } as any,
     validated_solution_id: '0b000002-1111-4111-8111-000000000002',
     procurement_case_id: '0c000002-1111-4111-8111-000000000002',
     startup_id: 'b0000004-1111-4111-8111-000000000004',
@@ -176,6 +182,12 @@ export const CANONICAL_PROJECTS: GovernmentProject[] = [
       'Comprehensive city-scale expansion of AquaSense AI hydro-acoustic leak telemetry and water quality IoT sensing across 25 municipal zones in Nagpur North and Central. Awarded post PILOT-001 (4.8/5 rating, 94% KPI) under government procurement guidelines.',
     sector: 'Water & Wastewater',
     pilot_id: '0a000001-1111-4111-8111-000000000001',
+    pilot: {
+      id: '0a000001-1111-4111-8111-000000000001',
+      pilot_number: 'PILOT-WRD-2025-001',
+      status: 'completed',
+      progress_percent: 100,
+    } as any,
     validated_solution_id: '0b000001-1111-4111-8111-000000000001',
     procurement_case_id: '0c000001-1111-4111-8111-000000000001',
     startup_id: 'b0000001-1111-4111-8111-000000000001',
@@ -351,6 +363,12 @@ export const CANONICAL_PROJECTS: GovernmentProject[] = [
       'Phase 1 adoption of CleanGrid MicroBalancer intelligent solar feeder telemetry and predictive inverter health analytics across 20 state-run renewable power substations. Currently deployed across 6 initial pilot sites.',
     sector: 'Clean Energy',
     pilot_id: '0a000004-1111-4111-8111-000000000004',
+    pilot: {
+      id: '0a000004-1111-4111-8111-000000000004',
+      pilot_number: 'PILOT-MNRE-2025-004',
+      status: 'active',
+      progress_percent: 65,
+    } as any,
     validated_solution_id: '0b000003-1111-4111-8111-000000000003',
     procurement_case_id: '0c000003-1111-4111-8111-000000000003',
     startup_id: 'b0000005-1111-4111-8111-000000000005',

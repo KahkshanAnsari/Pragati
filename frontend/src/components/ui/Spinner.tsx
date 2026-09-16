@@ -1,5 +1,4 @@
 import React from 'react';
-import { Loader2 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 interface SpinnerProps {
@@ -9,11 +8,20 @@ interface SpinnerProps {
 
 export function Spinner({ className, size = 'md' }: SpinnerProps) {
   const sizes = {
-    sm: 'h-4 w-4',
-    md: 'h-6 w-6',
-    lg: 'h-8 w-8',
+    sm: 'h-1.5 w-5',
+    md: 'h-2 w-8',
+    lg: 'h-2.5 w-12',
   };
   return (
-    <Loader2 className={cn('animate-spin text-navy-600', sizes[size], className)} />
+    <span
+      role="status"
+      aria-label="Loading"
+      className={cn(
+        'inline-flex shrink-0 items-center justify-center animate-pulse rounded-full bg-current opacity-80',
+        sizes[size],
+        className
+      )}
+    />
   );
 }
+

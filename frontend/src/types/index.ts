@@ -171,6 +171,10 @@ export interface Application {
   rejection_reason?: string;
   rejection_feedback?: string;
   created_at: string;
+  lifecycle_stage?: 'applied' | 'shortlisted' | 'selected' | 'pilot_active' | 'pilot_completed' | 'procurement_approved' | 'project_active' | string;
+  pilot?: Pilot | any;
+  is_validated_solution?: boolean;
+  is_procurement_approved?: boolean;
 }
 
 export interface Evaluation {

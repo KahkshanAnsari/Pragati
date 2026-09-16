@@ -43,6 +43,63 @@ def populate_rejection_info(apps: list):
         print("Error populating evaluations:", err)
 
 
+def populate_pilot_and_lifecycle_info(apps: list):
+    if not apps:
+        return
+    app_ids = [a["id"] for a in apps if isinstance(a, dict) and "id" in a]
+    if not app_ids:
+        return
+    try:
+        pilots_res = supabase_admin.table("pilots").select(
+            "id, pilot_number, status, progress_percent, application_id, overall_score, budget_allocated, budget_utilized, start_date, end_date"
+        ).in_("application_id", app_ids).execute()
+        pilot_rows = pilots_res.data or []
+        pilot_map = {p["application_id"]: p for p in pilot_rows}
+
+        pilot_ids = [p["id"] for p in pilot_rows]
+        solutions_map = {}
+        procurement_map = {}
+        if pilot_ids:
+            sol_res = supabase_admin.table("validated_solutions").select(
+                "id, pilot_id, solution_name, validation_status"
+            ).in_("pilot_id", pilot_ids).execute()
+            for s in (sol_res.data or []):
+                solutions_map[s["pilot_id"]] = s
+
+            proc_res = supabase_admin.table("procurement_cases").select(
+                "id, pilot_id, status, readiness_score"
+            ).in_("pilot_id", pilot_ids).execute()
+            for pr in (proc_res.data or []):
+                procurement_map[pr["pilot_id"]] = pr
+
+        for app in apps:
+            p = pilot_map.get(app["id"])
+            if p:
+                app["pilot"] = p
+                sol = solutions_map.get(p["id"])
+                if sol:
+                    app["validated_solution"] = sol
+                    app["is_validated_solution"] = True
+                pr = procurement_map.get(p["id"])
+                if pr:
+                    app["procurement_case"] = pr
+                    if pr.get("status") == "approved":
+                        app["is_procurement_approved"] = True
+
+                if p.get("status") == "completed" or (p.get("progress_percent") or 0) >= 100:
+                    app["lifecycle_stage"] = "pilot_completed"
+                elif p.get("status") == "active":
+                    app["lifecycle_stage"] = "pilot_active"
+                elif p.get("status") == "paused":
+                    app["lifecycle_stage"] = "pilot_paused"
+                else:
+                    app["lifecycle_stage"] = "pilot_in_progress"
+            else:
+                app["lifecycle_stage"] = app.get("status", "submitted")
+    except Exception as err:
+        print("Error populating pilot & lifecycle info:", err)
+
+
 @router.get("")
 async def list_applications(
     problem_id: str = None,
@@ -78,6 +135,7 @@ async def list_applications(
     response = query.order("created_at", desc=True).execute()
     data = response.data or []
     populate_rejection_info(data)
+    populate_pilot_and_lifecycle_info(data)
     return data
 
 
