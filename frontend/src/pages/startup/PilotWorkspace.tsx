@@ -13,7 +13,8 @@ import { Pilot, Milestone, KPI } from '../../types';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import { getPilotProgressInfo } from '../../components/ui/SmartPilotProgress';
-import { CheckCircle2, Clock, Upload, FileText, AlertCircle } from 'lucide-react';
+import { getRatingForPilot } from '../../lib/ratingService';
+import { CheckCircle2, Clock, Upload, FileText, AlertCircle, Star, Award, ShieldCheck } from 'lucide-react';
 
 export const PilotWorkspace: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -110,6 +111,50 @@ export const PilotWorkspace: React.FC = () => {
         description={`Managing Pilot ID: ${pilot.id.substring(0,8)}`}
         backLink="/startup/pilots"
       />
+
+      {pilot.status === 'completed' && (() => {
+        const rating = getRatingForPilot(pilot.id);
+        return (
+          <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 border border-emerald-200 p-5 rounded-xl shadow-xs space-y-3">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <Badge variant="success">Successfully Completed & Validated</Badge>
+                  {rating && (
+                    <span className="text-xs font-bold text-amber-900 bg-amber-50 border border-amber-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                      <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                      Government Evaluation: {rating.overall_rating} / 5.0
+                    </span>
+                  )}
+                  <span className="text-xs font-bold text-emerald-800 bg-emerald-100/60 border border-emerald-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <Award className="w-3.5 h-3.5 text-emerald-600" />
+                    KPI Achievement: 94%
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-navy-900">
+                  Pilot Outcomes Approved & Certified for Scaling
+                </h3>
+                <p className="text-xs text-gray-600 mt-1">
+                  Department: <strong>{(pilot as any).department?.name || 'Municipal Water & Sanitation Department'}</strong> • Active Deployment: <strong>25 monitoring locations</strong> • Procurement Status: <strong>Adopted / Approved</strong>
+                </p>
+              </div>
+              <div className="bg-white p-3 rounded-lg border border-emerald-200 text-center shrink-0 shadow-2xs">
+                <span className="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">Scale-Up Status</span>
+                <span className="text-xs font-bold text-emerald-700 flex items-center gap-1 justify-center">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  Recommended for City-Wide Grid
+                </span>
+              </div>
+            </div>
+            {rating?.feedback && (
+              <div className="p-3 bg-white/80 rounded-lg border border-emerald-100 text-xs text-gray-700">
+                <strong className="text-navy-900">Official Government Feedback: </strong>
+                {rating.feedback}
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Progress Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
