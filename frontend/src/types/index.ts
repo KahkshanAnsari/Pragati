@@ -479,3 +479,79 @@ export interface PilotOutcomeScore {
   overall_score: number;
   outcome: 'SUCCESSFUL' | 'NEEDS_REVIEW' | 'UNSUCCESSFUL';
 }
+
+// ─── Government Projects ─────────────────────────────────────────────────────
+export interface ProjectMilestone {
+  id: string;
+  project_id: string;
+  title: string;
+  description: string;
+  sequence_order: number;
+  due_date: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'delayed' | 'skipped';
+  completed_date?: string | null;
+  government_notes?: string | null;
+  startup_notes?: string | null;
+  created_at?: string;
+}
+
+export interface ProjectUpdate {
+  id: string;
+  project_id: string;
+  author_role: 'government_officer' | 'startup' | 'admin';
+  author_name: string;
+  update_text: string;
+  update_type: 'progress' | 'issue' | 'milestone' | 'budget' | 'field_visit' | 'kpi_update' | 'general';
+  created_at: string;
+}
+
+export interface ProjectKpi {
+  metric_name: string;
+  baseline_value: number | string;
+  target_value: number | string;
+  current_value: number | string;
+  unit: string;
+  status: 'on_track' | 'at_risk' | 'achieved' | 'missed';
+}
+
+export interface GovernmentProject {
+  id: string;
+  pilot_id: string;
+  pilot?: Pilot;
+  validated_solution_id?: string;
+  validated_solution?: ValidatedSolution;
+  procurement_case_id?: string;
+  procurement_case?: ProcurementCase;
+  startup_id: string;
+  startup?: Startup;
+  department_id: string;
+  department?: GovernmentDepartment;
+  officer_id?: string;
+  officer?: GovernmentOfficer;
+  project_number: string;
+  project_name: string;
+  description: string;
+  sector: string;
+  budget_allocated: number;
+  budget_utilized: number;
+  status: 'active' | 'completed' | 'delayed' | 'at_risk' | 'scaled_up';
+  progress_percent: number;
+  start_date: string;
+  expected_end_date: string;
+  actual_end_date?: string | null;
+  deployment_scope: string;
+  deployment_target: number;
+  deployment_current: number;
+  deployment_unit?: string;
+  kpi_achievement_percent: number;
+  government_evaluation?: number | null;
+  officer_notes?: string;
+  procurement_reference?: string;
+  work_order_number?: string;
+  scale_up_status?: 'not_ready' | 'recommended' | 'approved' | 'scaled';
+  milestones?: ProjectMilestone[];
+  updates?: ProjectUpdate[];
+  kpis?: ProjectKpi[];
+  created_at: string;
+  updated_at?: string;
+}

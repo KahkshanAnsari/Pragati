@@ -4,7 +4,7 @@ import { KPICard } from '../../components/ui/KPICard';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
 import { SkeletonPage } from '../../components/ui/Skeleton';
-import { Building2, Rocket, FileText, CheckCircle2, ShieldAlert, Award, Layers } from 'lucide-react';
+import { Building2, Rocket, FileText, CheckCircle2, ShieldAlert, Award, Layers, FolderKanban, IndianRupee, Target } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area, Legend } from 'recharts';
 import { supabase } from '../../lib/supabase';
 import { formatDate } from '../../lib/utils';
@@ -187,7 +187,96 @@ export const Dashboard: React.FC = () => {
         <KPICard title="Validated Solutions" value={stats.validatedSolutionsCount.toString()} icon={<Layers className="w-5 h-5 text-teal-500" />} />
       </div>
 
-      {/* Charts Grid */}
+            {/* Government Projects Enterprise Portfolio */}
+      <Card className="p-5 border-blue-200 bg-gradient-to-r from-blue-50/40 via-white to-slate-50">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <FolderKanban className="w-5 h-5 text-blue-700" />
+              <h3 className="font-bold text-[#0F2747] text-base">Government Projects & Scale-Up Portfolio</h3>
+            </div>
+            <p className="text-xs text-slate-500 mt-0.5">Enterprise scale-up deployments awarded post pilot validation under GFR 2017 Rule 149</p>
+          </div>
+          <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full border border-blue-200">
+            3 Active Contracts (₹48.0 L Outlay)
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-4">
+          <div className="bg-white p-3 rounded-xl border border-slate-200">
+            <span className="text-[11px] text-slate-400 font-medium uppercase">Total Projects</span>
+            <div className="text-xl font-extrabold text-slate-900 mt-0.5">3</div>
+            <span className="text-[10px] text-blue-600 font-semibold">100% Traceable</span>
+          </div>
+          <div className="bg-white p-3 rounded-xl border border-slate-200">
+            <span className="text-[11px] text-slate-400 font-medium uppercase">Active Deployments</span>
+            <div className="text-xl font-extrabold text-amber-600 mt-0.5">2</div>
+            <span className="text-[10px] text-slate-500">70% & 30% Progress</span>
+          </div>
+          <div className="bg-white p-3 rounded-xl border border-slate-200">
+            <span className="text-[11px] text-slate-400 font-medium uppercase">Completed Projects</span>
+            <div className="text-xl font-extrabold text-emerald-600 mt-0.5">1</div>
+            <span className="text-[10px] text-emerald-700 font-semibold">100% Commissioned</span>
+          </div>
+          <div className="bg-white p-3 rounded-xl border border-slate-200">
+            <span className="text-[11px] text-slate-400 font-medium uppercase">Budget Utilization</span>
+            <div className="text-xl font-extrabold text-slate-900 mt-0.5">73.1%</div>
+            <span className="text-[10px] text-slate-500">₹35.1 L of ₹48.0 L</span>
+          </div>
+          <div className="bg-white p-3 rounded-xl border border-slate-200 col-span-2 sm:col-span-1">
+            <span className="text-[11px] text-slate-400 font-medium uppercase">Avg KPI Achievement</span>
+            <div className="text-xl font-extrabold text-purple-700 mt-0.5">90.8%</div>
+            <span className="text-[10px] text-purple-600 font-semibold">Exceeds Targets</span>
+          </div>
+        </div>
+
+        {/* Project Breakdown Rows */}
+        <div className="space-y-2.5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded-lg bg-white border border-slate-200 text-xs gap-2">
+            <div className="flex items-center gap-2">
+              <span className="font-mono font-bold text-slate-700">PROJ-AGR-2026-001</span>
+              <span className="font-bold text-slate-900">AI-Based Crop Disease Detection (KrishiVision)</span>
+              <span className="text-slate-400">•</span>
+              <span className="text-slate-500">Dept of Agriculture, Maharashtra</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="font-semibold text-slate-700">₹24.8 L / ₹26.0 L</span>
+              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded text-[11px]">Completed (100%)</span>
+              <span className="px-2 py-0.5 bg-purple-100 text-purple-800 font-bold rounded text-[11px]">Scaled Statewide</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded-lg bg-white border border-slate-200 text-xs gap-2">
+            <div className="flex items-center gap-2">
+              <span className="font-mono font-bold text-slate-700">PROJ-WRD-2026-002</span>
+              <span className="font-bold text-slate-900">Smart Water Quality Monitoring (AquaSense Technologies)</span>
+              <span className="text-slate-400">•</span>
+              <span className="text-slate-500">Municipal Water & Sanitation Dept</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="font-semibold text-slate-700">₹7.2 L / ₹10.0 L (18/25 Sites)</span>
+              <span className="px-2 py-0.5 bg-amber-100 text-amber-800 font-bold rounded text-[11px]">Active (70%)</span>
+              <span className="px-2 py-0.5 bg-blue-100 text-blue-800 font-bold rounded text-[11px]">Recommended Scale</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded-lg bg-white border border-slate-200 text-xs gap-2">
+            <div className="flex items-center gap-2">
+              <span className="font-mono font-bold text-slate-700">PROJ-MNRE-2026-003</span>
+              <span className="font-bold text-slate-900">Smart Energy Monitoring Deployment (CleanGrid Dynamics)</span>
+              <span className="text-slate-400">•</span>
+              <span className="text-slate-500">Ministry of New & Renewable Energy</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="font-semibold text-slate-700">₹3.1 L / ₹12.0 L (6/20 Sites)</span>
+              <span className="px-2 py-0.5 bg-blue-100 text-blue-800 font-bold rounded text-[11px]">Active (30%)</span>
+              <span className="px-2 py-0.5 bg-slate-100 text-slate-600 font-bold rounded text-[11px]">On Track</span>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+{/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-5">
           <h3 className="font-semibold text-[#0F2747] mb-4">Problems by Sector</h3>

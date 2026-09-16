@@ -37,6 +37,8 @@ import { ProcurementReadiness } from '../pages/government/ProcurementReadiness';
 import { ValidatedSolutions } from '../pages/government/ValidatedSolutions';
 import { ComplianceOverview } from '../pages/government/ComplianceOverview';
 import { ReportingStructure } from '../pages/government/ReportingStructure';
+import { GovernmentProjects as GovGovernmentProjects } from '../pages/government/GovernmentProjects';
+import { GovernmentProjectDetail as GovGovernmentProjectDetail } from '../pages/government/GovernmentProjectDetail';
 
 // Startup Pages
 import { StartupDashboard } from '../pages/startup/Dashboard';
@@ -46,6 +48,8 @@ import { StartupApplications } from '../pages/startup/StartupApplications';
 import { ActivePilots } from '../pages/startup/ActivePilots';
 import { PilotWorkspace as StartupPilotWorkspace } from '../pages/startup/PilotWorkspace';
 import { StartupProfile } from '../pages/startup/StartupProfile';
+import { GovernmentProjects as StartupGovernmentProjects } from '../pages/startup/GovernmentProjects';
+import { GovernmentProjectDetail as StartupGovernmentProjectDetail } from '../pages/startup/GovernmentProjectDetail';
 
 // Shared Pages
 import { ProblemDetails } from '../pages/common/ProblemDetails';
@@ -136,6 +140,8 @@ const router = createBrowserRouter([
           { path: 'monitoring', element: <PilotManagement /> },
           { path: 'procurement', element: <ProcurementOverview /> },
           { path: 'procurement/:id', element: <ProcurementReadiness /> },
+          { path: 'projects', element: <GovGovernmentProjects /> },
+          { path: 'projects/:id', element: <GovGovernmentProjectDetail /> },
           { path: 'solutions', element: <ValidatedSolutions /> },
           { path: 'compliance', element: <ComplianceOverview /> },
           { path: 'reporting-structure', element: <ReportingStructure /> },
@@ -165,6 +171,8 @@ const router = createBrowserRouter([
           { path: 'pilots', element: <ActivePilots /> },
           { path: 'pilots/:id', element: <StartupPilotWorkspace /> },
           { path: 'pilots/:id/workspace', element: <StartupPilotWorkspace /> },
+          { path: 'projects', element: <StartupGovernmentProjects /> },
+          { path: 'projects/:id', element: <StartupGovernmentProjectDetail /> },
           { path: 'profile', element: <StartupProfile /> },
           { path: 'notifications', element: <NotificationsPage /> },
           { path: '*', element: <NotFound /> },

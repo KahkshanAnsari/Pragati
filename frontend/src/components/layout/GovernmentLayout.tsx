@@ -10,6 +10,7 @@ import {
   Activity,
   ShoppingBag,
   ShieldCheck,
+  FolderKanban,
   AlertTriangle,
   Bell,
   LogOut,
@@ -60,6 +61,7 @@ const navGroups: NavGroup[] = [
     title: 'OUTCOMES',
     items: [
       { name: 'Procurement Readiness', path: '/government/procurement', icon: ShoppingBag },
+      { name: 'Government Projects', path: '/government/projects', icon: FolderKanban },
       { name: 'Validated Solutions', path: '/government/solutions', icon: ShieldCheck },
     ],
   },

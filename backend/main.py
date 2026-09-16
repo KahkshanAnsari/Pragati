@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api import (
     auth, problems, startups, matching, applications,
     pilots, milestones, kpis, inspections, issues,
-    procurement, solutions, notifications, audit, admin, budget
+    procurement, solutions, notifications, audit, admin, budget, projects
 )
 
 app = FastAPI(
@@ -55,4 +55,5 @@ app.include_router(solutions.router,     prefix="/api/solutions",    tags=["solu
 app.include_router(notifications.router, prefix="/api/notifications",tags=["notifications"])
 app.include_router(audit.router,         prefix="/api/audit-logs",   tags=["audit"])
 app.include_router(admin.router,         prefix="/api/admin",        tags=["admin"])
+app.include_router(projects.router,      prefix="/api/projects",     tags=["projects"])
 

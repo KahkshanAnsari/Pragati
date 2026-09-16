@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 
 import { api } from '../../lib/api';
@@ -29,6 +30,7 @@ import {
   Star,
 
   ShieldCheck,
+  FolderKanban,
 
   CheckCircle2,
 
@@ -215,6 +217,7 @@ type ViewMode = 'list' | 'report' | 'adopt';
 
 
 export const ValidatedSolutions: React.FC = () => {
+  const navigate = useNavigate();
 
   const [solutions, setSolutions] = useState<ValidatedSolution[]>([]);
 
@@ -835,6 +838,11 @@ export const ValidatedSolutions: React.FC = () => {
             <div className="flex items-center gap-2.5">
 
               <Button type="button" variant="secondary" className="text-xs font-bold flex items-center gap-1.5" onClick={() => handleDownloadReport(activeSolution, enrichment)}><Download className="w-3.5 h-3.5" /> Download Report</Button>
+              {activeSolution.validation_status === 'scaled' && (
+                <Button type="button" variant="secondary" className="text-xs font-bold text-blue-900 bg-blue-50 border-blue-300 hover:bg-blue-100 flex items-center gap-1.5" onClick={() => navigate('/government/projects')}>
+                  <FolderKanban className="w-3.5 h-3.5 text-blue-600" /> Government Project Active
+                </Button>
+              )}
 
               <Button type="button" className="bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold flex items-center gap-1.5" onClick={() => openAdopt(activeSolution, activeIdx)}><Send className="w-3.5 h-3.5" /> Request Adoption</Button>
 
@@ -999,6 +1007,15 @@ export const ValidatedSolutions: React.FC = () => {
                 <Badge variant="blue" className="text-xs">{sol.sector}</Badge>
 
                 <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-600"/> Procurement Verified</span>
+                {sol.validation_status === 'scaled' && (
+                  <button
+                    onClick={() => navigate('/government/projects')}
+                    className="text-[10px] font-bold text-blue-800 bg-blue-50 px-2 py-0.5 rounded border border-blue-300 flex items-center gap-1 hover:bg-blue-100 cursor-pointer"
+                  >
+                    <FolderKanban className="w-3 h-3 text-blue-600" />
+                    Government Project Active
+                  </button>
+                )}
 
               </div>
 

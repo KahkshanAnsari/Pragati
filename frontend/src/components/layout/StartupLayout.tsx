@@ -5,6 +5,7 @@ import {
   Compass,
   FileText,
   Rocket,
+  FolderKanban,
   User,
   Bell,
   LogOut,
@@ -24,6 +25,7 @@ const navItems = [
   { name: 'Discover Problems', path: '/startup/problems', icon: Compass },
   { name: 'My Applications', path: '/startup/applications', icon: FileText },
   { name: 'Active Pilots', path: '/startup/pilots', icon: Rocket },
+  { name: 'Government Projects', path: '/startup/projects', icon: FolderKanban },
   { name: 'My Profile', path: '/startup/profile', icon: User },
 ];
 
