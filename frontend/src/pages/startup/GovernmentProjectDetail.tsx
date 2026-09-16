@@ -27,6 +27,8 @@ import {
 import { GovernmentProject, ProjectMilestone, ProjectUpdate } from '../../types';
 import { getProjectById, addProjectUpdate } from '../../lib/projectService';
 import { formatCurrency, formatDate } from '../../lib/utils';
+import { ProgressBar } from '../../components/ui/ProgressBar';
+import { SkeletonProjectDetail } from '../../components/ui/Skeleton';
 import { toast } from 'react-hot-toast';
 
 export function GovernmentProjectDetail() {
@@ -75,12 +77,7 @@ export function GovernmentProjectDetail() {
   };
 
   if (loading) {
-    return (
-      <div className="py-20 text-center">
-        <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-slate-500 mt-2 font-medium">Loading project dossier...</p>
-      </div>
-    );
+    return <SkeletonProjectDetail />;
   }
 
   if (!project) {
@@ -194,13 +191,8 @@ export function GovernmentProjectDetail() {
               <span>Overall Progress</span>
               <span className="font-bold text-blue-700">{project.progress_percent}%</span>
             </div>
-            <div className="h-2 bg-slate-200/70 rounded-full mt-2 overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-500 ${
-                  isCompleted ? 'bg-emerald-500' : 'bg-blue-600'
-                }`}
-                style={{ width: `${project.progress_percent}%` }}
-              />
+            <div className="mt-2">
+              <ProgressBar value={project.progress_percent} size="sm" showLabel />
             </div>
             <div className="text-[11px] text-slate-500 mt-2 font-medium">
               {completedMilestones} of {totalMilestones} Milestones Completed
@@ -213,11 +205,8 @@ export function GovernmentProjectDetail() {
               <span>Budget Outlay</span>
               <span className="font-bold text-slate-800">{budgetPct}%</span>
             </div>
-            <div className="h-2 bg-slate-200/70 rounded-full mt-2 overflow-hidden">
-              <div
-                className="h-full bg-indigo-600 rounded-full transition-all duration-500"
-                style={{ width: `${budgetPct}%` }}
-              />
+            <div className="mt-2">
+              <ProgressBar value={budgetPct} size="sm" showLabel />
             </div>
             <div className="text-[11px] text-slate-500 mt-2 font-medium">
               <span className="font-bold text-slate-900">{formatCurrency(project.budget_utilized)}</span> of {formatCurrency(project.budget_allocated)}
@@ -230,11 +219,8 @@ export function GovernmentProjectDetail() {
               <span>Deployment Scope</span>
               <span className="font-bold text-emerald-700">{deployPct}%</span>
             </div>
-            <div className="h-2 bg-slate-200/70 rounded-full mt-2 overflow-hidden">
-              <div
-                className="h-full bg-emerald-500 rounded-full transition-all duration-500"
-                style={{ width: `${deployPct}%` }}
-              />
+            <div className="mt-2">
+              <ProgressBar value={deployPct} size="sm" showLabel />
             </div>
             <div className="text-[11px] text-slate-500 mt-2 font-medium">
               <span className="font-bold text-slate-900">{project.deployment_current}</span> of {project.deployment_target} {project.deployment_unit || 'Units'}
@@ -247,11 +233,8 @@ export function GovernmentProjectDetail() {
               <span>KPI Achievement</span>
               <span className="font-bold text-purple-700">{project.kpi_achievement_percent}%</span>
             </div>
-            <div className="h-2 bg-slate-200/70 rounded-full mt-2 overflow-hidden">
-              <div
-                className="h-full bg-purple-600 rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(project.kpi_achievement_percent, 100)}%` }}
-              />
+            <div className="mt-2">
+              <ProgressBar value={Math.min(project.kpi_achievement_percent, 100)} size="sm" showLabel />
             </div>
             <div className="text-[11px] text-purple-700 mt-2 font-semibold flex items-center gap-1">
               <Award className="w-3 h-3" /> Verified Performance

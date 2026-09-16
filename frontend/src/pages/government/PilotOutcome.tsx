@@ -6,6 +6,7 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { Button } from '../../components/ui/Button';
 import { Card, CardHeader, CardContent } from '../../components/ui/Card';
 import { Spinner } from '../../components/ui/Spinner';
+import { SkeletonAISynthesis } from '../../components/ui/Skeleton';
 import { SkeletonCard } from '../../components/ui/Skeleton';
 import { toast } from 'react-hot-toast';
 import { getRatingForPilot } from '../../lib/ratingService';
@@ -114,9 +115,12 @@ export const PilotOutcome: React.FC = () => {
             </CardHeader>
             <CardContent>
               {analyzing ? (
-                <div className="py-12 flex flex-col items-center">
-                  <Spinner className="mb-4" />
-                  <p className="text-gray-500">Synthesizing milestones, budget, and KPIs...</p>
+                <div className="py-2 space-y-3">
+                  <p className="text-xs text-blue-700 font-semibold flex items-center gap-1.5">
+                    <span className="inline-block w-2 h-2 rounded-full bg-blue-600 animate-ping mr-1" />
+                    Synthesizing milestones, budget utilization, and field verification metrics with AI...
+                  </p>
+                  <SkeletonAISynthesis />
                 </div>
               ) : analysis ? (
                 <div className="space-y-6 animate-in fade-in">

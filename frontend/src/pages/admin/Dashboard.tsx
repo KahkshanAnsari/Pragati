@@ -255,7 +255,7 @@ export const Dashboard: React.FC = () => {
             </div>
             <div className="flex items-center gap-3">
               <span className="font-semibold text-slate-700">₹7.2 L / ₹10.0 L (18/25 Sites)</span>
-              <span className="px-2 py-0.5 bg-amber-100 text-amber-800 font-bold rounded text-[11px]">Active (70%)</span>
+              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded text-[11px]">Active (70%)</span>
               <span className="px-2 py-0.5 bg-blue-100 text-blue-800 font-bold rounded text-[11px]">Recommended Scale</span>
             </div>
           </div>
@@ -269,7 +269,7 @@ export const Dashboard: React.FC = () => {
             </div>
             <div className="flex items-center gap-3">
               <span className="font-semibold text-slate-700">₹3.1 L / ₹12.0 L (6/20 Sites)</span>
-              <span className="px-2 py-0.5 bg-blue-100 text-blue-800 font-bold rounded text-[11px]">Active (30%)</span>
+              <span className="px-2 py-0.5 bg-rose-100 text-rose-800 font-bold rounded text-[11px]">Active (30%)</span>
               <span className="px-2 py-0.5 bg-slate-100 text-slate-600 font-bold rounded text-[11px]">On Track</span>
             </div>
           </div>

@@ -183,7 +183,7 @@ export const SmartPilotProgress: React.FC<SmartPilotProgressProps> = ({
         </div>
       )}
 
-      <ProgressBar value={info.actual} color={info.barColor} size={size} />
+      <ProgressBar value={info.actual} color="auto" size={size} />
     </div>
   );
 };

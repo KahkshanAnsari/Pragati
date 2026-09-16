@@ -23,6 +23,8 @@ import { GovernmentProject } from '../../types';
 import { getAllProjects } from '../../lib/projectService';
 import { useAuthStore } from '../../stores/authStore';
 import { formatCurrency, formatDate } from '../../lib/utils';
+import { ProgressBar } from '../../components/ui/ProgressBar';
+import { SkeletonProjectList } from '../../components/ui/Skeleton';
 
 export function GovernmentProjects() {
   const navigate = useNavigate();
@@ -154,10 +156,7 @@ export function GovernmentProjects() {
 
       {/* Project Cards List */}
       {loading ? (
-        <div className="py-16 text-center">
-          <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-slate-500 mt-2 font-medium">Loading government projects...</p>
-        </div>
+        <SkeletonProjectList count={3} />
       ) : filteredProjects.length === 0 ? (
         <div className="bg-white rounded-xl p-12 text-center border border-slate-200">
           <FolderKanban className="w-12 h-12 text-slate-300 mx-auto mb-3" />
@@ -317,18 +316,11 @@ export function GovernmentProjects() {
                       <span className="font-bold text-slate-700 text-[11px] uppercase tracking-wider">
                         Deployment Progress
                       </span>
-                      <span className="font-extrabold text-blue-700 text-xs">
+                      <span className="font-extrabold text-slate-900 text-xs">
                         {project.progress_percent}%
                       </span>
                     </div>
-                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200/60">
-                      <div
-                        className={`h-full transition-all duration-500 rounded-full ${
-                          isCompleted ? 'bg-emerald-500' : 'bg-gradient-to-r from-blue-600 to-indigo-600'
-                        }`}
-                        style={{ width: `${project.progress_percent}%` }}
-                      />
-                    </div>
+                    <ProgressBar value={project.progress_percent} size="sm" showLabel />
                   </div>
 
                   {/* Card Footer: Pilot Traceability & CTA */}

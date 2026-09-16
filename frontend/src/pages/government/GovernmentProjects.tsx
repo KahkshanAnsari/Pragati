@@ -20,6 +20,8 @@ import {
 import { GovernmentProject } from '../../types';
 import { getAllProjects } from '../../lib/projectService';
 import { formatCurrency, formatDate } from '../../lib/utils';
+import { ProgressBar } from '../../components/ui/ProgressBar';
+import { SkeletonProjectList } from '../../components/ui/Skeleton';
 import { useAuthStore } from '../../stores/authStore';
 
 export function GovernmentProjects() {
@@ -160,10 +162,7 @@ export function GovernmentProjects() {
 
       {/* Projects List */}
       {loading ? (
-        <div className="py-16 text-center">
-          <div className="inline-block w-8 h-8 border-4 border-navy-900 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-slate-500 mt-2 font-medium">Loading government projects...</p>
-        </div>
+        <SkeletonProjectList count={3} />
       ) : filteredProjects.length === 0 ? (
         <div className="bg-white rounded-xl p-12 text-center border border-slate-200">
           <FolderKanban className="w-12 h-12 text-slate-300 mx-auto mb-3" />
